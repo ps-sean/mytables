@@ -36,7 +36,7 @@ task('horizon', function () {
 
 host('18.133.49.69')
     ->user('ec2-user')
-    ->identityFile('~/.ssh/BlackBull.pem')
+    ->identityFile('~/.ssh/myTables.pem')
     ->set('deploy_path', '/var/www/html');
 
 // Tasks
