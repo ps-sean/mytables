@@ -187,8 +187,12 @@
     <!-- Responsive Navigation Menu -->
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
     @auth
+        <x-jet-responsive-nav-link href="{{ route('bookings') }}" :active="request()->routeIs('bookings')">
+            Bookings
+        </x-jet-responsive-nav-link>
         @if(auth()->user()->restaurants->count())
-            <div class="pt-2 pb-3 space-y-1">
+            <div class="pt-2 pb-3 space-y-1 border-t border-gray-200">
+                <h5 class="px-4 font-bold text-gray-600">Restaurants</h5>
                 @if(auth()->user()->restaurants->count())
                     <x-jet-responsive-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
@@ -197,11 +201,14 @@
                         Bookings
                     </x-jet-responsive-nav-link>
                 @endif
-                @if(auth()->user()->belongsToTeam(\App\Models\Team::find(1)))
-                    <x-jet-responsive-nav-link href="{{ route('restaurant.status', 'pending') }}" :active="request()->routeIs('restaurant.status')">
-                        Restaurants
-                    </x-jet-responsive-nav-link>
-                @endif
+            </div>
+        @endif
+        @if(auth()->user()->belongsToTeam(\App\Models\Team::find(1)))
+            <div class="pt-2 pb-3 space-y-1 border-t border-gray-200">
+                <h5 class="px-4 font-bold text-gray-600">Admin</h5>
+                <x-jet-responsive-nav-link href="{{ route('restaurant.status', 'pending') }}" :active="request()->routeIs('restaurant.status')">
+                    Restaurants
+                </x-jet-responsive-nav-link>
             </div>
         @endif
         <!-- Responsive Settings Options -->
@@ -223,9 +230,11 @@
                         {{ __('Profile') }}
                     </x-jet-responsive-nav-link>
 
-                    <x-jet-responsive-nav-link href="{{ route('my-restaurants') }}" :active="request()->routeIs('my-restaurants')">
-                        {{ __('My Restaurants') }}
-                    </x-jet-responsive-nav-link>
+                    @if(auth()->user()->restaurants->count())
+                        <x-jet-responsive-nav-link href="{{ route('my-restaurants') }}" :active="request()->routeIs('my-restaurants')">
+                            {{ __('My Restaurants') }}
+                        </x-jet-responsive-nav-link>
+                    @endif
 
                     @if (Laravel\Jetstream\Jetstream::hasApiFeatures())
                         <x-jet-responsive-nav-link href="{{ route('api-tokens.index') }}" :active="request()->routeIs('api-tokens.index')">
