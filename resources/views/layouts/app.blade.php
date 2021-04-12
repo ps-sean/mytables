@@ -38,7 +38,7 @@
     </main>
 
     <footer class="bg-red-800 text-white">
-        <div class="container mx-auto grid grid-cols-2 py-5">
+        <div class="container mx-auto grid grid-cols-2 py-5 px-3">
             <div class="space-y-2">
                 <h5 class="text-lg font-bold mb-3">Popular Locations</h5>
                 <p><a class="hover:text-gray-300" href="{{ route("home") }}?search=Livingston">Livingston</a></p>
@@ -49,6 +49,10 @@
                 <p><a class="hover:text-gray-300" href="{{ route("about-us") }}">About Us</a></p>
                 <p><a class="hover:text-gray-300" href="{{ route("contact") }}">Contact Us</a></p>
             </div>
+        </div>
+        <div class="flex flex-col space-y-2 justify-center items-center border-t border-white py-3">
+            <p>&copy; {{ date("Y") }} myTables. All rights reserved.</p>
+            <p>powered by <a class="text-red-800 hover:text-red-700" href="https://str94.co.uk">STR94</a></p>
         </div>
     </footer>
 
