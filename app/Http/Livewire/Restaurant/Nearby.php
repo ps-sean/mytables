@@ -25,11 +25,9 @@ class Nearby extends Component
         $this->limit += 6;
     }
 
-    public function load($position)
+    public function load($lat, $lng)
     {
-        $position = (object)$position;
-
-        $this->restaurants = SearchController::byRadius($position->latitude, $position->longitude)
+        $this->restaurants = SearchController::byRadius($lat, $lng)
             ->sortBy("distance");
     }
 }

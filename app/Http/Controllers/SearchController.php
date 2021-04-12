@@ -80,7 +80,7 @@ class SearchController extends Controller
     public static function radiusQuery($lat, $lng)
     {
         return "69 *
-    DEGREES(ACOS(LEAST(1.0, COS(RADIANS(restaurants.lat))
+        DEGREES(ACOS(LEAST(1.0, COS(RADIANS(restaurants.lat))
          * COS(RADIANS(" . $lat . "))
          * COS(RADIANS(restaurants.lng - " . $lng . "))
          + SIN(RADIANS(restaurants.lat))

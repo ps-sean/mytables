@@ -1,7 +1,7 @@
 <div x-show="open" id="nearby_restaurants" x-data="{ open:true, loading:true }" x-init="() => {
     if(navigator.geolocation){
         navigator.geolocation.getCurrentPosition((position) => {
-            $wire.call('load', position.coords)
+            $wire.call('load', position.coords.latitude, position.coords.longitude)
             loading = false
         }, (e) => {
             open = false
