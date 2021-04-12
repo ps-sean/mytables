@@ -62,7 +62,7 @@ class TableSettings extends Component
     {
         // delete any tables that are no longer present
         // get a list of ID's
-        $existingTables = $this->tables->pluck("id");
+        $existingTables = $this->tables->whereNotNull("id")->pluck("id");
 
         $this->restaurant->tables()->whereNotIn("id", $existingTables)->delete();
 

@@ -58,7 +58,7 @@ class StatusUpdate extends Notification
     public function toArray($notifiable)
     {
         $link = "/bookings/" . $this->booking->id;
-        $text = "The status of your booking #" . $this->booking->id . " was updated to " . $this->booking->status;
+        $text = "Your booking #" . $this->booking->id . " has ben updated.";
 
         if($this->booking->status === "cancelled"){
             // only the user can update the status to cancelled

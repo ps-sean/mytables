@@ -7,7 +7,7 @@
 
     <div class="container mx-auto bg-white">
         <div class="grid md:grid-cols-2">
-            <div class="bg-cover bg-center" style="background-image: url('{{ $restaurant->image }}');"></div>
+            <div class="bg-cover bg-center h-64 md:h-auto" style="background-image: url('{{ $restaurant->image }}');"></div>
 
             <div class="p-5 space-y-2">
                 <p class="text-gray-700 text-base flex items-start">

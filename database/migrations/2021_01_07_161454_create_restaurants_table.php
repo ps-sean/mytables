@@ -33,6 +33,7 @@ class CreateRestaurantsTable extends Migration
             $table->string("table_confirmation")->default('automatic');
             $table->string("booking_timeframe")->default('0:0');
             $table->string("status")->default("pending");
+            $table->integer("turnaround_time")->default(0);
         });
     }
 

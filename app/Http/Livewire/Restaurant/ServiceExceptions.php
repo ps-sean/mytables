@@ -13,11 +13,12 @@ class ServiceExceptions extends Component
     protected $rules = [
         "exceptions.*.service_date" => "required",
         "exceptions.*.restaurant_id" => "required",
-        "exceptions.*.title" => "required",
+        "exceptions.*.title" => "required_if:exceptions.*.closed,false",
         "exceptions.*.description" => "",
-        "exceptions.*.start" => "required|date_format:H:i",
-        "exceptions.*.finish" => "required|date_format:H:i",
-        "exceptions.*.last_booking" => "required|date_format:H:i",
+        "exceptions.*.start" => "required_if:exceptions.*.closed,false|exclude_if:exceptions.*.closed,true|nullable|date_format:H:i",
+        "exceptions.*.finish" => "required_if:exceptions.*.closed,false|exclude_if:exceptions.*.closed,true|nullable|date_format:H:i",
+        "exceptions.*.last_booking" => "required_if:exceptions.*.closed,false|exclude_if:exceptions.*.closed,true|nullable|date_format:H:i",
+        "exceptions.*.closed" => "boolean",
     ];
 
     public function mount(Restaurant $restaurant)
@@ -62,6 +63,7 @@ class ServiceExceptions extends Component
                 }
             } else {
                 $this->exceptions->push($this->restaurant->service_exceptions()->make([
+                    "closed" => 1,
                     "service_date" => Carbon::parse($this->newDate),
                 ]));
             }
@@ -80,13 +82,20 @@ class ServiceExceptions extends Component
     public function removeException($index)
     {
         $this->exceptions->forget($index);
+
+        if($this->exceptions->count() < 1){
+            $this->exceptions->push($this->restaurant->service_exceptions()->make([
+                "service_date" => $this->openDate,
+                "closed" => 1,
+            ]));
+        }
     }
 
     public function submit()
     {
         $this->validate();
 
-        $ids = $this->exceptions->pluck("id");
+        $ids = $this->exceptions->whereNotNull("id")->pluck("id");
 
         $this->restaurant->service_exceptions()->whereNotIn("id", $ids)->delete();
 
@@ -97,7 +106,11 @@ class ServiceExceptions extends Component
         $this->emit("saved");
     }
 
-    // TODO add extra service
-
-    // TODO block out day
+    public function addService()
+    {
+        $this->exceptions->push($this->restaurant->service_exceptions()->make([
+            "service_date" => $this->openDate,
+            "closed" => 0,
+        ]));
+    }
 }

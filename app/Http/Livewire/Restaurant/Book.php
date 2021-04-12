@@ -32,6 +32,10 @@ class Book extends Component
         $this->selectedDate = Carbon::now();
 
         $this->rules["booking.covers"][] = "max:" . $restaurant->max_booking_size;
+
+        if($restaurant->table_groups->count()){
+            $this->group = $restaurant->table_groups->first()->id;
+        }
     }
 
     public function render()

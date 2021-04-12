@@ -38,7 +38,7 @@ class TableGroups extends Component
     {
         $this->validate();
 
-        $existingGroups = $this->groups->pluck("id");
+        $existingGroups = $this->groups->whereNotNull("id")->pluck("id");
 
         $this->restaurant->table_groups()->whereNotIn("id", $existingGroups)->delete();
 

@@ -3,7 +3,10 @@
 namespace App\Http\Livewire\Restaurant;
 
 use App\Models\Booking;
+use App\Notifications\Booking\StatusUpdate;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Notification;
 use Livewire\Component;
 
 class BookingDetails extends Component
@@ -41,6 +44,12 @@ class BookingDetails extends Component
         if(!$this->booking->checkTime()){
             $this->addError("booking", $this->booking->tableNumber . " is not available on " . $this->booking->booked_at->toDayDateTimeString());
             return;
+        }
+
+        if($this->booking->isDirty("booked_at")){
+            // booking time has changed
+            Mail::to($this->booking->email)->send(new \App\Mail\Booking\StatusUpdate($this->booking));
+            Notification::send($this->booking->booker, new StatusUpdate($this->booking));
         }
 
         $this->booking->save();

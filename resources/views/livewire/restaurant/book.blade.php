@@ -19,10 +19,10 @@
             <div class="flex items-center justify-center">
                 <label>Location:</label>
                 <x-select wire:model="group">
-                    <option value="all">All</option>
                     @foreach($restaurant->table_groups as $group)
                         <option value="{{ $group->id }}">{{ $group }}</option>
                     @endforeach
+                    <option value="all">All</option>
                 </x-select>
             </div>
         </div>
@@ -39,7 +39,7 @@
                 </div>
             </div>
         @else
-            <div wire:loading.remove wire:target="selectDate" class="grid md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6 gap-4">
+            <div wire:loading.remove wire:target="selectDate" class="grid grid-cols-2 lg:grid-cols-4 xl:grid-cols-6 gap-4">
                 @if($services->count())
                     @foreach($services as $serviceTime)
                         <a href="#" wire:click.prevent="showBooking('{{ $serviceTime->time }}')" class="shadow rounded p-5 text-center hover:bg-red-800 hover:text-white transition ease-in-out duration-500 cursor-pointer">

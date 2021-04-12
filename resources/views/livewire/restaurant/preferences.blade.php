@@ -23,6 +23,7 @@
             <x-jet-input wire:model="bookingTimeframe.minutes" type="number" min="0" max="90"/>
             minutes.
         </p>
+        <p class="col-span-6">Leave a minimum of <x-jet-input wire:model="bookingTurnaround" type="number" min="0" max="90" step="{{ $bookingTimeframe['minutes'] }}"/> minutes between bookings. (Time to clean table before next booking)</p>
     </x-slot>
 
     <x-slot name="actions">

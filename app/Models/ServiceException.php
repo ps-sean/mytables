@@ -17,6 +17,7 @@ class ServiceException extends Service
         "description",
         "start",
         "finish",
-        "last_booking"
+        "last_booking",
+        "closed",
     ];
 }

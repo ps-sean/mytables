@@ -13,7 +13,7 @@ use Livewire\Component;
 
 class Bookings extends Component
 {
-    public $bookings, $restaurant, $date, $tables, $search, $newBooking, $nextBooking;
+    public $bookings, $restaurant, $date, $tables, $search, $newBooking, $nextBooking, $services;
     public $createBooking = false;
 
     protected $queryString = ['search', 'date'];
@@ -53,6 +53,7 @@ class Bookings extends Component
 
     public function render()
     {
+        $this->services = $this->restaurant->servicesByDate(Carbon::parse($this->date));
         $period = $this->restaurant->servicePeriod(Carbon::parse($this->date));
 
         return view('livewire.restaurant.bookings', compact([

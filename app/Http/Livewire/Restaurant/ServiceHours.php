@@ -24,7 +24,7 @@ class ServiceHours extends Component
     public function mount(Restaurant $restaurant)
     {
         $this->restaurant = $restaurant;
-        $this->services = $restaurant->services;
+        $this->services = $restaurant->services->sortBy("start");
     }
 
     public function render()
@@ -51,7 +51,7 @@ class ServiceHours extends Component
 
     public function submit()
     {
-        $existingServices = $this->services->pluck("id");
+        $existingServices = $this->services->whereNotNull("id")->pluck("id");
 
         $this->restaurant->services()->whereNotIn("id", $existingServices)->delete();
 
@@ -60,6 +60,8 @@ class ServiceHours extends Component
 
             $service->save();
         }
+
+        $this->services = $this->services->sortBy("start");
 
         $this->emitSelf("saved");
     }

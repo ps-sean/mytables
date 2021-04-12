@@ -3,9 +3,7 @@
 namespace App\Http\Livewire\Restaurant;
 
 use App\Http\Controllers\SearchController;
-use Illuminate\Http\Request;
 use Livewire\Component;
-use Stevebauman\Location\Facades\Location;
 
 class Nearby extends Component
 {
@@ -15,11 +13,6 @@ class Nearby extends Component
     public function mount()
     {
         $this->restaurants = collect([]);
-
-        if($position = Location::get("82.29.99.99")){
-           $this->restaurants = SearchController::byRadius($position->latitude, $position->longitude)
-               ->sortBy("distance");
-        }
     }
 
     public function render()
@@ -30,5 +23,13 @@ class Nearby extends Component
     public function showMore()
     {
         $this->limit += 6;
+    }
+
+    public function load($position)
+    {
+        $position = (object)$position;
+
+        $this->restaurants = SearchController::byRadius($position->latitude, $position->longitude)
+            ->sortBy("distance");
     }
 }

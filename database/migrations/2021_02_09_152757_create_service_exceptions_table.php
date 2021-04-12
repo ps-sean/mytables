@@ -17,13 +17,14 @@ class CreateServiceExceptionsTable extends Migration
             $table->id();
             $table->integer("restaurant_id");
             $table->date("service_date");
-            $table->string("title");
+            $table->string("title")->nullable();
             $table->text("description")->nullable();
-            $table->time("start");
-            $table->time("finish");
-            $table->time("last_booking");
+            $table->time("start")->nullable();
+            $table->time("finish")->nullable();
+            $table->time("last_booking")->nullable();
             $table->timestamps();
             $table->softDeletes();
+            $table->boolean("closed")->default(0);
         });
     }
 

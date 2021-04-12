@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -26,5 +27,24 @@ class Service extends Model
     public function __toString()
     {
         return $this->title;
+    }
+
+    public function restaurant()
+    {
+        return $this->belongsTo(Restaurant::class);
+    }
+
+    public function columns()
+    {
+        $start = Carbon::parse(date("Y-m-d " . $this->start));
+        $finish = Carbon::parse(date("Y-m-d " . $this->finish));
+
+        if($finish->lessThan($start)){
+            $finish->addDay();
+        }
+
+        $length = $start->diffInMinutes($finish);
+
+        return $length/$this->restaurant->booking_timeframe['minutes'];
     }
 }

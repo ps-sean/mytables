@@ -45,7 +45,7 @@ class BookingLength extends Component
 
     public function submit()
     {
-        $ids = $this->booking_rules->pluck("id");
+        $ids = $this->booking_rules->whereNotNull("id")->pluck("id");
 
         $this->restaurant->booking_rules()->whereNotIn("id", $ids)->delete();
 

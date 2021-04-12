@@ -62,7 +62,7 @@ class OpenHoursExceptions extends Component
     {
         $this->validate();
 
-        $ids = $this->exceptions->pluck("id");
+        $ids = $this->exceptions->whereNotNull("id")->pluck("id");
 
         $this->restaurant->open_hours_exceptions()->whereNotIn("id", $ids)->delete();
 

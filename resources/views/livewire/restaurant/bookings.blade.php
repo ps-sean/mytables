@@ -29,16 +29,47 @@
                         @endforeach
                     </tr>
                     <tr>
+                        <th class="p-0 h-0"></th>
                         @foreach($period as $time)
                             <td class="p-0 h-0" style="min-width: 50px;"></td>
                         @endforeach
                     </tr>
                     </thead>
                     <tbody>
+                    <tr>
+                        <th class="text-left px-3 py-2 border bg-gray-600 text-white border-white" colspan="{{ $period->count() + 1 }}">Services</th>
+                    </tr>
+                    @if($services->count())
+                        @foreach($services as $service)
+                            @php($serviceStart = \Carbon\Carbon::parse($date . " " . $service->start))
+                            <tr>
+                                <th class="border px-3 py-2 {{ $loop->even ? '' : 'bgr-gray-100' }}">{{ $service }}</th>
+                                @php($cols = 0)
+                                @foreach($period as $time)
+                                    @if($cols < 1)
+                                        @if($time->equalTo($serviceStart))
+                                            @php($cols = $service->columns())
+                                            <td class="border bg-red-800 text-white text-center" colspan="{{ $cols }}">{{ \Carbon\Carbon::parse(date("Y-m-d " . $service->start))->format("h:ia") }} - {{ \Carbon\Carbon::parse(date("Y-m-d " . $service->finish))->format("h:ia") }}</td>
+                                        @else
+                                            <td class="border bg-gray-300 border-white"></td>
+                                        @endif
+                                    @endif
+                                    @php($cols--)
+                                @endforeach
+                            </tr>
+                        @endforeach
+                    @else
+                        <tr>
+                            <td class="border text-center px-3 py-2 bg-red-800 text-white" colspan="{{ $period->count() + 1 }}">No Services</td>
+                        </tr>
+                    @endif
+                    <tr>
+                        <th class="text-left px-3 py-2 border bg-gray-600 text-white border-white" colspan="{{ $period->count() + 1 }}">Bookings</th>
+                    </tr>
                     @foreach($tables as $table)
                         @php($bgGray = $loop->even)
                         <tr>
-                            <th class="border {{ $loop->even ? '' : 'bg-gray-100' }}">{{ $table }}</th>
+                            <th class="border px-3 py-2 {{ $loop->even ? '' : 'bg-gray-100' }}">{{ $table }}</th>
                             @php($cols = 0)
                             @foreach($period as $time)
                                 @if($cols < 1)

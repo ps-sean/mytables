@@ -50,7 +50,7 @@ class Staff extends Component
 
     public function submit()
     {
-        $existingStaff = $this->staff->pluck("id");
+        $existingStaff = $this->staff->whereNotNull("id")->pluck("id");
 
         foreach($this->restaurant->staff as $staff){
             if(!$this->staff->contains($staff)){

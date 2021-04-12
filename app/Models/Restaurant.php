@@ -225,6 +225,12 @@ class Restaurant extends Model
         $services = $this->service_exceptions()->whereDate("service_date", $date)->orderBy("start")->get();
 
         if($services->count()){
+            $closed = $services->where("closed", 1);
+
+            if($closed->count()){
+                return collect([]);
+            }
+
             return $services;
         } else {
             return $this->services()->where("day", $date->shortEnglishDayOfWeek)->orderBy("start")->get();
