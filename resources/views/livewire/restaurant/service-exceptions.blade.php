@@ -74,7 +74,7 @@
                         </div>
                     @endif
                 @endforeach
-                @if(!$exceptions->firstWhere("service_date", \Carbon\Carbon::parse($openDate))->closed)
+                @if($exceptions->count() && !$exceptions->firstWhere("service_date", \Carbon\Carbon::parse($openDate))->closed)
                     <div class="flex items-center justify-center">
                         <x-button class="justify-center bg-red-800 hover:bg-red-700" type="button" wire:click.prevent="addService"><x-icons.plus class="h-6 mr-2"/> Add Service</x-button>
                     </div>

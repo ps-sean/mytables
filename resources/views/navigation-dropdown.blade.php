@@ -37,6 +37,9 @@
                                         <x-jet-dropdown-link href="{{ route('restaurant.bookings_select') }}">
                                             Bookings
                                         </x-jet-dropdown-link>
+                                        <x-jet-dropdown-link href="{{ route('my-restaurants') }}">
+                                            Settings
+                                        </x-jet-dropdown-link>
                                     </x-slot>
                                 </x-jet-dropdown>
                             </div>
@@ -99,12 +102,6 @@
                             <x-jet-dropdown-link href="{{ route('profile.show') }}">
                                 {{ __('Profile') }}
                             </x-jet-dropdown-link>
-
-                            @if(auth()->user()->restaurants->count())
-                                <x-jet-dropdown-link href="{{ route('my-restaurants') }}">
-                                    {{ __('My Restaurants') }}
-                                </x-jet-dropdown-link>
-                            @endif
 
                             @if (Laravel\Jetstream\Jetstream::hasApiFeatures())
                                 <x-jet-dropdown-link href="{{ route('api-tokens.index') }}">
@@ -200,6 +197,9 @@
                     <x-jet-responsive-nav-link href="{{ route('restaurant.bookings_select') }}" :active="request()->routeIs('restaurant.bookings_select')">
                         Bookings
                     </x-jet-responsive-nav-link>
+                    <x-jet-responsive-nav-link href="{{ route('my-restaurants') }}" :active="request()->routeIs('my-restaurants')">
+                        Settings
+                    </x-jet-responsive-nav-link>
                 @endif
             </div>
         @endif
@@ -229,12 +229,6 @@
                     <x-jet-responsive-nav-link href="{{ route('profile.show') }}" :active="request()->routeIs('profile.show')">
                         {{ __('Profile') }}
                     </x-jet-responsive-nav-link>
-
-                    @if(auth()->user()->restaurants->count())
-                        <x-jet-responsive-nav-link href="{{ route('my-restaurants') }}" :active="request()->routeIs('my-restaurants')">
-                            {{ __('My Restaurants') }}
-                        </x-jet-responsive-nav-link>
-                    @endif
 
                     @if (Laravel\Jetstream\Jetstream::hasApiFeatures())
                         <x-jet-responsive-nav-link href="{{ route('api-tokens.index') }}" :active="request()->routeIs('api-tokens.index')">

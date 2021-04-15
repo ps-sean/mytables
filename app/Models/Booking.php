@@ -55,6 +55,11 @@ class Booking extends Model
         return $this->belongsTo(User::class, "booked_by");
     }
 
+    public function review()
+    {
+        return $this->hasOne(Review::class);
+    }
+
     public function setBookedAtAttribute($value)
     {
         if(!$value instanceof Carbon){

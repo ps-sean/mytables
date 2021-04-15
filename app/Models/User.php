@@ -87,6 +87,11 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(Booking::class, "booked_by");
     }
 
+    public function reviews()
+    {
+        return $this->hasMany(Review::class);
+    }
+
     public function getInitialsAttribute()
     {
         $nameParts = explode(" ", $this->name);

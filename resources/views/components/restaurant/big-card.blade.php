@@ -15,6 +15,10 @@
             <x-icons.at class="h-5 inline mr-2"/>
             <a class="text-red-800 hover:text-red-700 transition-all duration-150 ease-in-out" href="mailto:{{ $restaurant->email }}">{{ $restaurant->email }}</a>
         </p>
+        <div class="text-gray-700 text-base flex items-center">
+            <x-icons.star class="h-5 inline mr-2"/>
+            <x-restaurant.reviews :restaurant="$restaurant"/>
+        </div>
         <p class="italic">
             {{ $slot }}
         </p>

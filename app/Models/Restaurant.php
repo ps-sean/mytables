@@ -93,6 +93,11 @@ class Restaurant extends Model
         return $this->hasMany(TableGroup::class);
     }
 
+    public function reviews()
+    {
+        return $this->hasManyThrough(Review::class, Booking::class);
+    }
+
     public function stripeAccount()
     {
         if($this->stripe_acct_id){
@@ -207,7 +212,7 @@ class Restaurant extends Model
         return $this->staff()->where("user_id", Auth::user()->id)->first();
     }
 
-    public function linkAccount()
+    public function linkAccountUrl()
     {
         $account_links = AccountLink::create([
             'account' => $this->stripe_acct_id,
@@ -216,7 +221,12 @@ class Restaurant extends Model
             'type' => 'account_onboarding'
         ]);
 
-        return redirect($account_links->url);
+        return $account_links->url;
+    }
+
+    public function linkAccount()
+    {
+        return redirect($this->linkAccountUrl());
     }
 
     public function servicesByDate(Carbon $date)
@@ -409,5 +419,16 @@ class Restaurant extends Model
 
         // check for exceptions
         return $this->open_hours_exceptions()->whereDate("open_date", $date)->first();
+    }
+
+    public function averageReview($option = "overall")
+    {
+        $avg = $this->reviews()->avg($option);
+
+        if(!$avg){
+            return null;
+        }
+
+        return number_format($avg, "2");
     }
 }

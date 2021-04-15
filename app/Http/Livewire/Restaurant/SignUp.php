@@ -117,7 +117,7 @@ class SignUp extends Component
             "email" => $this->email,
             "phone" => $this->phone,
             "address_line_1" => $address->name,
-            "vicinity" => $address->vicinity,
+            "vicinity" => $address->vicinity ?? $this->getAddressPart($address, "postal_town"),
             "country" => $this->getAddressPart($address, "country"),
             "postal_code" => $this->getAddressPart($address, "postal_code"),
             "lat" => $address->geometry->location->lat,

@@ -11,19 +11,12 @@
             <x-icons.at class="h-5 inline mr-2"/>
             <a href="mailto:{{ $booking->email }}">{{ $booking->email }}</a>
         </p>
-        @if($restaurant->staff->contains(auth()->user()))
+        @if($booking->booked_at->isFuture() && $restaurant->staff->contains(auth()->user()))
             <div>
                 <label><x-icons.user class="h-5 inline mr-2"/> Guests</label>
                 <x-jet-input class="w-full" type="number" min="1" wire:model="booking.covers"/>
                 @error("booking.covers")<span class="text-red-600">{{ $message }}</span>@enderror
             </div>
-        @else
-            <p class="text-gray-700 text-base flex items-start">
-                <x-icons.user class="h-5 inline mr-2"/>
-                {{ $booking->covers }} guests
-            </p>
-        @endif
-        @if($restaurant->staff->contains(auth()->user()))
             <div>
                 <label><x-icons.table class="h-5 inline mr-2"/> Table</label>
                 <x-select class="w-full" wire:model="booking.table_id">
@@ -32,18 +25,19 @@
                     @endforeach
                 </x-select>
             </div>
-        @else
-            <p class="text-gray-700 text-base flex items-start">
-                <x-icons.table class="h-5 inline mr-2"/>
-                {{ $booking->tableNumber }}
-            </p>
-        @endif
-        @if($restaurant->staff->contains(auth()->user()))
             <div class="col-span-2">
                 <label><x-icons.clock class="h-5 inline mr-2"/> Booked At</label>
                 <x-jet-input class="w-full" type="datetime-local" wire:model="bookedAt"/>
             </div>
         @else
+            <p class="text-gray-700 text-base flex items-start">
+                <x-icons.user class="h-5 inline mr-2"/>
+                {{ $booking->covers }} guests
+            </p>
+            <p class="text-gray-700 text-base flex items-start">
+                <x-icons.table class="h-5 inline mr-2"/>
+                {{ $booking->tableNumber }}
+            </p>
             <p class="text-gray-700 text-base flex items-start">
                 <x-icons.calendar class="h-5 inline mr-2"/>
                 {{ $booking->booked_at->ToFormattedDateString() }}
@@ -60,7 +54,7 @@
             </p>
         @endif
 
-        @if($restaurant->staff->contains(auth()->user()))
+        @if($booking->booked_at->isFuture() && $restaurant->staff->contains(auth()->user()))
             <div class="col-span-2">
                 <x-button type="submit" class="w-full justify-center bg-green-400 hover:bg-green-300">
                     <x-icons.save class="h-6 mr-2"/>
@@ -82,7 +76,7 @@
                 @livewire("restaurant.booking-status", compact(["booking"]))
             @endif
 
-            @if(auth()->user()->id === $booking->booked_by)
+            @if($booking->booked_at->isFuture() && auth()->user()->id === $booking->booked_by)
                 @livewire("booking.cancel", compact(["booking"]))
             @endif
         </div>

@@ -51,6 +51,12 @@ class Bookings extends Component
         return $listenOn;
     }
 
+    public function updatedNewBookingCovers()
+    {
+        // hack to update the finish time when covers is changed
+        $this->newBooking->setBookedAtAttribute($this->newBooking->booked_at);
+    }
+
     public function render()
     {
         $this->services = $this->restaurant->servicesByDate(Carbon::parse($this->date));

@@ -50,6 +50,12 @@
                                     <span class="text-green-500">({{ $restaurant->email_verified_at->toDayDateTimeString() }})</span>
                                 @endif
                             </p>
+                            <div class="space-y-2">
+                                @php($stripeAccount = $restaurant->stripeAccount())
+                                <h5 class="font-bold text-lg">Stripe Account</h5>
+                                <p>Details Submitted: {!! !empty($stripeAccount->details_submitted) ? "<span class='text-green-500'>Yes</span>" : "<span class='text-red-600'>No</span>" !!}</p>
+                                <p>Charges Enabled: {!! !empty($stripeAccount->charges_enabled) ? "<span class='text-green-500'>Yes</span>" : "<span class='text-red-600'>No</span>" !!}</p>
+                            </div>
                         </div>
                     </div>
                     <div class="bg-gray-100 p-3 space-y-2 overflow-auto min-h-full lg:h-64">
@@ -62,18 +68,20 @@
                                 </div>
                                 <div class="col-span-2">
                                     <div class="grid grid-cols-2">
-                                        @foreach($activity->changes['old'] as $key => $value)
-                                            @if($key !== "updated_at" && $activity->changes['old'][$key] !== $activity->changes['attributes'][$key])
-                                                <p class="col-span-2">{{ ucwords($key) }}</p>
-                                                @if($key === "status")
-                                                    <p class="text-red-500">{{ $activity->changes['old'][$key]['text'] }}</p>
-                                                    <p class="text-green-500">{{ $activity->changes['attributes'][$key]['text'] }}</p>
-                                                @else
-                                                    <p class="text-red-500">{{ $activity->changes['old'][$key] }}</p>
-                                                    <p class="text-green-500">{{ $activity->changes['attributes'][$key] }}</p>
+                                        @if(!empty($activity->changes['old']))
+                                            @foreach($activity->changes['old'] as $key => $value)
+                                                @if($key !== "updated_at" && $activity->changes['old'][$key] !== $activity->changes['attributes'][$key])
+                                                    <p class="col-span-2">{{ ucwords($key) }}</p>
+                                                    @if($key === "status")
+                                                        <p class="text-red-500">{{ $activity->changes['old'][$key]['text'] }}</p>
+                                                        <p class="text-green-500">{{ $activity->changes['attributes'][$key]['text'] }}</p>
+                                                    @else
+                                                        <p class="text-red-500">{{ $activity->changes['old'][$key] }}</p>
+                                                        <p class="text-green-500">{{ $activity->changes['attributes'][$key] }}</p>
+                                                    @endif
                                                 @endif
-                                            @endif
-                                        @endforeach
+                                            @endforeach
+                                        @endif
                                     </div>
                                 </div>
                             </div>

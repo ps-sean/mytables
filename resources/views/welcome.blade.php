@@ -34,7 +34,12 @@
                     <div class="mb-5">
                         <a href="{{ route("restaurant.show", $restaurant) }}">
                             <x-restaurant.card :restaurant="$restaurant">
-                                <x-slot name="status">No reviews</x-slot>
+                                <x-slot name="status">
+                                    <div class="text-gray-700 text-base flex items-center">
+                                        <x-icons.star class="h-5 inline mr-2"/>
+                                        <x-restaurant.reviews :restaurant="$restaurant" :clicking="false"/>
+                                    </div>
+                                </x-slot>
                             </x-restaurant.card>
                         </a>
                     </div>

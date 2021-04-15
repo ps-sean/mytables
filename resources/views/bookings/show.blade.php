@@ -35,10 +35,10 @@
                 <x-icons.map-marker class="h-5 inline mr-2"/>
                 {{ $restaurant->address }}
             </p>
-            <p class="text-gray-700 text-base flex items-start">
+            <div class="text-gray-700 text-base flex items-center">
                 <x-icons.star class="h-5 inline mr-2"/>
-                No Reviews
-            </p>
+                <x-restaurant.reviews :restaurant="$restaurant"/>
+            </div>
             <p class="text-gray-700 text-base flex items-start">
                 <x-icons.phone class="h-5 inline mr-2"/>
                 {{ $restaurant->phone }}
@@ -73,5 +73,12 @@
                 @endif
             </div>
         </div>
+
+        @if(!empty($booking->booked_by) && strtolower($booking->status) === "confirmed" && $booking->booked_at->isPast())
+            <div class="px-5 py-3 bg-red-800 text-white font-bold">
+                Leave a Review
+            </div>
+            @livewire("restaurant.review", compact(["booking"]))
+        @endif
     </div>
 </x-app-layout>
