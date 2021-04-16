@@ -105,6 +105,11 @@ class User extends Authenticatable implements MustVerifyEmail
         return $initials;
     }
 
+    public function getAdminAttribute()
+    {
+        return $this->belongsToTeam(Team::find(1));
+    }
+
     public function top3restaurants()
     {
         $restaurants = collect([]);

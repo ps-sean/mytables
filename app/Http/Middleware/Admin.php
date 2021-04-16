@@ -18,7 +18,7 @@ class Admin
      */
     public function handle(Request $request, Closure $next)
     {
-        if(!Auth::user()->belongsToTeam(Team::find(1))){
+        if(!Auth::user()->admin){
             abort(401);
         }
 

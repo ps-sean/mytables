@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Team;
 use App\Models\User;
 use Closure;
 use Illuminate\Http\Request;
@@ -30,7 +31,7 @@ class Restaurant
             abort(404, "Restaurant with this ID could not be found");
         }
 
-        if(!Auth::user()->restaurants->contains($restaurant)){
+        if(!Auth::user()->restaurants->contains($restaurant) && !Auth::user()->admin){
             abort(403, "You do not have permission to manage this restaurant");
         }
 

@@ -140,12 +140,12 @@ class Restaurant extends Model
         ];
 
         switch($value){
-            case "complete":
             case "live":
                 $status->color = "text-green-300";
 
                 break;
 
+            case "offline":
             case "rejected":
                 $status->color = "text-red-600";
 
@@ -193,8 +193,8 @@ class Restaurant extends Model
             "live" => '<svg class="stroke-current h-full animate-pulse" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                               <circle cx="12" cy="12" r="6" fill="currentColor" />
                             </svg>',
-            "complete" => '<svg class="stroke-current h-full" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            "offline" => '<svg class="stroke-current h-full" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>',
             "pending" => '<svg class="stroke-current h-full" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />

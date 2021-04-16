@@ -92,7 +92,7 @@
                     <button x-on:click.stop="status = 'rejected'" class="bg-red-600 text-white py-3 font-bold">
                         Reject
                     </button>
-                    <button x-on:click.stop="status = 'complete'" class="bg-green-400 text-white py-3 font-bold">
+                    <button x-on:click.stop="status = 'offline'" class="bg-green-400 text-white py-3 font-bold">
                         Accept
                     </button>
                 </div>
@@ -110,9 +110,9 @@
             <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
 
             <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full" role="dialog" aria-modal="true" aria-labelledby="modal-headline">
-                <div x-show="status === 'complete'">
+                <div x-show="status === 'offline'">
                     <div class="bg-white p-3">
-                        <p>This will update this restaurant's status to "complete". Are you sure?</p>
+                        <p>This will update this restaurant's status to "offline" until they are ready to go live. Are you sure?</p>
                     </div>
 
                     <button wire:click.prevent="save" class="bg-green-400 text-white py-3 w-full">Accept</button>

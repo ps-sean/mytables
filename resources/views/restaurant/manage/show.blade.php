@@ -16,7 +16,7 @@
             </x-alert>
         @endempty
 
-        @livewire('restaurant.status.complete', compact('restaurant'))
+        @livewire('restaurant.status.offline', compact('restaurant'))
 
         @if($stripeAccount = $restaurant->stripeAccount())
             @if(!$stripeAccount->charges_enabled)

@@ -5,7 +5,7 @@ namespace App\Http\Livewire\Restaurant\Status;
 use App\Models\Restaurant;
 use Livewire\Component;
 
-class Complete extends Component
+class Offline extends Component
 {
     public $restaurant, $status;
 
@@ -17,7 +17,7 @@ class Complete extends Component
 
     public function render()
     {
-        return view('livewire.restaurant.status.complete');
+        return view('livewire.restaurant.status.offline');
     }
 
     public function goLive()
