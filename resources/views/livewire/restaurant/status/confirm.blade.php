@@ -72,9 +72,9 @@
                                             @foreach($activity->changes['old'] as $key => $value)
                                                 @if($key !== "updated_at" && $activity->changes['old'][$key] !== $activity->changes['attributes'][$key])
                                                     <p class="col-span-2">{{ ucwords($key) }}</p>
-                                                    @if($key === "status")
-                                                        <p class="text-red-500">{{ $activity->changes['old'][$key]['text'] }}</p>
-                                                        <p class="text-green-500">{{ $activity->changes['attributes'][$key]['text'] }}</p>
+                                                    @if(is_array($activity->changes['old'][$key]) || is_array($activity->changes['attributes'][$key]))
+                                                            <pre class="text-red-500">{{ print_r($activity->changes['old'][$key]) }}</pre>
+                                                            <pre class="text-green-500">{{ print_r($activity->changes['attributes'][$key]) }}</pre>
                                                     @else
                                                         <p class="text-red-500">{{ $activity->changes['old'][$key] }}</p>
                                                         <p class="text-green-500">{{ $activity->changes['attributes'][$key] }}</p>
