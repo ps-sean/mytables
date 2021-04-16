@@ -116,7 +116,9 @@ class User extends Authenticatable implements MustVerifyEmail
             ->get();
 
         $grouped = $bookings->groupBy(function($item, $key){
-            return $item->restaurant->id;
+            if($item->restaurant){
+                return $item->restaurant->id;
+            }
         });
 
         $groupCount = $grouped->map(function($item, $key){
