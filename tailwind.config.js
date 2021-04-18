@@ -9,7 +9,7 @@ module.exports = {
         ],
 
         options: {
-            safelist: ['text-green-300', 'text-red-600', 'text-yellow-300', 'animate-pulse'],
+            whitelist: ['text-green-300', 'text-red-600', 'text-yellow-300', 'animate-pulse'],
         }
     },
 
