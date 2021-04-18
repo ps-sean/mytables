@@ -32,6 +32,10 @@ task('horizon', function () {
     run("sudo supervisorctl restart horizon");
 });
 
+task('websockets', function () {
+    run("sudo supervisorctl restart websockets");
+});
+
 // Hosts
 
 host('18.133.49.69')
@@ -57,4 +61,6 @@ after('deploy:vendors', 'npm:install');
 after('npm:install', 'webpack');
 
 after('deploy:symlink', 'horizon');
+
+after('horizon', 'websockets');
 

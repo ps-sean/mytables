@@ -1,11 +1,17 @@
 const defaultTheme = require('tailwindcss/defaultTheme');
 
 module.exports = {
-    purge: [
-        './vendor/laravel/jetstream/**/*.blade.php',
-        './storage/framework/views/*.php',
-        './resources/views/**/*.blade.php',
-    ],
+    purge: {
+        content: [
+            './vendor/laravel/jetstream/**/*.blade.php',
+            './storage/framework/views/*.php',
+            './resources/views/**/*.blade.php',
+        ],
+
+        options: {
+            safelist: ['text-green-300', 'text-red-600', 'text-yellow-300', 'animate-pulse'],
+        }
+    },
 
     theme: {
         extend: {
