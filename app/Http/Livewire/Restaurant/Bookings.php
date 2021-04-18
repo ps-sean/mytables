@@ -71,7 +71,7 @@ class Bookings extends Component
     {
         $this->bookings = $this->restaurant->bookings()->whereDate("booked_at", $this->date)->whereNotIn("status", ["cancelled", "rejected"])->orderBy("booked_at")->get();
 
-        $this->tables = $this->restaurant->tables()->orderBy("table_group_id")->orderBy("name")->get();
+        $this->tables = $this->restaurant->tables->sortBy("table_group_id")->sortBy("name", SORT_NATURAL);
 
         foreach($this->bookings as $booking){
             if(!$this->tables->contains($booking->tableNumber)){
