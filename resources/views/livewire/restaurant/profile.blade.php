@@ -29,6 +29,11 @@
             <x-jet-input wire:model="restaurant.phone" class="w-full" />
             @error("restaurant.phone")<span class="text-red-600">{{ $message }}</span>@enderror
         </div>
+        <div class="col-span-6 sm:col-span-4">
+            <label>Description</label>
+            <x-jet-input textarea wire:model="restaurant.description" class="w-full" rows="5" placeholder="A short description of your restaurant" />
+            @error("restaurant.description")<span class="text-red-600">{{ $message }}</span>@enderror
+        </div>
     </x-slot>
     <x-slot name="actions">
         <x-jet-action-message class="mr-3" on="saved">

@@ -8,6 +8,7 @@ use Livewire\Component;
 class Offline extends Component
 {
     public $restaurant, $status;
+    public $offlineConfirmation = false;
 
     public function mount(Restaurant $restaurant)
     {
@@ -27,5 +28,16 @@ class Offline extends Component
         $this->restaurant->save();
 
         $this->emit('statusUpdated');
+    }
+
+    public function goOffline()
+    {
+        $this->status = "offline";
+        $this->restaurant->status = $this->status;
+        $this->restaurant->save();
+
+        $this->emit('statusUpdated');
+
+        $this->offlineConfirmation = false;
     }
 }

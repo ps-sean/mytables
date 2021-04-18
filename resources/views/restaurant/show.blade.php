@@ -72,6 +72,10 @@
             </div>
         </div>
 
+        @if(!empty($restaurant->description))
+            <div class="text-lg text-gray-800 text-center border-t border-b border-gray-400 my-3 mx-5 py-5 whitespace-pre-line">{{ trim($restaurant->description) }}</div>
+        @endif
+
         <iframe class="w-full h-48"
                 frameborder="0" style="border:0"
                 src="https://www.google.com/maps/embed/v1/place?key={{ config('services.google.key') }}&q={{ $restaurant->lat }},{{ $restaurant->lng }}"

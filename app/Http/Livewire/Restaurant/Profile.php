@@ -20,6 +20,7 @@ class Profile extends Component
         "restaurant.name" => "required",
         "restaurant.email" => "required|email",
         "restaurant.phone" => "required|min:11|max:16|phone",
+        "restaurant.description" => "",
     ];
 
     public function mount(Restaurant $restaurant)

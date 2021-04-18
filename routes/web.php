@@ -23,7 +23,7 @@ Route::view('/about-us', 'about-us')->name('about-us');
 Route::get('/restaurant/{restaurant}', [RestaurantController::class, 'show'])->name("restaurant.show");
 Route::get('/restaurant/email/verify/{restaurant}', [RestaurantController::class, 'verifyEmail'])->name("restaurant.verify_email");
 
-Route::middleware(['auth:sanctum', 'admin'])->group(function(){
+Route::middleware(['auth:sanctum', 'verified', 'admin'])->group(function(){
     Route::get('restaurants/status/{status}', [RestaurantController::class, 'status'])->name('restaurant.status');
 });
 
@@ -34,11 +34,11 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::get('/my-restaurants/bookings', [RestaurantController::class, 'bookingsSelect'])->name("restaurant.bookings_select");
 });
 
-Route::middleware(['auth:sanctum', 'booking'])->group(function(){
+Route::middleware(['auth:sanctum', 'verified', 'booking'])->group(function(){
     Route::get('/bookings/{booking}', [BookingController::class, 'show'])->name("booking");
 });
 
-Route::middleware(['auth:sanctum', 'restaurant'])->group(function(){
+Route::middleware(['auth:sanctum', 'verified', 'restaurant'])->group(function(){
     Route::get('/restaurants/{restaurant}/bookings', [RestaurantController::class, 'bookings'])->name("restaurant.bookings");
     Route::get('/restaurants/{restaurant}/bookings/{booking}', [RestaurantController::class, 'booking'])->name("restaurant.booking");
     Route::get('/restaurants/{restaurant}/manage', [RestaurantController::class, 'manage'])->name("restaurant.manage");
