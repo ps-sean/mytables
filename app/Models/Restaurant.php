@@ -139,7 +139,7 @@ class Restaurant extends Model
             "color" => ""
         ];
 
-        switch($value){
+        switch(strtolower($value)){
             case "live":
                 $status->color = "text-green-300";
 
