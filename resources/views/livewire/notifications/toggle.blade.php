@@ -5,4 +5,14 @@
     @if($count)
         <span class="absolute top-0 left-0 -mt-3 ml-3 bg-red-800 text-white text-xs rounded-full px-2">{{ $count }}</span>
     @endif
+
+    @push("scripts")
+        <script>
+            document.addEventListener("DOMContentLoaded", () => {
+                @this.on("tone", () => {
+                    new Audio('{{ asset("audio/notification.mp3") }}').play()
+                })
+            })
+        </script>
+    @endpush
 </div>

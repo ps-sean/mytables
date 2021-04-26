@@ -51,6 +51,8 @@ class ServiceHours extends Component
 
     public function submit()
     {
+        $this->validate();
+
         $existingServices = $this->services->whereNotNull("id")->pluck("id");
 
         $this->restaurant->services()->whereNotIn("id", $existingServices)->delete();

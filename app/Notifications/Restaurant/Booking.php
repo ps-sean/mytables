@@ -60,7 +60,7 @@ class Booking extends Notification
         return [
             'title' => $this->booking->restaurant->name,
             'text' => $this->booking->name . " booked a table for " . $this->booking->covers . " on " . $this->booking->booked_at->toDayDateTimeString() . ".",
-            'link' => "restaurants/" . $this->booking->restaurant->id . "/bookings?date=" . $this->booking->booked_at . "&search=" . $this->booking->name,
+            'link' => "restaurants/" . $this->booking->restaurant->id . "/bookings?date=" . $this->booking->booked_at->format("Y-m-d") . "&search=" . $this->booking->name,
         ];
     }
 }

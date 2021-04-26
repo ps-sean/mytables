@@ -21,7 +21,13 @@
                                 <x-jet-dropdown align="left" width="48">
                                     <x-slot name="trigger">
                                         <button class="flex items-center text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300 transition duration-150 ease-in-out">
-                                            <div>Restaurants</div>
+                                            <div>
+                                                Restaurants
+                                                @if(auth()->user()->restaurantBookingsPending)
+                                                    &nbsp;
+                                                    <span class="rounded-full bg-red-800 text-white px-2">{{ auth()->user()->restaurantBookingsPending }}</span>
+                                                @endif
+                                            </div>
 
                                             <div class="ml-1">
                                                 <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
@@ -36,6 +42,10 @@
                                         </x-jet-dropdown-link>
                                         <x-jet-dropdown-link href="{{ route('restaurant.bookings_select') }}">
                                             Bookings
+                                            @if(auth()->user()->restaurantBookingsPending)
+                                                &nbsp;
+                                                <span class="rounded-full bg-red-800 text-white px-2">{{ auth()->user()->restaurantBookingsPending }}</span>
+                                            @endif
                                         </x-jet-dropdown-link>
                                         <x-jet-dropdown-link href="{{ route('my-restaurants') }}">
                                             Settings

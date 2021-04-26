@@ -15,8 +15,9 @@ class Bookings extends Component
 {
     public $bookings, $restaurant, $date, $tables, $search, $newBooking, $nextBooking, $services;
     public $createBooking = false;
+    public $view = "grid";
 
-    protected $queryString = ['search', 'date'];
+    protected $queryString = ['search', 'date', 'view'];
 
     protected $rules = [
         "newBooking.restaurant_id" => "required",

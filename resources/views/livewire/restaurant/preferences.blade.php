@@ -10,20 +10,38 @@
     <x-slot name="form">
         <p class="col-span-6">
             Tables are
-            <x-select wire:model="bookingConfirmation">
+            <x-select wire:model="restaurant.table_confirmation">
                 <option value="automatic">automatically</option>
                 <option value="manual">manually</option>
             </x-select>
             confirmed when booking.
         </p>
+        @error("restaurant.table_confirmation")<p class="text-red-600">{{ $message }}</p>@enderror
+        <p class="col-span-6">
+            Show customers tables every <x-jet-input wire:model="restaurant.interval" type="number" min="5" max="90"/> minutes.
+        </p>
+        @error("restaurant.table_confirmation")<p class="text-red-600">{{ $message }}</p>@enderror
         <p class="col-span-6">
             The maximum number of bookings within a timeframe is
-            <x-jet-input wire:model="bookingTimeframe.tables" type="number" min="0" max="{{ $restaurant->tables->count() }}"/>
+            <x-jet-input wire:model="restaurant.booking_timeframe.tables" type="number" min="0" max="{{ $restaurant->tables->count() }}"/>
             tables every
-            <x-jet-input wire:model="bookingTimeframe.minutes" type="number" min="0" max="90"/>
+            <x-jet-input wire:model="restaurant.booking_timeframe.minutes" type="number" min="0" max="90"/>
             minutes.
         </p>
-        <p class="col-span-6">Leave a minimum of <x-jet-input wire:model="bookingTurnaround" type="number" min="0" max="90" step="{{ $bookingTimeframe['minutes'] }}"/> minutes between bookings. (Time to clean table before next booking)</p>
+        @error("restaurant.booking_timeframe.tables")<p class="text-red-600">{{ $message }}</p>@enderror
+        @error("restaurant.booking_timeframe.minutes")<p class="text-red-600">{{ $message }}</p>@enderror
+        <p class="col-span-6">Leave a minimum of <x-jet-input wire:model="restaurant.turnaround_time" type="number" min="0" max="90"/> minutes between bookings. (Time to clean table before next booking)</p>
+        @error("restaurant.turnaround_time")<p class="text-red-600">{{ $message }}</p>@enderror
+
+        @if($errors->any())
+            <x-alert class="col-span-6 border-red-600 text-red-600 bg-red-200">
+                <ul>
+                    @foreach($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </x-alert>
+        @endif
     </x-slot>
 
     <x-slot name="actions">

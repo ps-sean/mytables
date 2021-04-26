@@ -51,10 +51,7 @@
                                 @endif
                             </p>
                             <div class="space-y-2">
-                                @php($stripeAccount = $restaurant->stripeAccount())
-                                <h5 class="font-bold text-lg">Stripe Account</h5>
-                                <p>Details Submitted: {!! !empty($stripeAccount->details_submitted) ? "<span class='text-green-500'>Yes</span>" : "<span class='text-red-600'>No</span>" !!}</p>
-                                <p>Charges Enabled: {!! !empty($stripeAccount->charges_enabled) ? "<span class='text-green-500'>Yes</span>" : "<span class='text-red-600'>No</span>" !!}</p>
+{{--                                TODO: check for customer account--}}
                             </div>
                         </div>
                     </div>

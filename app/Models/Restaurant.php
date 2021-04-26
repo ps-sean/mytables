@@ -12,13 +12,14 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
+use Laravel\Cashier\Billable;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Stripe\Account;
 use Stripe\AccountLink;
 
 class Restaurant extends Model
 {
-    use HasFactory, LogsActivity;
+    use HasFactory, LogsActivity, Billable;
 
     protected $fillable = [
         "name",
@@ -98,13 +99,9 @@ class Restaurant extends Model
         return $this->hasManyThrough(Review::class, Booking::class);
     }
 
-    public function stripeAccount()
+    public function invoices()
     {
-        if($this->stripe_acct_id){
-            return Account::retrieve($this->stripe_acct_id);
-        }
-
-        return false;
+        return $this->hasMany(Invoice::class);
     }
 
     // Accessors & Mutators
@@ -129,6 +126,11 @@ class Restaurant extends Model
         }
 
         return implode(", ", $address);
+    }
+
+    public function getRateAttribute()
+    {
+        return 5;
     }
 
     public function getStatusAttribute($value)
@@ -214,6 +216,7 @@ class Restaurant extends Model
 
     public function linkAccountUrl()
     {
+        // TODO: change this to customer account
         $account_links = AccountLink::create([
             'account' => $this->stripe_acct_id,
             'refresh_url' => route('restaurant.manage', $this->id),
@@ -254,16 +257,16 @@ class Restaurant extends Model
         $services = $this->servicesByDate($date);
 
         if($services->count()){
-            $dayStart = Carbon::parse($date->format("Y-m-d") . " " . $services->first()->start);
-            $dayFinish = Carbon::parse($date->format("Y-m-d") . " " . $services->first()->finish);
+            $dayStart = Carbon::parse($date->format("Y-m-d") . " " . $services->first()->start->format("H:i:s"));
+            $dayFinish = Carbon::parse($date->format("Y-m-d") . " " . $services->first()->finish->format("H:i:s"));
 
             if($dayFinish->lessThanOrEqualTo($dayStart)){
                 $dayFinish->addDay();
             }
 
             foreach($services as $service){
-                $serviceStart = Carbon::parse($date->format("Y-m-d") . " " . $service->start);
-                $serviceFinish = Carbon::parse($date->format("Y-m-d") . " " . $service->finish);
+                $serviceStart = Carbon::parse($date->format("Y-m-d") . " " . $service->start->format("H:i:s"));
+                $serviceFinish = Carbon::parse($date->format("Y-m-d") . " " . $service->finish->format("H:i:s"));
 
                 if($serviceFinish->lessThanOrEqualTo($serviceStart)){
                     $serviceFinish->addDay();
@@ -288,7 +291,7 @@ class Restaurant extends Model
         }
 
         if(!empty($dayStart) && !empty($dayFinish)){
-            $times = CarbonPeriod::create($dayStart, CarbonInterval::minutes(15), $dayFinish->subMinutes($this->booking_timeframe["minutes"]));
+            $times = CarbonPeriod::create($dayStart, CarbonInterval::minutes($this->interval), $dayFinish->subMinutes($this->interval));
         }
 
         return $times;
@@ -303,8 +306,8 @@ class Restaurant extends Model
 
         if($services->count()){
             foreach($services as $service){
-                $serviceStart = Carbon::parse($date->format("Y-m-d") . " " . $service->start);
-                $serviceFinish = Carbon::parse($date->format("Y-m-d") . " " . $service->last_booking);
+                $serviceStart = Carbon::parse($date->format("Y-m-d") . " " . $service->start->format("H:i:s"));
+                $serviceFinish = Carbon::parse($date->format("Y-m-d") . " " . $service->last_booking->format("H:i:s"));
 
                 if($serviceFinish->lessThanOrEqualTo($serviceStart)){
                     $serviceFinish->addDay();
@@ -323,7 +326,7 @@ class Restaurant extends Model
                         $serviceTimes[] = $currentTime->clone();
                     }
 
-                    $currentTime->addMinutes($this->booking_timeframe["minutes"]);
+                    $currentTime->addMinutes($this->interval);
                 }
             }
         }
@@ -430,5 +433,48 @@ class Restaurant extends Model
         }
 
         return number_format($avg, "2");
+    }
+
+    public function tablesCreatedOnDate($date)
+    {
+        return $this->tables()->withTrashed()
+            ->whereDate("created_at", $date)
+            ->get();
+    }
+
+    public function tablesDeletedOnDate($date)
+    {
+        return $this->tables()->withTrashed()
+            ->whereDate("deleted_at", $date)
+            ->get();
+    }
+
+    public function tablesOnDate($date)
+    {
+        return $this->tables()->withTrashed()
+            ->whereDate("created_at", "<=", $date)
+            ->where(function($query) use ($date){
+                $query->whereNull("deleted_at");
+                $query->orWhereDate("deleted_at", ">=", $date);
+            })->count();
+    }
+
+    public function wasOnlineOnDate($date)
+    {
+        $status = [];
+
+        // get the last activity before the date
+        $lastActivity = $this->activities()->where("created_at", "<", $date->startOfDay())->orderBy("created_at", "DESC")->first();
+
+        if($lastActivity){
+            $status[] = strtoupper($lastActivity->properties["attributes"]["status"]["text"]);
+        }
+
+        // get all activity during the day
+        foreach($this->activities()->whereDate("created_at", $date)->get() as $activity){
+            $status[] = strtoupper($activity->properties["attributes"]["status"]["text"]);
+        }
+
+        return in_array("LIVE", $status);
     }
 }

@@ -50,12 +50,10 @@
                                 <h2 id="slide-over-heading" class="text-lg font-medium text-gray-900">
                                     Notifications
                                 </h2>
-                                <div>
+                                <div class="flex space-x-2">
+                                    <button wire:click.prevent="markAllRead" class="text-blue-400 underline text-sm">Mark All As Read</button>
                                     <p class="flex items-center bg-red-800 text-white text-xs rounded-full px-2">{{ $count }}</p>
                                 </div>
-                            </div>
-                            <div class="flex justify-end">
-                                <button wire:click.prevent="markAllRead" class="text-blue-400 underline text-sm">Mark All As Read</button>
                             </div>
                         </div>
                         <div class="mt-3 relative flex-1 border-t">

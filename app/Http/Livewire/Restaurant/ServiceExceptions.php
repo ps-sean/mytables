@@ -8,7 +8,7 @@ use Livewire\Component;
 
 class ServiceExceptions extends Component
 {
-    public $exceptions, $restaurant, $openDate, $newDate;
+    public $exceptions, $restaurant, $openDate, $newDate, $bookings;
 
     protected $rules = [
         "exceptions.*.service_date" => "required",
@@ -30,6 +30,10 @@ class ServiceExceptions extends Component
 
         if($this->exceptions->count()){
             $this->openDate = $this->exceptions->first()->service_date->format("Y-m-d");
+            $this->bookings = $restaurant->bookings()
+                ->whereDate("booked_at", $this->openDate)
+                ->whereNotIn("status", ["cancelled", "rejected"])
+                ->get();
         }
     }
 
@@ -56,9 +60,10 @@ class ServiceExceptions extends Component
                         "service_date" => Carbon::parse($this->newDate),
                         "title" => $service->title,
                         "description" => $service->description,
-                        "start" => $service->start,
-                        "finish" => $service->finish,
-                        "last_booking" => $service->last_booking,
+                        "start" => Carbon::parse($service->start)->format("H:i"),
+                        "finish" => Carbon::parse($service->finish)->format("H:i"),
+                        "last_booking" => Carbon::parse($service->last_booking)->format("H:i"),
+                        "closed" => 0,
                     ]));
                 }
             } else {
@@ -69,6 +74,10 @@ class ServiceExceptions extends Component
             }
 
             $this->openDate = $this->exceptions->last()->service_date->format("Y-m-d");
+            $this->bookings = $this->restaurant->bookings()
+                ->whereDate("booked_at", $this->openDate)
+                ->whereNotIn("status", ["cancelled", "rejected"])
+                ->get();
 
             $this->newDate = null;
         }
@@ -77,6 +86,10 @@ class ServiceExceptions extends Component
     public function changeOpenDate($date)
     {
         $this->openDate = $date;
+        $this->bookings = $this->restaurant->bookings()
+            ->whereDate("booked_at", $this->openDate)
+            ->whereNotIn("status", ["cancelled", "rejected"])
+            ->get();
     }
 
     public function removeException($index)

@@ -24,6 +24,12 @@ class Service extends Model
         "last_booking"
     ];
 
+    protected $casts = [
+        "start" => "datetime:H:i",
+        "finish" => "datetime:H:i",
+        "last_booking" => "datetime:H:i",
+    ];
+
     public function __toString()
     {
         return $this->title;
@@ -36,8 +42,8 @@ class Service extends Model
 
     public function columns()
     {
-        $start = Carbon::parse(date("Y-m-d " . $this->start));
-        $finish = Carbon::parse(date("Y-m-d " . $this->finish));
+        $start = Carbon::parse(date("Y-m-d " . $this->start->format("H:i:s")));
+        $finish = Carbon::parse(date("Y-m-d " . $this->finish->format("H:i:s")));
 
         if($finish->lessThan($start)){
             $finish->addDay();
@@ -45,6 +51,6 @@ class Service extends Model
 
         $length = $start->diffInMinutes($finish);
 
-        return $length/$this->restaurant->booking_timeframe['minutes'];
+        return $length/$this->restaurant->interval;
     }
 }

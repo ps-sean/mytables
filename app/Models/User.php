@@ -110,6 +110,17 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->belongsToTeam(Team::find(1));
     }
 
+    public function getRestaurantBookingsPendingAttribute()
+    {
+        $bookings = 0;
+
+        foreach($this->restaurants as $restaurant){
+            $bookings += $restaurant->bookings()->whereDate("booked_at", ">=", Carbon::now())->where("status", "pending")->count();
+        }
+
+        return $bookings;
+    }
+
     public function top3restaurants()
     {
         $restaurants = collect([]);

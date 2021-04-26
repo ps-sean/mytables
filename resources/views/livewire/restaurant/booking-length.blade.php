@@ -19,7 +19,7 @@
                             </div>
                             <div>
                                 <label>Minutes</label>
-                                <x-jet-input class="w-full" type="number" wire:model="booking_rules.{{ $index }}.minutes" min="{{ $restaurant->booking_timeframe['minutes'] }}" step="{{ $restaurant->booking_timeframe['minutes'] }}" required />
+                                <x-jet-input class="w-full" type="number" wire:model="booking_rules.{{ $index }}.minutes" min="5" step="5" required />
                                 @error("booking_rules.$index.minutes")<span class="text-red-600">{{ $message }}</span>@enderror
                             </div>
                             <div>

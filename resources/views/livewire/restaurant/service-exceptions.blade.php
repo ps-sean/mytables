@@ -37,7 +37,7 @@
                             <div class="space-y-2">
                                 <div>
                                     <label>Title</label>
-                                    <x-jet-input wire:model="exceptions.{{ $index }}.title" placeholder="Title" class="w-full"/>
+                                    <x-jet-input wire:model="exceptions.{{ $index }}.title" placeholder="Title" class="w-full" required/>
                                     @error("exceptions.$index.title")<span class="text-red-600">{{ $message }}</span>@enderror
                                 </div>
                                 <div>
@@ -48,18 +48,18 @@
                             </div>
                             <div>
                                 <label>Open</label>
-                                <x-jet-input type="time" wire:model="exceptions.{{ $index }}.start" class="w-full"/>
+                                <x-jet-input type="time" wire:model="exceptions.{{ $index }}.start" class="w-full" required/>
                                 @error("exceptions.$index.start")<span class="text-red-600">{{ $message }}</span>@enderror
                             </div>
                             <div class="space-y-2">
                                 <div>
                                     <label>Finish</label>
-                                    <x-jet-input type="time" wire:model="exceptions.{{ $index }}.finish" class="w-full"/>
+                                    <x-jet-input type="time" wire:model="exceptions.{{ $index }}.finish" class="w-full" required/>
                                     @error("exceptions.$index.finish")<span class="text-red-600">{{ $message }}</span>@enderror
                                 </div>
                                 <div>
                                     <label>Last Booking</label>
-                                    <x-jet-input type="time" wire:model="exceptions.{{ $index }}.last_booking" class="w-full"/>
+                                    <x-jet-input type="time" wire:model="exceptions.{{ $index }}.last_booking" class="w-full" required/>
                                     @error("exceptions.$index.last_booking")<span class="text-red-600">{{ $message }}</span>@enderror
                                 </div>
                             </div>
@@ -80,6 +80,45 @@
                     </div>
                 @endif
             </div>
+
+            @if($bookings->count())
+                <div class="p-6 overflow-auto">
+                    <h5 class="font-bold">You currently have bookings on {{ \Carbon\Carbon::parse($openDate)->toFormattedDateString() }}</h5>
+                    <table class="w-full">
+                        <thead class="bg-gray-300 border-b border-gray-800 text-left">
+                        <tr>
+                            <th class="p-3">Name</th>
+                            <th class="p-3">Booked At</th>
+                            <th class="p-3">Status</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @foreach($bookings as $booking)
+                            <tr class="{{ $loop->even ? 'bg-gray-200' : '' }} border-b border-500">
+                                <th class="p-3 text-left">
+                                    <a class="text-red-800 hover:text-red-500 underline transition-all duration-150 ease-in-out" href="{{ route("restaurant.booking", [$restaurant, $booking]) }}">
+                                        {{ $booking->name }}
+                                    </a>
+                                </th>
+                                <td class="p-3">{{ $booking->booked_at->format("h:ia") }}</td>
+                                @switch($booking->status)
+                                    @case("confirmed")
+                                    <td class="text-green-400"><x-icons.check class="h-5 inline mr-2"/> {{ ucwords($booking->status) }}</td>
+                                    @break
+                                    @case("rejected")
+                                    @case("cancelled")
+                                    <td class="text-red-600"><x-icons.cross class="h-5 inline mr-2"/> {{ ucwords($booking->status) }}</td>
+                                    @break
+                                    @default
+                                    <td class="text-yellow-300"><x-icons.info class="h-5 inline mr-2"/> {{ ucwords($booking->status) }}</td>
+                                    @break
+                                @endswitch
+                            </tr>
+                        @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            @endif
 
             @if($errors->any())
                 <x-alert class="border-red-600 text-red-600 bg-red-200">

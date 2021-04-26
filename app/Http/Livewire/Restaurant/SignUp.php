@@ -108,9 +108,11 @@ class SignUp extends Component
 
         $address = json_decode($this->addressJSON);
 
-        $account = Account::create([
-            'type' => 'express'
-        ]);
+        $billing_date = date("d");
+
+        if($billing_date > 28){
+            $billing_date = 28;
+        }
 
         $restaurant = Auth::user()->restaurants()->create([
             "name" => $this->name,
@@ -122,10 +124,11 @@ class SignUp extends Component
             "postal_code" => $this->getAddressPart($address, "postal_code"),
             "lat" => $address->geometry->location->lat,
             "lng" => $address->geometry->location->lng,
-            "stripe_acct_id" => $account->id
+            "billing_date" => $billing_date
         ]);
 
         if($restaurant){
+            // create a stripe customer for this restaurant
             $restaurant_staff = RestaurantStaff::create([
                 "restaurant_id" => $restaurant->id,
                 "user_id" => Auth::user()->id,

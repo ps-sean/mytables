@@ -12,7 +12,7 @@
 
         <x-slot name="form">
             <div x-show.transition="open" class="col-span-6">
-                <div class="h-16 space-x-8 flex mb-5">
+                <div class="h-16 space-x-8 flex mb-5 overflow-auto">
                     @foreach(\App\Models\Service::DAYS_OF_WEEK as $day)
                         <x-jet-nav-link wire:click.prevent="changeTab('{{ $day }}')" href="#" :active="$openDay === $day">
                             {{ $day }}
@@ -27,7 +27,7 @@
                                 <div class="space-y-2">
                                     <div>
                                         <label>Title</label>
-                                        <x-jet-input wire:model="services.{{ $index }}.title" placeholder="Title" class="w-full"/>
+                                        <x-jet-input wire:model="services.{{ $index }}.title" placeholder="Title" class="w-full" required/>
                                         @error("services.$index.title")<span class="text-red-600">{{ $message }}</span>@enderror
                                     </div>
                                     <div>
@@ -38,18 +38,18 @@
                                 </div>
                                 <div>
                                     <label>Open</label>
-                                    <x-jet-input type="time" wire:model="services.{{ $index }}.start" class="w-full"/>
+                                    <x-jet-input type="time" wire:model="services.{{ $index }}.start" class="w-full" required/>
                                     @error("services.$index.start")<span class="text-red-600">{{ $message }}</span>@enderror
                                 </div>
                                 <div class="space-y-2">
                                     <div>
                                         <label>Finish</label>
-                                        <x-jet-input type="time" wire:model="services.{{ $index }}.finish" class="w-full"/>
+                                        <x-jet-input type="time" wire:model="services.{{ $index }}.finish" class="w-full" required/>
                                         @error("services.$index.finish")<span class="text-red-600">{{ $message }}</span>@enderror
                                     </div>
                                     <div>
                                         <label>Last Booking</label>
-                                        <x-jet-input type="time" wire:model="services.{{ $index }}.last_booking" class="w-full"/>
+                                        <x-jet-input type="time" wire:model="services.{{ $index }}.last_booking" class="w-full" required/>
                                         @error("services.$index.last_booking")<span class="text-red-600">{{ $message }}</span>@enderror
                                     </div>
                                 </div>

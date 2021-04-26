@@ -48,5 +48,6 @@ class Toggle extends Component
     public function updateCount()
     {
         $this->count = Auth::user()->unreadNotifications->count();
+        $this->emitSelf("tone");
     }
 }
