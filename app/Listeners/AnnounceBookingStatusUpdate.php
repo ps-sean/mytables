@@ -38,6 +38,9 @@ class AnnounceBookingStatusUpdate
         }
 
         Mail::to($mailTo)->send(new \App\Mail\Booking\StatusUpdate($event->booking));
-        Notification::send($users, new StatusUpdate($event->booking));
+
+        if($users){
+            Notification::send($users, new StatusUpdate($event->booking));
+        }
     }
 }
