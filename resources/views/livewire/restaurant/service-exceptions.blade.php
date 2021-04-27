@@ -81,7 +81,7 @@
                 @endif
             </div>
 
-            @if($bookings->count())
+            @if($bookings && $bookings->count())
                 <div class="p-6 overflow-auto">
                     <h5 class="font-bold">You currently have bookings on {{ \Carbon\Carbon::parse($openDate)->toFormattedDateString() }}</h5>
                     <table class="w-full">

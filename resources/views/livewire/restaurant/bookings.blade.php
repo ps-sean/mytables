@@ -151,9 +151,9 @@
                         </thead>
                         <tbody>
                         @if($view === "pending")
-                            @php($bookings = $restaurant->bookings()->whereDate("booked_at", ">=", \Carbon\Carbon::now())->where("status", "pending")->get())
+                            @php($bookings = $restaurant->bookings()->whereDate("booked_at", ">=", \Carbon\Carbon::now())->where("status", "pending")->orderBy("booked_at")->get())
                         @else
-                            @php($bookings = $restaurant->bookings()->whereNotIn("status", ["cancelled", "rejected"])->whereDate("booked_at", $date)->get())
+                            @php($bookings = $restaurant->bookings()->whereNotIn("status", ["cancelled", "rejected"])->whereDate("booked_at", $date)->orderBy("booked_at")->get())
                         @endif
                         @foreach($bookings as $booking)
                             <tr class="{{ (!empty($search) && preg_match("/{$search}/i", $booking->name)) ? 'bg-red-800 text-white' : ($loop->even ? 'bg-gray-100' : '') }} border-b border-gray-500">
