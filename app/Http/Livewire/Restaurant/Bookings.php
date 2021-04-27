@@ -10,14 +10,18 @@ use Carbon\Carbon;
 use Carbon\CarbonPeriod;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
+use Livewire\WithPagination;
 
 class Bookings extends Component
 {
-    public $bookings, $restaurant, $date, $tables, $search, $newBooking, $nextBooking, $services;
+    use WithPagination;
+
+    public $restaurant, $date, $tables, $search, $newBooking, $nextBooking, $services;
+    public $status = "all";
     public $createBooking = false;
     public $view = "grid";
 
-    protected $queryString = ['search', 'date', 'view'];
+    protected $queryString = ['search', 'date', 'view', 'status'];
 
     protected $rules = [
         "newBooking.restaurant_id" => "required",
@@ -63,18 +67,35 @@ class Bookings extends Component
         $this->services = $this->restaurant->servicesByDate(Carbon::parse($this->date));
         $period = $this->restaurant->servicePeriod(Carbon::parse($this->date));
 
+        if($this->view === "grid"){
+            $bookings = $this->restaurant->bookings()->whereDate("booked_at", $this->date)->whereNotIn("status", ["cancelled", "rejected"])->orderBy("booked_at")->get();
+        } else {
+            $bookings = $this->restaurant->bookings()->whereDate("booked_at", ">=", Carbon::now())->orderBy("booked_at");
+
+            if($this->status !== "all"){
+                $bookings = $bookings->where("status", $this->status);
+            }
+
+            if(!empty($this->search)){
+                $bookings = $bookings->where("name", 'like', '%' . $this->search . '%');
+            }
+
+            $bookings = $bookings->paginate(5);
+        }
+
         return view('livewire.restaurant.bookings', compact([
-            "period"
+            "period",
+            "bookings"
         ]));
     }
 
     public function setTables()
     {
-        $this->bookings = $this->restaurant->bookings()->whereDate("booked_at", $this->date)->whereNotIn("status", ["cancelled", "rejected"])->orderBy("booked_at")->get();
+        $this->bookings = $this->restaurant->bookings()->whereDate("booked_at", $this->date)->whereNotIn("status", ["cancelled", "rejected"])->orderBy("booked_at");
 
         $this->tables = $this->restaurant->tables->sortBy("table_group_id")->sortBy("name", SORT_NATURAL);
 
-        foreach($this->bookings as $booking){
+        foreach($this->bookings->get() as $booking){
             if(!$this->tables->contains($booking->tableNumber)){
                 $this->tables->push($booking->tableNumber);
             }

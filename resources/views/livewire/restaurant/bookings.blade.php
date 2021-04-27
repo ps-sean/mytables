@@ -9,7 +9,17 @@
     <div class="bg-white p-5">
         <div class="container mx-auto md:flex justify-between space-y-3 mb-6">
             <x-jet-input class="w-full md:w-auto" wire:model="search" placeholder="Search"/>
-            @if($view !== "pending")
+            @if($view === "list")
+                <div class="w-full md:w-auto">
+                    Status:&nbsp;
+                    <x-select wire:model="status">
+                        <option value="all">All</option>
+                        <option value="pending">Pending</option>
+                        <option value="confirmed">Confirmed</option>
+                        <option value="rejected">Rejected</option>
+                    </x-select>
+                </div>
+            @else
                 <x-jet-input class="w-full md:w-auto" wire:model="date" type="date"/>
             @endif
             <div class="w-full md:w-auto">
@@ -17,7 +27,6 @@
                 <x-select wire:model="view">
                     <option value="grid">Grid</option>
                     <option value="list">List</option>
-                    <option value="pending">Pending</option>
                 </x-select>
             </div>
         </div>
@@ -29,7 +38,7 @@
                         <p class="text-3xl">No services for this date.</p>
                     </div>
                 @else
-                    <div class="overflow-auto">
+                    <div wire:loading.class="opacity-50" class="overflow-auto">
                         <table>
                             <thead>
                             <tr class="bg-red-800 text-white">
@@ -135,8 +144,7 @@
                 @endif
             @break
             @case("list")
-            @case("pending")
-                <div class="overflow-auto">
+                <div wire:loading.class="opacity-50" class="overflow-auto">
                     <table class="w-full">
                         <thead class="bg-gray-300 border-b border-gray-700">
                         <tr class="text-left">
@@ -150,26 +158,17 @@
                         </tr>
                         </thead>
                         <tbody>
-                        @if($view === "pending")
-                            @php($bookings = $restaurant->bookings()->whereDate("booked_at", ">=", \Carbon\Carbon::now())->where("status", "pending")->orderBy("booked_at")->get())
-                        @else
-                            @php($bookings = $restaurant->bookings()->whereNotIn("status", ["cancelled", "rejected"])->whereDate("booked_at", $date)->orderBy("booked_at")->get())
-                        @endif
                         @foreach($bookings as $booking)
-                            <tr class="{{ (!empty($search) && preg_match("/{$search}/i", $booking->name)) ? 'bg-red-800 text-white' : ($loop->even ? 'bg-gray-100' : '') }} border-b border-gray-500">
+                            <tr class="{{ $loop->even ? 'bg-gray-100' : '' }} border-b border-gray-500">
                                 <th class="p-3 text-left">
-                                    <a class="{{ (!empty($search) && preg_match("/{$search}/i", $booking->name)) ? 'text-white hover:text-gray-200' : 'text-red-800 hover:text-red-500' }} underline transition-all duration-150 ease-in-out" href="{{ route("restaurant.booking", [$restaurant, $booking]) }}">
+                                    <a class="text-red-800 hover:text-red-500 underline transition-all duration-150 ease-in-out" href="{{ route("restaurant.booking", [$restaurant, $booking]) }}">
                                         {{ $booking->name }}
                                     </a>
                                 </th>
                                 <td class="p-3">{{ $booking->covers }}</td>
                                 <td class="p-3">{{ $booking->tableNumber }}</td>
                                 <td class="p-3">
-                                    @if($view === "pending")
-                                        {{ $booking->booked_at->toDayDateTimeString() }}
-                                    @else
-                                        {{ $booking->booked_at->format("h:ia") }}
-                                    @endif
+                                    {{ $booking->booked_at->toDayDateTimeString() }}
                                 </td>
                                 <td class="p-3">
                                     {{ $booking->finish_at->format("h:ia") }}
@@ -191,6 +190,10 @@
                         @endforeach
                         </tbody>
                     </table>
+                </div>
+
+                <div class="my-6">
+                    {!! $bookings->links() !!}
                 </div>
             @break
         @endswitch
