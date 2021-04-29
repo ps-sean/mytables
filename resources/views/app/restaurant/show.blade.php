@@ -45,7 +45,7 @@
             <div class="grid grid-cols-2 lg:grid-cols-4 xl:grid-cols-6 gap-4">
                 @if($services->count())
                     @foreach($services as $serviceTime)
-                        <a href="/restaurant/{{ $restaurant->id }}/book?time={{ urlencode($serviceTime->time) }}&covers={{ $covers }}&group={{ $group }}" class="bg-white shadow rounded p-5 text-center hover:bg-red-800 hover:text-white transition ease-in-out duration-500 cursor-pointer">
+                        <a href="/app/restaurant/{{ $restaurant->id }}/book?time={{ urlencode($serviceTime->time) }}&covers={{ $covers }}&group={{ $group }}" class="bg-white shadow rounded p-5 text-center hover:bg-red-800 hover:text-white transition ease-in-out duration-500 cursor-pointer">
                             <h5 class="font-bold text-lg">{{ $serviceTime->time->format("H:ia") }}</h5>
                             @foreach($serviceTime->services as $service)
                                 <p>
