@@ -356,7 +356,7 @@ class Restaurant extends Model
         $available = [];
 
         foreach($times as $time){
-            if($time->isFuture()){
+            if($time->format("Y-m-d H:i:s") > Carbon::now()->setTimezone("Europe/London")->format("Y-m-d H:i:s")){
                 // get available services
                 // check services from the night before to make sure we're not still serving
                 // check exception days first

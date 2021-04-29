@@ -88,6 +88,10 @@
                     {{ __('Saved.') }}
                 </x-jet-action-message>
 
+                <x-button wire:click.prevent="$set('schedule', true)" class="bg-red-800 hover:bg-red-700 mr-3">
+                    <x-icons.clock class="h-4 mr-2"/> Schedule
+                </x-button>
+
                 <x-button @click="open = false" class="bg-red-800 hover:bg-red-700 mr-3">
                     <svg class="h-4 mr-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
@@ -101,6 +105,37 @@
             </x-slot>
         @endif
     </x-jet-form-section>
+
+    <x-jet-dialog-modal wire:model="schedule">
+        <x-slot name="title">Schedule Changes</x-slot>
+        <x-slot name="content">
+            <p>
+                This will schedule the changes to service hours until a later date. The changes will be updated
+                immediately in your settings but exceptions will be added up until the scheduled date.
+            </p>
+            <p class="font-bold">
+                Please note: any dates that already have exceptions will be skipped by this process.
+            </p>
+            <p>To make these changes immediately, leave this field blank and save your changes as normal.</p>
+
+            <div class="flex items-center justify-center">
+                <x-jet-input wire:model="scheduleDate" type="date" :min="\Carbon\Carbon::now()->addDay()->format('Y-m-d')"/>
+            </div>
+
+            @if($errors->any())
+                <x-alert class="border-red-600 text-red-600 bg-red-200">
+                    <ul>
+                        @foreach($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </x-alert>
+            @endif
+        </x-slot>
+        <x-slot name="footer">
+            <x-button wire:click.prevent="submit" class="bg-red-800 hover:bg-red-700">Save</x-button>
+        </x-slot>
+    </x-jet-dialog-modal>
 
     <div x-cloak x-show="modal" x-on:keydown.escape="modal = false" class="fixed z-10 inset-0 overflow-y-auto">
         <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">

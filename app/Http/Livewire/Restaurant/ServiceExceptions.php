@@ -21,6 +21,8 @@ class ServiceExceptions extends Component
         "exceptions.*.closed" => "boolean",
     ];
 
+    protected $listeners = ["service_exceptions" => 'mount'];
+
     public function mount(Restaurant $restaurant)
     {
         $this->restaurant = $restaurant;
@@ -29,7 +31,7 @@ class ServiceExceptions extends Component
             ->get();
 
         if($this->exceptions->count()){
-            $this->openDate = $this->exceptions->first()->service_date->format("Y-m-d");
+            $this->openDate = $this->exceptions->sortBy("service_date")->first()->service_date->format("Y-m-d");
             $this->bookings = $restaurant->bookings()
                 ->whereDate("booked_at", $this->openDate)
                 ->whereNotIn("status", ["cancelled", "rejected"])
@@ -102,6 +104,26 @@ class ServiceExceptions extends Component
                 "closed" => 1,
             ]));
         }
+    }
+
+    public function removeExceptions()
+    {
+        foreach($this->exceptions->where("service_date", Carbon::parse($this->openDate)) as $index => $exception){
+            $this->exceptions->forget($index);
+        }
+
+        if($this->exceptions->count()){
+            $this->openDate = $this->exceptions->sortBy("service_date")->first()->service_date->format("Y-m-d");
+            $this->bookings = $this->restaurant->bookings()
+                ->whereDate("booked_at", $this->openDate)
+                ->whereNotIn("status", ["cancelled", "rejected"])
+                ->get();
+        } else {
+            $this->openDate = null;
+            $this->bookings = null;
+        }
+
+
     }
 
     public function submit()

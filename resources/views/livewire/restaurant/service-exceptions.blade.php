@@ -23,7 +23,6 @@
                     @endforeach
                     <x-jet-nav-link class="whitespace-no-wrap" wire:click="addException" href="#">&plus; Add Exception</x-jet-nav-link>
                 </div>
-
                 @foreach($exceptions->where("service_date", \Carbon\Carbon::parse($openDate)) as $index => $exception)
                     @if($exception->closed)
                         <div class="flex items-center justify-center py-6">
@@ -77,6 +76,11 @@
                 @if($exceptions->count() && !$exceptions->firstWhere("service_date", \Carbon\Carbon::parse($openDate))->closed)
                     <div class="flex items-center justify-center">
                         <x-button class="justify-center bg-red-800 hover:bg-red-700" type="button" wire:click.prevent="addService"><x-icons.plus class="h-6 mr-2"/> Add Service</x-button>
+                    </div>
+                @endif
+                @if($openDate)
+                    <div class="flex items-center justify-center">
+                        <x-button class="justify-center bg-red-800 hover:bg-red-700" type="button" wire:click.prevent="removeExceptions">Remove Exceptions on {{ \Carbon\Carbon::parse($openDate)->toFormattedDateString() }}</x-button>
                     </div>
                 @endif
             </div>

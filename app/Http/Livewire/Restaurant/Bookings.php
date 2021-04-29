@@ -80,7 +80,7 @@ class Bookings extends Component
                 $bookings = $bookings->where("name", 'like', '%' . $this->search . '%');
             }
 
-            $bookings = $bookings->paginate(5);
+            $bookings = $bookings->paginate(25);
         }
 
         return view('livewire.restaurant.bookings', compact([
