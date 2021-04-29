@@ -7,7 +7,11 @@
 
     <div class="container mx-auto bg-white">
         <div class="grid md:grid-cols-2">
-            <div class="bg-cover bg-center h-64 md:h-auto" style="background-image: url('{{ $restaurant->image }}');"></div>
+            <div class="relative bg-cover bg-center h-64 md:h-auto" style="background-image: url('{{ $restaurant->image }}');">
+                @if(!empty($restaurant->image_location) && !empty($restaurant->logo_location))
+                    <img class="absolute bottom-0 right-0 max-h-1/2 max-w-1/2" src="{{ $restaurant->logo }}"/>
+                @endif
+            </div>
 
             <div class="p-5 space-y-2">
                 <p class="text-gray-700 text-base flex items-start">

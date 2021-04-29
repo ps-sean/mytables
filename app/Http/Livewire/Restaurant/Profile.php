@@ -14,7 +14,7 @@ class Profile extends Component
 {
     use WithFileUploads;
 
-    public $restaurant, $image;
+    public $restaurant, $image, $logo;
 
     protected $rules = [
         "restaurant.name" => "required",
@@ -32,6 +32,13 @@ class Profile extends Component
     {
         $this->validate([
             "image" => "image|max:1024",
+        ]);
+    }
+
+    public function updatedLogo()
+    {
+        $this->validate([
+            "logo" => "image|max:1024",
         ]);
     }
 
@@ -58,6 +65,18 @@ class Profile extends Component
             if(!empty($oldImage)){
                 // now that it's saved, delete the old one
                 Storage::disk("public")->delete($oldImage);
+            }
+        }
+
+        if(!empty($this->logo)){
+            // a new image was submitted, lets save it
+            $oldLogo = $this->restaurant->logo_location;
+
+            $this->restaurant->logo_location = $this->logo->store('restaurant/images', ["disk" => "public"]);
+
+            if(!empty($oldLogo)){
+                // now that it's saved, delete the old one
+                Storage::disk("public")->delete($oldLogo);
             }
         }
 

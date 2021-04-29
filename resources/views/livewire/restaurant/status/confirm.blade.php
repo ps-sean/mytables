@@ -18,7 +18,11 @@
                 <div class="grid md:grid-cols-2">
                     <div>
                         <div class="grid lg:grid-cols-2">
-                            <div class="h-48 bg-cover bg-center" style="background-image: url('{{ $restaurant->image }}');"></div>
+                            <div class="relative h-48 bg-cover bg-center" style="background-image: url('{{ $restaurant->image }}');">
+                                @if(!empty($restaurant->image_location) && !empty($restaurant->logo_location))
+                                    <img class="absolute bottom-0 right-0 max-h-1/2 max-w-1/2" src="{{ $restaurant->logo }}"/>
+                                @endif
+                            </div>
                             <div class="h-48">
                                 <iframe class="w-full h-full"
                                         frameborder="0" style="border:0"

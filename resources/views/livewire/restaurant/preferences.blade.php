@@ -18,6 +18,9 @@
         </p>
         @error("restaurant.table_confirmation")<p class="text-red-600">{{ $message }}</p>@enderror
         <p class="col-span-6">
+            Show dates within the next <x-jet-input wire:model="restaurant.show_days" type="number" min="1" max="365"/> days.
+        </p>
+        <p class="col-span-6">
             Show customers tables every <x-jet-input wire:model="restaurant.interval" type="number" min="5" max="90"/> minutes.
         </p>
         @error("restaurant.table_confirmation")<p class="text-red-600">{{ $message }}</p>@enderror

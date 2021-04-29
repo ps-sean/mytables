@@ -14,8 +14,6 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Laravel\Cashier\Billable;
 use Spatie\Activitylog\Traits\LogsActivity;
-use Stripe\Account;
-use Stripe\AccountLink;
 
 class Restaurant extends Model
 {
@@ -31,7 +29,6 @@ class Restaurant extends Model
         "postal_code",
         "lat",
         "lng",
-        "stripe_acct_id"
     ];
 
     protected static $logAttributes = ['*'];
@@ -108,10 +105,20 @@ class Restaurant extends Model
     public function getImageAttribute()
     {
         if(empty($this->image_location)){
-            return asset("/img/placeholder.jpg");
+            return $this->logo;
         }
 
         return Storage::url($this->image_location);
+    }
+
+    // Accessors & Mutators
+    public function getLogoAttribute()
+    {
+        if(empty($this->logo_location)){
+            return asset("/img/placeholder.jpg");
+        }
+
+        return Storage::url($this->logo_location);
     }
 
     public function getAddressAttribute()
@@ -177,9 +184,21 @@ class Restaurant extends Model
         $this->attributes['booking_timeframe'] = $value['tables'] . ":" . $value['minutes'];
     }
 
-    public function getMaxBookingSizeAttribute()
+    // functions
+    public function max_booking_size($group = "all")
     {
-        $largestTable = $this->tables()->orderBy("seats", "DESC")->first();
+        if($group === "all"){
+            $largestTable = $this->tables()
+                ->where("bookable", 1)
+                ->orderBy("seats", "DESC")
+                ->first();
+        } else {
+            $largestTable = $this->tables()
+                ->where("table_group_id", $group)
+                ->where("bookable", 1)
+                ->orderBy("seats", "DESC")
+                ->first();
+        }
 
         if(!$largestTable){
             return 0;
@@ -188,7 +207,6 @@ class Restaurant extends Model
         return $largestTable->seats;
     }
 
-    // functions
     public function statusIcon($status)
     {
         $icons = [
@@ -214,22 +232,19 @@ class Restaurant extends Model
         return $this->staff()->where("user_id", Auth::user()->id)->first();
     }
 
-    public function linkAccountUrl()
-    {
-        // TODO: change this to customer account
-        $account_links = AccountLink::create([
-            'account' => $this->stripe_acct_id,
-            'refresh_url' => route('restaurant.manage', $this->id),
-            'return_url' => route('restaurant.manage', $this->id),
-            'type' => 'account_onboarding'
-        ]);
-
-        return $account_links->url;
-    }
-
     public function linkAccount()
     {
-        return redirect($this->linkAccountUrl());
+
+        return $this->createAsStripeCustomer([
+            "name" => $this->name,
+            "email" => $this->email,
+            "phone" => $this->phone,
+            "address" => [
+                "line1" => $this->address_line_1,
+                "city" => $this->vicinity,
+                "postal_code" => $this->postal_code,
+            ]
+        ]);
     }
 
     public function servicesByDate(Carbon $date)

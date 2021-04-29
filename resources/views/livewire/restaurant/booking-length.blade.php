@@ -14,7 +14,7 @@
                         <div class="grid grid-cols-3 gap-2">
                             <div>
                                 <label>Max Guests</label>
-                                <x-jet-input class="w-full" type="number" wire:model="booking_rules.{{ $index }}.max_covers" min="1" max="{{ $restaurant->max_booking_size }}" required />
+                                <x-jet-input class="w-full" type="number" wire:model="booking_rules.{{ $index }}.max_covers" min="1" max="{{ $restaurant->max_booking_size() }}" required />
                                 @error("booking_rules.$index.max_covers")<span class="text-red-600">{{ $message }}</span>@enderror
                             </div>
                             <div>

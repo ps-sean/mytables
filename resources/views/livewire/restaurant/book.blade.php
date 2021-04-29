@@ -19,8 +19,8 @@
             <div class="flex items-center justify-center">
                 <label>Location:</label>
                 <x-select wire:model="group">
-                    @foreach($restaurant->table_groups as $group)
-                        <option value="{{ $group->id }}">{{ $group }}</option>
+                    @foreach($table_groups as $g)
+                        <option value="{{ $g->id }}">{{ $g }}</option>
                     @endforeach
                     <option value="all">All</option>
                 </x-select>
@@ -31,9 +31,9 @@
             <img class="mx-auto h-16" src="{{ asset("img/loading.gif") }}"/>
         </div>
 
-        @if($covers > $restaurant->max_booking_size)
+        @if($covers > $restaurant->max_booking_size($group))
             <div class="lg:wd-1/2 space-y-5">
-                <p>{{ $restaurant }} can only take bookings of up to {{ $restaurant->max_booking_size }} guests online. Please contact the restaurant using the form below to book bigger tables and they will get back to you as soon as possible.</p>
+                <p>{{ $restaurant }} can only take bookings of up to {{ $restaurant->max_booking_size($group) }} guests online in the {{ \App\Models\TableGroup::find($group) }}. Please contact the restaurant using the form below to book bigger tables and they will get back to you as soon as possible.</p>
                 <div class="md:w-1/2 mx-auto">
                     @livewire("contact-form", ["subject" => "Booking Enquiry", "to" => $restaurant->email, "extras" => ["Date: " . $selectedDate->toDayDateTimeString(), "Guests: " . $covers]])
                 </div>
@@ -79,8 +79,10 @@
                 <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full" role="dialog" aria-modal="true" aria-labelledby="modal-headline">
                     <div class="bg-white">
 
-                        <div class="w-full h-64 bg-cover bg-center" style="background-image: url({{ $booking->restaurant->image }});">
-
+                        <div class="relative w-full h-64 bg-cover bg-center" style="background-image: url({{ $booking->restaurant->image }});">
+                            @if(!empty($booking->restaurant->image_location) && !empty($booking->restaurant->logo_location))
+                                <img class="absolute bottom-0 right-0 max-h-1/2 max-w-1/2" src="{{ $booking->restaurant->logo }}"/>
+                            @endif
                         </div>
 
                         <div class="p-5 space-y-2">

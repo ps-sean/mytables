@@ -15,6 +15,7 @@ class Preferences extends Component
         "restaurant.booking_timeframe.tables" => "numeric|min:0",
         "restaurant.booking_timeframe.minutes" => "numeric|min:0|max:90",
         "restaurant.turnaround_time" => "numeric|min:0|max:90",
+        "restaurant.show_days" => "numeric|min:1",
     ];
 
     public function mount(Restaurant $restaurant)

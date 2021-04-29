@@ -11,7 +11,7 @@ use Livewire\Component;
 
 class Book extends Component
 {
-    public $restaurant, $dates, $selectedDate, $times, $services, $booking;
+    public $restaurant, $dates, $selectedDate, $times, $services, $booking, $table_groups;
     public $group = "all";
     public $covers = 2;
 
@@ -31,16 +31,20 @@ class Book extends Component
         $this->restaurant = $restaurant;
         $this->selectedDate = Carbon::now();
 
-        $this->rules["booking.covers"][] = "max:" . $restaurant->max_booking_size;
-
         if($restaurant->table_groups->count()){
             $this->group = $restaurant->table_groups->first()->id;
         }
+
+        $this->rules["booking.covers"][] = "max:" . $restaurant->max_booking_size($this->group);
+
+        $this->table_groups = $restaurant->table_groups()->whereHas("tables", function($query){
+            return $query->where("bookable", 1);
+        })->get();
     }
 
     public function render()
     {
-        $this->dates = CarbonPeriod::create(Carbon::now(), Carbon::now()->addDays(14))->toArray();
+        $this->dates = CarbonPeriod::create(Carbon::now(), Carbon::now()->addDays($this->restaurant->show_days))->toArray();
         $this->services = $this->restaurant->loadServices($this->selectedDate, $this->covers, $this->group);
 
         return view('livewire.restaurant.book');

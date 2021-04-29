@@ -1,5 +1,8 @@
 <div {{ $attributes->merge(["class" => "rounded w-full shadow hover:shadow-lg transition-shadow duration-150 ease-in-out overflow-hidden"]) }}>
-    <div class="h-48 w-full flex-none bg-cover bg-center text-center overflow-hidden" style="background-image: url('{{ $restaurant->image }}')" title="{{ $restaurant->name }} logo">
+    <div class="relative h-48 w-full flex-none bg-cover bg-center text-center overflow-hidden" style="background-image: url('{{ $restaurant->image }}')" title="{{ $restaurant->name }} logo">
+        @if(!empty($restaurant->image_location) && !empty($restaurant->logo_location))
+            <img class="absolute bottom-0 right-0 max-h-1/2 max-w-1/2" src="{{ $restaurant->logo }}"/>
+        @endif
     </div>
     <div class="p-3 space-y-3">
         <h5 class="text-lg font-bold">{{ $restaurant->name }}</h5>

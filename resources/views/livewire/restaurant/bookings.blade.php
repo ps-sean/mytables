@@ -159,7 +159,7 @@
                         </thead>
                         <tbody>
                         @foreach($bookings as $booking)
-                            <tr class="{{ $loop->even ? 'bg-gray-100' : '' }} border-b border-gray-500">
+                            <tr class="{{ $booking->booked_at->isPast() ? 'opacity-50' : '' }} {{ $loop->even ? 'bg-gray-100' : '' }} border-b border-gray-500">
                                 <th class="p-3 text-left">
                                     <a class="text-red-800 hover:text-red-500 underline transition-all duration-150 ease-in-out" href="{{ route("restaurant.booking", [$restaurant, $booking]) }}">
                                         {{ $booking->name }}

@@ -28,19 +28,6 @@ class RestaurantController extends Controller
         return view("restaurant.manage.show", compact(["restaurant"]));
     }
 
-    public function stripe(Restaurant $restaurant)
-    {
-        if($restaurant->stripe_acct_id){
-            $link = Account::createLoginLink($restaurant->stripe_acct_id);
-
-            if($link){
-                return redirect($link->url);
-            }
-        }
-
-        return abort(404, "Failed to create a login link to your stripe dashboard");
-    }
-
     public function bookingsSelect()
     {
         $restaurants = Auth::user()->restaurants;

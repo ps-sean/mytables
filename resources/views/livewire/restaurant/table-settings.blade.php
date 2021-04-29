@@ -17,10 +17,12 @@
                             <div>
                                 <label class="text-gray-600">Name</label>
                                 <x-jet-input class="w-full" wire:model="tables.{{ $index }}.name" placeholder="Table Name" required />
+                                @error("tables.$index.name")<span class="text-red-600">{{ $message }}</span>@enderror
                             </div>
                             <div>
                                 <label class="text-gray-600">Seats</label>
                                 <x-jet-input type="number" class="w-full" wire:model="tables.{{ $index }}.seats" min="1" required />
+                                @error("tables.$index.seats")<span class="text-red-600">{{ $message }}</span>@enderror
                             </div>
                             <div>
                                 <label>Group</label>
@@ -30,6 +32,11 @@
                                         <option value="{{ $group->id }}">{{ $group->name }}</option>
                                     @endforeach
                                 </x-select>
+                                @error("tables.$index.table_group_id")<span class="text-red-600">{{ $message }}</span>@enderror
+                            </div>
+                            <div class="text-center">
+                                <label><input type="checkbox" wire:model="tables.{{ $index }}.bookable"/> Bookable</label>
+                                @error("tables.$index.bookable")<span class="text-red-600">{{ $message }}</span>@enderror
                             </div>
                             <div>
                                 <x-button wire:click.prevent="deleteTable({{ $index }})" class="bg-red-600 hover:bg-red-500 w-full text-center">

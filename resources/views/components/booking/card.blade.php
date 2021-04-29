@@ -1,6 +1,9 @@
 <a href="{{ route("booking", $booking) }}">
     <div class="shadow bg-white rounded grid md:grid-cols-4 mb-5">
-        <div class="h-48 w-full md:h-full flex-none bg-cover bg-center text-center overflow-hidden" style="background-image: url('{{ $booking->restaurant->image }}')" title="{{ $booking->restaurant->name }} logo">
+        <div class="relative h-48 w-full md:h-full flex-none bg-cover bg-center text-center overflow-hidden" style="background-image: url('{{ $booking->restaurant->image }}')" title="{{ $booking->restaurant->name }} logo">
+            @if(!empty($booking->restaurant->image_location) && !empty($booking->restaurant->logo_location))
+                <img class="absolute bottom-0 right-0 max-h-1/2 max-w-1/2" src="{{ $booking->restaurant->logo }}"/>
+            @endif
         </div>
         <div class="md:col-span-2 p-3 space-y-2">
             <p class="text-gray-900 font-bold text-md md:text-xl">{{ $booking->restaurant->name }}</p>

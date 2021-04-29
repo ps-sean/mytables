@@ -26,7 +26,6 @@ class CreateRestaurantsTable extends Migration
             $table->string('postal_code');
             $table->decimal('lat', '15', '10');
             $table->decimal('lng', '15', '10');
-            $table->string("stripe_acct_id")->nullable();
             $table->text("open_hours")->nullable();
             $table->string("image_location")->nullable();
             $table->timestamps();

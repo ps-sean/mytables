@@ -33,7 +33,7 @@ class BookingLength extends Component
     public function addRule()
     {
         $this->booking_rules->push($this->restaurant->booking_rules()->make([
-            "max_covers" => $this->restaurant->max_booking_size,
+            "max_covers" => $this->restaurant->max_booking_size(),
             "minutes" => 120
         ]));
     }

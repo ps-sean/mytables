@@ -1,6 +1,8 @@
 <x-frame-app-layout>
-    <div class="w-full h-64 bg-cover bg-center" style="background-image: url({{ $restaurant->image }});">
-
+    <div class="relative w-full h-64 bg-cover bg-center" style="background-image: url({{ $restaurant->image }});">
+        @if(!empty($restaurant->image_location) && !empty($restaurant->logo_location))
+            <img class="absolute bottom-0 right-0 max-h-1/2 max-w-1/2" src="{{ $restaurant->logo }}"/>
+        @endif
     </div>
 
     <div class="p-5 space-y-5">
@@ -27,7 +29,7 @@
             <div class="flex items-center justify-center">
                 <label>Location:</label>
                 <x-select id="location_picker">
-                    @foreach($restaurant->table_groups as $location)
+                    @foreach($this->table_groups = $restaurant->table_groups()->whereHas("tables", function($query){return $query->where("bookable", 1);})->get() as $location)
                         <option value="{{ $location->id }}" {{ $group == $location->id ? 'selected' : '' }}>{{ $location }}</option>
                     @endforeach
                     <option value="all" {{ $group == "all" ? 'selected' : '' }}>All</option>
@@ -35,9 +37,9 @@
             </div>
         </div>
 
-        @if($covers > $restaurant->max_booking_size)
+        @if($covers > $restaurant->max_booking_size($group))
             <div class="lg:wd-1/2 space-y-5">
-                <p>{{ $restaurant }} can only take bookings of up to {{ $restaurant->max_booking_size }} guests online. Please contact the restaurant directly or go to <a class="external_link text-red-800 hover:text-red-700" href="{{ config("app.url") }}/restaurant/{{ $restaurant->id }}">myTables</a>.</p>
+                <p>{{ $restaurant }} can only take bookings of up to {{ $restaurant->max_booking_size($group) }} guests online in the {{ \App\Models\TableGroup::find($group) }}. Please contact the restaurant directly or go to <a class="external_link text-red-800 hover:text-red-700" href="{{ config("app.url") }}/restaurant/{{ $restaurant->id }}">myTables</a>.</p>
             </div>
         @else
             <div class="grid grid-cols-2 lg:grid-cols-4 xl:grid-cols-6 gap-4">

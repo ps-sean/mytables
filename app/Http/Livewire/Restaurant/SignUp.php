@@ -7,7 +7,6 @@ use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Livewire\Component;
-use Stripe\Account;
 
 class SignUp extends Component
 {
@@ -135,7 +134,9 @@ class SignUp extends Component
             ]);
 
             if($restaurant_staff){
-                return $restaurant->linkAccount();
+                if($restaurant->linkAccount()){
+                    return redirect()->route("restaurant.manage", [$restaurant->id]);
+                }
             } else {
                 $restaurant->delete();
                 $this->addError("submit_fail", "Something went wrong, and we couldn't link your account to your restaurant");

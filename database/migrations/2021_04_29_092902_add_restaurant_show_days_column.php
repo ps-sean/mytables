@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddRestaurantBillingDate extends Migration
+class AddRestaurantShowDaysColumn extends Migration
 {
     /**
      * Run the migrations.
@@ -14,9 +14,9 @@ class AddRestaurantBillingDate extends Migration
     public function up()
     {
         Schema::table("restaurants", function (Blueprint $table){
-            $table->integer("billing_date")
-                ->after("lng")
-                ->default(1);
+            $table->string("show_days")
+                ->after("turnaround_time")
+                ->default(14);
         });
     }
 
@@ -28,7 +28,7 @@ class AddRestaurantBillingDate extends Migration
     public function down()
     {
         Schema::table('restaurants', function (Blueprint $table) {
-            $table->dropColumn('billing_date');
+            $table->dropColumn('show_days');
         });
     }
 }

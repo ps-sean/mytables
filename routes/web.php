@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [SearchController::class, 'index'])->name("home");
 Route::view('/restaurant-sign-up', 'restaurant.sign_up')->name("restaurant-sign-up");
-Route::view('/contact-us', 'contact_us')->name('contact');
+Route::view('/contact-us', 'contact-us')->name('contact');
 Route::view('/about-us', 'about-us')->name('about-us');
 Route::get('/restaurant/{restaurant}', [RestaurantController::class, 'show'])->name("restaurant.show");
 Route::get('/restaurant/email/verify/{restaurant}', [RestaurantController::class, 'verifyEmail'])->name("restaurant.verify_email");
@@ -42,5 +42,4 @@ Route::middleware(['auth:sanctum', 'verified', 'restaurant'])->group(function(){
     Route::get('/restaurants/{restaurant}/bookings', [RestaurantController::class, 'bookings'])->name("restaurant.bookings");
     Route::get('/restaurants/{restaurant}/bookings/{booking}', [RestaurantController::class, 'booking'])->name("restaurant.booking");
     Route::get('/restaurants/{restaurant}/manage', [RestaurantController::class, 'manage'])->name("restaurant.manage");
-    Route::get('/restaurants/{restaurant}/stripe', [RestaurantController::class, 'stripe'])->name("restaurant.stripe");
 });

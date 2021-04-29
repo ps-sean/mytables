@@ -30,7 +30,7 @@ class RestaurantController extends Controller
             $defaultGroup = $restaurant->table_groups->first()->id;
         }
 
-        $dates = CarbonPeriod::create(Carbon::now(), Carbon::now()->addDays(14))->toArray();
+        $dates = CarbonPeriod::create(Carbon::now(), Carbon::now()->addDays($restaurant->show_days))->toArray();
         $covers = $request->covers ?? 2;
         $group = $request->group ?? $defaultGroup;
 

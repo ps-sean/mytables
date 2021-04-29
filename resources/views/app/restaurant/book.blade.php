@@ -2,8 +2,10 @@
     @if($booking->checkTime($group))
         <form method="POST">
             <div class="bg-white">
-                <div class="w-full h-64 bg-cover bg-center" style="background-image: url({{ $booking->restaurant->image }});">
-
+                <div class="relative w-full h-64 bg-cover bg-center" style="background-image: url({{ $booking->restaurant->image }});">
+                    @if(!empty($booking->restaurant->image_location) && !empty($booking->restaurant->logo_location))
+                        <img class="absolute bottom-0 right-0 max-h-1/2 max-w-1/2" src="{{ $booking->restaurant->logo }}"/>
+                    @endif
                 </div>
 
                 <div class="p-5 space-y-2">

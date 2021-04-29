@@ -102,6 +102,7 @@ class Booking extends Model
 
         // get the smallest table available that isn't being used
         $tables = $this->restaurant->tables()
+            ->where("bookable", 1)
             ->where("seats", ">=", $this->covers)
             ->whereNotIn("id", $tablesUsed->whereNotNull("id")->pluck("id"))
             ->orderBy("seats");

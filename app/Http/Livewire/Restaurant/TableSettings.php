@@ -15,7 +15,8 @@ class TableSettings extends Component
         'tables.*.id' => '',
         'tables.*.name' => 'required',
         'tables.*.seats' => 'min:1',
-        'tables.*.table_group_id' => ''
+        'tables.*.table_group_id' => '',
+        'tables.*.bookable' => 'boolean',
     ];
 
     protected $listeners = ["groups-update" => "groupsUpdate"];
@@ -43,6 +44,7 @@ class TableSettings extends Component
         $table->fill([
             "name" => "Table " . ($this->tables->count() + 1),
             "seats" => 2,
+            "bookable" => 1,
         ]);
 
         $this->tables->push($table);
