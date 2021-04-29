@@ -29,7 +29,7 @@
             <div class="flex items-center justify-center">
                 <label>Location:</label>
                 <x-select id="location_picker">
-                    @foreach($this->table_groups = $restaurant->table_groups()->whereHas("tables", function($query){return $query->where("bookable", 1);})->get() as $location)
+                    @foreach($table_groups = $restaurant->table_groups()->whereHas("tables", function($query){return $query->where("bookable", 1);})->get() as $location)
                         <option value="{{ $location->id }}" {{ $group == $location->id ? 'selected' : '' }}>{{ $location }}</option>
                     @endforeach
                     <option value="all" {{ $group == "all" ? 'selected' : '' }}>All</option>
