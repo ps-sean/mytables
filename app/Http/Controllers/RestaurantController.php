@@ -25,6 +25,10 @@ class RestaurantController extends Controller
 
     public function manage(Restaurant $restaurant)
     {
+        if(empty($restaurant->stripe_id)){
+            $restaurant->linkAccount();
+        }
+
         return view("restaurant.manage.show", compact(["restaurant"]));
     }
 
