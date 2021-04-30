@@ -34,8 +34,10 @@ class AutoConfirmBooking
                 $event->booking->save();
             }
 
-            // send the confirmation email
-            Mail::to($event->booking->email)->send(new StatusUpdate($event->booking));
+            if(!empty($event->booking->email)){
+                // send the confirmation email
+                Mail::to($event->booking->email)->send(new StatusUpdate($event->booking));
+            }
         }
     }
 }

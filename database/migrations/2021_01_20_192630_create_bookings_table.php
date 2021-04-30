@@ -24,7 +24,7 @@ class CreateBookingsTable extends Migration
             $table->integer("booked_by")->nullable();
             $table->string("name");
             $table->string("contact_number");
-            $table->string("email");
+            $table->string("email")->nullable();
             $table->string("status")->default("pending");
             $table->text("comments")->nullable();
         });

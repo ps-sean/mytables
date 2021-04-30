@@ -3,14 +3,16 @@
         <p class="text-gray-700 text-2xl font-bold col-span-2">
             {{ $booking->name }}
         </p>
-        <p class="text-gray-700 text-base flex items-start">
+        <p class="text-gray-700 text-base flex items-start col-span-2">
             <x-icons.phone class="h-5 inline mr-2"/>
             <a href="tel:{{ $booking->contact_number }}">{{ $booking->contact_number }}</a>
         </p>
-        <p class="text-gray-700 text-base flex items-start">
-            <x-icons.at class="h-5 inline mr-2"/>
-            <a href="mailto:{{ $booking->email }}">{{ $booking->email }}</a>
-        </p>
+        @if(!empty($booking->email))
+            <p class="text-gray-700 text-base flex items-start col-span-2">
+                <x-icons.at class="h-5 inline mr-2"/>
+                <a href="mailto:{{ $booking->email }}">{{ $booking->email }}</a>
+            </p>
+        @endif
         @if($booking->booked_at->isFuture() && $restaurant->staff->contains(auth()->user()))
             <div>
                 <label><x-icons.user class="h-5 inline mr-2"/> Guests</label>
@@ -50,7 +52,7 @@
         @if(!empty($booking->comments))
             <p class="text-gray-700 text-base flex items-start col-span-2">
                 <x-icons.info class="h-5 inline mr-2"/>
-                <span class="whitespace-pre">{{ $booking->comments }}</span>
+                <span class="whitespace-pre-line">{{ $booking->comments }}</span>
             </p>
         @endif
 

@@ -37,7 +37,9 @@ class AnnounceBookingStatusUpdate
             $mailTo = $event->booking->restaurant->email;
         }
 
-        Mail::to($mailTo)->send(new \App\Mail\Booking\StatusUpdate($event->booking));
+        if(!empty($mailTo)){
+            Mail::to($mailTo)->send(new \App\Mail\Booking\StatusUpdate($event->booking));
+        }
 
         if($users){
             Notification::send($users, new StatusUpdate($event->booking));

@@ -275,7 +275,7 @@
             @endif
         </x-slot>
         <x-slot name="footer">
-            <x-button class="bg-red-800 hover:bg-red-700" wire:click="submitBooking">Save</x-button>
+            <x-button class="bg-red-800 hover:bg-red-700" wire:loading.attr="disabled" wire:click="submitBooking">Save</x-button>
         </x-slot>
     </x-jet-dialog-modal>
 </div>

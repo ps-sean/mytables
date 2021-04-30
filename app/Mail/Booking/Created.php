@@ -31,8 +31,13 @@ class Created extends Mailable
      */
     public function build()
     {
-        return $this->subject("New Booking For " . $this->booking->restaurant)
-            ->replyTo($this->booking->email)
+        $mail = $this->subject("New Booking For " . $this->booking->restaurant)
             ->markdown('emails/booking/created');
+
+        if(!empty($this->booking->email)){
+            $mail = $mail->replyTo($this->booking->email);
+        }
+
+        return $mail;
     }
 }
