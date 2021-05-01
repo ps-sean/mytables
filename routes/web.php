@@ -20,7 +20,8 @@ Route::get('/', [SearchController::class, 'index'])->name("home");
 Route::view('/restaurant-sign-up', 'restaurant.sign_up')->name("restaurant-sign-up");
 Route::view('/contact-us', 'contact-us')->name('contact');
 Route::view('/about-us', 'about-us')->name('about-us');
-Route::get('/restaurant/{restaurant}', [RestaurantController::class, 'show'])->name("restaurant.show");
+Route::get('/restaurant/{restaurant}', [RestaurantController::class, 'redirectWithName']);
+Route::get('/restaurant/{restaurant}/{name}', [RestaurantController::class, 'show'])->name("restaurant.show");
 Route::get('/restaurant/email/verify/{restaurant}', [RestaurantController::class, 'verifyEmail'])->name("restaurant.verify_email");
 
 Route::middleware(['auth:sanctum', 'verified', 'admin'])->group(function(){

@@ -1,4 +1,8 @@
 <x-app-layout>
+    @push("meta")
+        <meta name="og:image" content="{{ $restaurant->image }}">
+    @endpush
+
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             {{ $restaurant->name }}

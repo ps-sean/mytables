@@ -73,7 +73,12 @@ class RestaurantController extends Controller
         ]));
     }
 
-    public function show(Restaurant $restaurant)
+    public function redirectWithName(Restaurant $restaurant)
+    {
+        return redirect()->route("restaurant.show", [$restaurant, $restaurant->name]);
+    }
+
+    public function show(Restaurant $restaurant, $name = null)
     {
         if(strtolower($restaurant->status->text) !== "live"){
             return view("restaurant.offline");

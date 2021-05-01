@@ -22,7 +22,7 @@
                 @foreach($restaurants as $restaurant)
                     @if($loop->index < $limit)
                         <div>
-                            <a href="{{ route("restaurant.show", $restaurant) }}">
+                            <a href="{{ route("restaurant.show", [$restaurant, $restaurant->name]) }}">
                                 <x-restaurant.big-card :restaurant="$restaurant">
                                     {{ number_format($restaurant->distance, 2) }} miles away
                                 </x-restaurant.big-card>

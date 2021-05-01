@@ -10,6 +10,8 @@ class TableSettings extends Component
 {
     public $restaurant, $tables;
     public $show = false;
+    public $groupModal = false;
+    public $blockModal = false;
 
     protected $rules = [
         'tables.*.id' => '',

@@ -32,7 +32,7 @@
             @if($restaurants->count())
                 @foreach($restaurants as $restaurant)
                     <div class="mb-5">
-                        <a href="{{ route("restaurant.show", $restaurant) }}">
+                        <a href="{{ route("restaurant.show", [$restaurant, $restaurant->name]) }}">
                             <x-restaurant.card :restaurant="$restaurant">
                                 <x-slot name="status">
                                     <div class="text-gray-700 text-base flex items-center">
@@ -85,7 +85,7 @@
                                 }
                             @endphp
                             <div>
-                                <a href="{{ route("restaurant.show", $restaurant) }}">
+                                <a href="{{ route("restaurant.show", [$restaurant, $restaurant->name]) }}">
                                     <x-restaurant.big-card :restaurant="$restaurant">
                                         Booked {{ $counter }} in the last year
                                     </x-restaurant.big-card>

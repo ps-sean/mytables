@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\Restaurant\InvoiceDay;
 use App\Jobs\UnreadMessageEmailer;
 use App\Models\Restaurant;
 use Bugsnag\BugsnagLaravel\Facades\Bugsnag;
@@ -16,8 +17,6 @@ class SearchController extends Controller
 {
     public function index(Request $request)
     {
-        $job = new UnreadMessageEmailer();
-        $job->handle();
         $restaurants = collect([]);
 
         if(!empty($request->search)){

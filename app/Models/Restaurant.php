@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Events\RestaurantCreated;
 use App\Mail\Restaurant\EmailVerification;
+use App\Traits\History;
 use Carbon\Carbon;
 use Carbon\CarbonInterval;
 use Carbon\CarbonPeriod;
@@ -14,10 +15,11 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Laravel\Cashier\Billable;
 use Spatie\Activitylog\Traits\LogsActivity;
+use Stripe\StripeClient;
 
 class Restaurant extends Model
 {
-    use HasFactory, LogsActivity, Billable;
+    use HasFactory, Billable, History;
 
     protected $fillable = [
         "name",
@@ -30,8 +32,6 @@ class Restaurant extends Model
         "lat",
         "lng",
     ];
-
-    protected static $logAttributes = ['*'];
 
     protected $dispatchesEvents = [
         'created' => RestaurantCreated::class,
@@ -96,9 +96,15 @@ class Restaurant extends Model
         return $this->hasManyThrough(Review::class, Booking::class);
     }
 
-    public function invoices()
+    public function invoiceItems()
     {
-        return $this->hasMany(Invoice::class);
+        return $this->hasMany(InvoiceItem::class);
+    }
+
+    public function tableBlocks()
+    {
+        return $this->hasMany(TableBlock::class)
+            ->where("end_date", ">", Carbon::now());
     }
 
     // Accessors & Mutators
@@ -450,31 +456,7 @@ class Restaurant extends Model
         return number_format($avg, "2");
     }
 
-    public function tablesCreatedOnDate($date)
-    {
-        return $this->tables()->withTrashed()
-            ->whereDate("created_at", $date)
-            ->get();
-    }
-
-    public function tablesDeletedOnDate($date)
-    {
-        return $this->tables()->withTrashed()
-            ->whereDate("deleted_at", $date)
-            ->get();
-    }
-
-    public function tablesOnDate($date)
-    {
-        return $this->tables()->withTrashed()
-            ->whereDate("created_at", "<=", $date)
-            ->where(function($query) use ($date){
-                $query->whereNull("deleted_at");
-                $query->orWhereDate("deleted_at", ">=", $date);
-            })->count();
-    }
-
-    public function wasOnlineOnDate($date)
+    public function wasLive($date)
     {
         $status = [];
 
@@ -491,5 +473,76 @@ class Restaurant extends Model
         }
 
         return in_array("LIVE", $status);
+    }
+
+    public function calculateDailyRate()
+    {
+        if(empty($this->stripe_id)){
+            $this->linkAccount();
+            $this->refresh();
+        }
+
+        $stripeClient = new StripeClient(config("services.stripe.secret"));
+
+        $invoices = $stripeClient->invoices->all([
+            "customer" => $this->stripe_id,
+            "limit" => 1,
+        ]);
+
+        // TODO get the end date of the last invoice, make sure to set to start of day
+        if($invoice = $invoices->first()){
+            $startDate = Carbon::createFromTimestamp($invoice->period_end)->startOfDay();
+        } else {
+            $startDate = $this->created_at;
+
+            if($this->created_at < Carbon::parse("2021-05-19")){
+                $startDate = Carbon::parse("2021-05-19");
+            }
+        }
+
+        // get the natural end date
+        $naturalEnd = $startDate->copy()->addMonth();
+        $monthsAdded = 1;
+
+        while(!$naturalEnd->isToday() && $naturalEnd->isPast()){
+            $naturalEnd->addMonth();
+            $monthsAdded++;
+        }
+
+        // how many days between?
+        $days = $startDate->diffInDays($naturalEnd);
+
+        return ($this->rate*$monthsAdded)/$days;
+    }
+
+    public function addInvoiceItem($description, $amount)
+    {
+        return $this->invoiceItems()->create([
+            'description' => $description,
+            'amount' => $amount
+        ]);
+    }
+
+    public function payday()
+    {
+        $roundedAmount = 0;
+
+        $items = $this->invoiceItems;
+
+        if($items->count()){
+            foreach($items as $item){
+                $this->tab($item->description, round($item->amount));
+                $roundedAmount += round($item->amount);
+                $item->delete();
+            }
+
+            $roundingAdjustment = round($items->sum("amount") - $roundedAmount);
+
+            if($roundingAdjustment != 0) {
+                $this->tab("Rounding Adjustment", $roundingAdjustment);
+            }
+
+            $this->invoice();
+        }
     }
 }

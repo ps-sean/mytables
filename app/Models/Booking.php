@@ -100,11 +100,23 @@ class Booking extends Model
             }
         }
 
+        $blockedTables = [];
+
+        $blocks = $this->restaurant->tableBlocks()
+            ->where("start_date", "<", $this->finish_at)
+            ->where("end_date", ">", $this->booked_at)
+            ->get();
+
+        foreach($blocks as $block){
+            $blockedTables = array_merge($blockedTables, $block->tables);
+        }
+
         // get the smallest table available that isn't being used
         $tables = $this->restaurant->tables()
             ->where("bookable", 1)
             ->where("seats", ">=", $this->covers)
             ->whereNotIn("id", $tablesUsed->whereNotNull("id")->pluck("id"))
+            ->whereNotIn("id", $blockedTables)
             ->orderBy("seats");
 
         if($group != "all"){

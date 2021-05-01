@@ -5,16 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Invoice extends Model
+class InvoiceItem extends Model
 {
     use HasFactory;
 
-    protected $fillable = [];
-
-    protected $dates = ["start", "end"];
-    protected $casts = [
-        "notes" => "json"
-    ];
+    protected $fillable = ["description", "amount"];
 
     public function restaurant()
     {

@@ -27,6 +27,7 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')->hourly();
         $schedule->job(new UnreadMessageEmailer)->everyFiveMinutes();
+        $schedule->command("restaurant:invoice")->dailyAt("06:00");
     }
 
     /**
