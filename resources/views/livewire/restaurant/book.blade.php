@@ -143,13 +143,17 @@
                             </div>
 
                             @if(!empty($booking->id))
-                                <div class="text-center">
+                                <div class="text-center space-y-5">
                                     <p>Thank you for booking your table with myTables.</p>
                                     @if($booking->restaurant->table_confirmation === "automatic")
                                         <p>Your booking has now been confirmed. You will soon receive an email confirming your booking details.</p>
                                     @else
                                         <p>Your booking request has been sent to {{ $booking->restaurant }} and you will receive an email when they respond.</p>
                                     @endif
+
+                                    @guest
+                                        <p>Want to keep track of your bookings? <a class="text-red-800 hover:text-red-700 transition-all duration-150 ease-in-out" href="{{ route("register") }}">Register</a> for an account today.</p>
+                                    @endguest
                                 </div>
                             @else
                                 @auth

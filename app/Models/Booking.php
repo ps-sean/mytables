@@ -13,13 +13,9 @@ class Booking extends Model
 
     protected $connection = "mysql";
 
-    protected $dates = [
-        "booked_at",
-        "finish_at",
-    ];
-
     protected $casts = [
-        "finish_at" => "datetime:Y-m-d\TH:i"
+        "booked_at" => "datetime:Y-m-d\TH:i",
+        "finish_at" => "datetime:Y-m-d\TH:i",
     ];
 
     protected $guarded = [

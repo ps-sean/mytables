@@ -27,9 +27,13 @@
                     @endforeach
                 </x-select>
             </div>
-            <div class="col-span-2">
+            <div>
                 <label><x-icons.clock class="h-5 inline mr-2"/> Booked At</label>
-                <x-jet-input class="w-full" type="datetime-local" wire:model="bookedAt"/>
+                <x-jet-input class="w-full" type="datetime-local" wire:model="booking.booked_at"/>
+            </div>
+            <div>
+                <label><x-icons.clock class="h-5 inline mr-2"/> Finish At</label>
+                <x-jet-input class="w-full" type="datetime-local" wire:model="booking.finish_at"/>
             </div>
         @else
             <p class="text-gray-700 text-base flex items-start">

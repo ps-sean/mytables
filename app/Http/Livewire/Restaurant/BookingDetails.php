@@ -11,24 +11,19 @@ use Livewire\Component;
 
 class BookingDetails extends Component
 {
-    public $booking, $restaurant, $bookedAt;
+    public $booking, $restaurant;
 
     protected $rules = [
         "booking.covers" => "required|min:1",
         "booking.table_id" => "required",
-        "booking.booked_at" => "required"
+        "booking.booked_at" => "required",
+        "booking.finish_at" => "required",
     ];
 
     public function mount(Booking $booking)
     {
         $this->booking = $booking;
         $this->restaurant = $booking->restaurant;
-        $this->bookedAt = $this->booking->booked_at->format("Y-m-d\TH:i:s");
-    }
-
-    public function updatedBookedAt($value)
-    {
-        $this->booking->booked_at = $value;
     }
 
     public function render()
@@ -48,8 +43,13 @@ class BookingDetails extends Component
 
         if($this->booking->isDirty("booked_at")){
             // booking time has changed
-            Mail::to($this->booking->email)->send(new \App\Mail\Booking\StatusUpdate($this->booking));
-            Notification::send($this->booking->booker, new StatusUpdate($this->booking));
+            if(!empty($this->booking->email)){
+                Mail::to($this->booking->email)->send(new \App\Mail\Booking\StatusUpdate($this->booking));
+            }
+
+            if($this->booking->booker){
+                Notification::send($this->booking->booker, new StatusUpdate($this->booking));
+            }
         }
 
         $this->booking->save();
