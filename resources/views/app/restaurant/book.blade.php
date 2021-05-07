@@ -118,7 +118,7 @@
                             Cancel
                         </x-button>
                     </a>
-                    <x-button type="submit" class="justify-center bg-green-500 hover:bg-green-600">
+                    <x-button id="submit-booking" type="submit" class="justify-center bg-green-500 hover:bg-green-600">
                         Book
                     </x-button>
                 </div>
@@ -134,4 +134,22 @@
             </p>
         </div>
     @endif
+
+    @push("scripts")
+        <script>
+            let bookingbtn = document.getElementById("submit-booking")
+            let form = document.getElementsByTagName("form")[0]
+            let inputs = document.getElementsByTagName("input")
+
+            form.addEventListener("submit", () => {
+                bookingbtn.disabled = true
+            })
+
+            for(let i = 0; i < inputs.length; i++){
+                inputs[i].addEventListener("invalid", () => {
+                    bookingbtn.disabled = false
+                })
+            }
+        </script>
+    @endpush
 </x-frame-app-layout>
