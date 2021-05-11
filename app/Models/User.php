@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Events\UserCreated;
 use Carbon\Carbon;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -30,6 +31,10 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     protected $fillable = [
         'name', 'email', 'password',
+    ];
+
+    protected $dispatchesEvents = [
+        'created' => UserCreated::class,
     ];
 
     /**

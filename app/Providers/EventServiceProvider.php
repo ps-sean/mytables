@@ -5,9 +5,11 @@ namespace App\Providers;
 use App\Events\BookingCreated;
 use App\Events\BookingMessageCreated;
 use App\Events\BookingStatusUpdated;
+use App\Events\UserCreated;
 use App\Listeners\AnnounceBooking;
 use App\Listeners\AnnounceBookingStatusUpdate;
 use App\Listeners\AutoConfirmBooking;
+use App\Listeners\MatchBookings;
 use App\Listeners\SendBookingMessageNotification;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
@@ -40,6 +42,9 @@ class EventServiceProvider extends ServiceProvider
         BookingStatusUpdated::class => [
             AnnounceBookingStatusUpdate::class,
         ],
+        UserCreated::class => [
+            MatchBookings::class,
+        ]
     ];
 
     /**
