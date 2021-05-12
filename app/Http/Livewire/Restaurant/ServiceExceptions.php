@@ -98,7 +98,7 @@ class ServiceExceptions extends Component
     {
         $this->exceptions->forget($index);
 
-        if($this->exceptions->count() < 1){
+        if($this->exceptions->where("service_date", $this->openDate)->count() < 1){
             $this->exceptions->push($this->restaurant->service_exceptions()->make([
                 "service_date" => $this->openDate,
                 "closed" => 1,
