@@ -7,7 +7,7 @@
 
     @stack("meta")
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>@if(!empty($header)){{ strip_tags($header) }} - @endif{{ config('app.name', 'Laravel') }}</title>
 
     <link rel="apple-touch-icon" sizes="57x57" href="{{ asset("img/favicon/apple-icon-57x57.png") }}">
     <link rel="apple-touch-icon" sizes="60x60" href="{{ asset("img/favicon/apple-icon-60x60.png") }}">
