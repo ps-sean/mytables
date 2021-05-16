@@ -128,7 +128,7 @@
         <div class="p-4 text-center">
             <p>This time has now been taken, please try another time.</p>
             <p>
-                <a href="{{ url()->previous() }}" class="text-red-800 hover:text-red-700">
+                <a href="/app/restaurant/{{ $restaurant->id }}" class="text-red-800 hover:text-red-700">
                     Go Back
                 </a>
             </p>

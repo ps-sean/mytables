@@ -33,6 +33,6 @@ class Cors
             $response->header($key, $value);
         }
 
-        return $next($request);
+        return $response;
     }
 }

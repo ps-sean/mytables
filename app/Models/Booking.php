@@ -59,7 +59,7 @@ class Booking extends Model
     public function setBookedAtAttribute($value)
     {
         if(!$value instanceof Carbon){
-            $value = Carbon::parse($value);
+            $value = Carbon::parse(urldecode($value));
         }
 
         $this->attributes["booked_at"] = $value;
