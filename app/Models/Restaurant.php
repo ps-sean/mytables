@@ -190,6 +190,32 @@ class Restaurant extends Model
         $this->attributes['booking_timeframe'] = $value['tables'] . ":" . $value['minutes'];
     }
 
+    public function getMonthlyPaymentAttribute()
+    {
+        return $this->tables()->where("bookable", 1)->count() * $this->rate;
+    }
+
+    public function getNextBillingDateAttribute()
+    {
+        $date = Carbon::parse(date("Y") . "-" . date("m") . "-" . $this->billing_date);
+
+        while($date->isPast()){
+            $date->addMonth();
+        }
+
+        return $date;
+    }
+
+    public function getNextPaymentAmountAttribute()
+    {
+        // get all outstanding invoice items
+        $amount = $this->invoiceItems->sum("amount");
+
+        $amount += Carbon::now()->startOfDay()->diffInDays($this->next_billing_date) * $this->tables()->where("bookable", 1)->count() * $this->calculateDailyRate();
+
+        return number_format($amount, 2);
+    }
+
     // functions
     public function max_booking_size($group = "all")
     {
@@ -489,7 +515,7 @@ class Restaurant extends Model
             "limit" => 1,
         ]);
 
-        // TODO get the end date of the last invoice, make sure to set to start of day
+        // get the end date of the last invoice, make sure to set to start of day
         if($invoice = $invoices->first()){
             $startDate = Carbon::createFromTimestamp($invoice->period_end)->startOfDay();
         } else {

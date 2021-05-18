@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use App\Jobs\ReviewReminder;
 use App\Jobs\UnreadMessageEmailer;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
@@ -27,6 +28,7 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')->hourly();
         $schedule->job(new UnreadMessageEmailer)->everyFiveMinutes();
+        $schedule->job(new ReviewReminder)->everyFiveMinutes();
         $schedule->command("restaurant:invoice")->dailyAt("06:00");
     }
 

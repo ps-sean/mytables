@@ -1,10 +1,43 @@
 <div class="space-y-10">
     <div>
-        <x-select wire:model="restaurants">
+        <x-select wire:model="rid">
             @foreach($restaurants as $r)
                 <option value="{{ $r->id }}">{{ $r }}</option>
             @endforeach
         </x-select>
+    </div>
+
+    <div>
+        <h2 class="font-bold text-3xl">Billing</h2>
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 p-6 border border-gray-100 shadow rounded">
+            <div class="flex flex-col items-center justify-center px-6 text-center">
+                <p class="text-6xl">&pound;{{ $restaurant->monthly_payment }}</p>
+                <p>Your typical monthly payment</p>
+                <p class="text-gray-600 text-sm mt-3">
+                    This is calculated based on the number of bookable tables in your restaurant multiplied by your
+                    monthly rate of &pound;{{ $restaurant->rate }} per table.
+                </p>
+            </div>
+            <div class="flex flex-col items-center justify-center px-6 text-center lg:border-l lg:border-r">
+                <p class="text-5xl">{{ $restaurant->next_billing_date->toFormattedDateString() }}</p>
+                <p>Next payment date</p>
+                <p class="text-gray-600 text-sm mt-3">
+                    The date of your next payment is driven by the date you set in your billing settings.
+                </p>
+            </div>
+            <div class="flex flex-col items-center justify-center px-6 text-center">
+                <p class="text-6xl">&pound;{{ $restaurant->next_payment_amount }}</p>
+                <p>Next payment amount (expected)</p>
+                <p class="text-gray-600 text-sm mt-3">
+                    This is calculated based on the costs you have already accrued, plus the number of bookable tables
+                    you have at this moment in time multiplied by the number of days left until your next payment date.
+                </p>
+                <p class="text-gray-600 text-sm mt-3 italic">
+                    Due to the strain on the hospitality industry during these difficult times, we are not charging for
+                    any costs accrued before 19th May 2021.
+                </p>
+            </div>
+        </div>
     </div>
 
     <div>
@@ -22,40 +55,39 @@
         <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
         <script>
             document.addEventListener('livewire:load', () => {
-                google.charts.load('current', {'packages':['corechart']});
-                google.charts.setOnLoadCallback(drawChart);
+                google.charts.load('current', {'packages':['corechart']})
+                google.charts.setOnLoadCallback(drawChart)
 
                 function drawChart() {
-                    var data = google.visualization.arrayToDataTable(@this.bookings);
+                    let data = google.visualization.arrayToDataTable(@this.bookings)
 
-                    var options = {
-                        title: 'Booking Comparison vs. Last Week',
+                    let options = {
+                        title: 'Booking Comparison vs. Next/Last Week',
                         curveType: 'function',
                         legend: { position: 'bottom' },
                         vAxis: {viewWindowMode: "explicit", viewWindow:{min:0}},
-                    };
+                    }
 
-                    var chart = new google.visualization.LineChart(document.getElementById('bookings_chart'));
+                    let chart = new google.visualization.LineChart(document.getElementById('bookings_chart'))
 
-                    chart.draw(data, options);
+                    chart.draw(data, options)
 
-                    var coversData = google.visualization.arrayToDataTable(@this.covers);
+                    let coversData = google.visualization.arrayToDataTable(@this.covers)
 
-                    var coversOptions = {
-                        title: 'Guests Comparison vs. Last Week',
+                    let coversOptions = {
+                        title: 'Guests Comparison vs. Next/Last Week',
                         curveType: 'function',
                         legend: { position: 'bottom' },
                         vAxis: {viewWindowMode: "explicit", viewWindow:{min:0}},
-                    };
+                    }
 
-                    var coversChart = new google.visualization.LineChart(document.getElementById('covers_chart'));
+                    let coversChart = new google.visualization.LineChart(document.getElementById('covers_chart'))
 
                     coversChart.draw(coversData, coversOptions);
 
-                    console.log(@this.reviews);
-                    var reviewsData = google.visualization.arrayToDataTable(@this.reviews);
+                    let reviewsData = google.visualization.arrayToDataTable(@this.reviews)
 
-                    var reviewsOptions = {
+                    let reviewsOptions = {
                         title: 'Monthly Reviews',
                         legend: { position: 'bottom' },
                         seriesType: 'line',
@@ -65,12 +97,14 @@
                             top: 55,
                             height: '40%'
                         }
-                    };
+                    }
 
-                    var reviewsChart = new google.visualization.ComboChart(document.getElementById('reviews_chart'));
+                    let reviewsChart = new google.visualization.ComboChart(document.getElementById('reviews_chart'))
 
-                    reviewsChart.draw(reviewsData, reviewsOptions);
+                    reviewsChart.draw(reviewsData, reviewsOptions)
                 }
+
+                document.addEventListener("updated-restaurant", drawChart)
             })
         </script>
     @endpush

@@ -8,11 +8,11 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class Created extends Mailable
+class ReviewReminder extends Mailable
 {
-    use Queueable, SerializesModels;
-
     public $booking;
+
+    use Queueable, SerializesModels;
 
     /**
      * Create a new message instance.
@@ -31,13 +31,8 @@ class Created extends Mailable
      */
     public function build()
     {
-        $mail = $this->subject("New Booking For " . $this->booking->restaurant)
-            ->markdown('emails.booking.created');
-
-        if(!empty($this->booking->email)){
-            $mail = $mail->replyTo($this->booking->email);
-        }
-
-        return $mail;
+        return $this->subject("Leave a review for " . $this->booking->restaurant)
+            ->replyTo($this->booking->restaurant->email)
+            ->markdown('emails.booking.review_reminder');
     }
 }

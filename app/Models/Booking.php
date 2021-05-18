@@ -16,6 +16,7 @@ class Booking extends Model
     protected $casts = [
         "booked_at" => "datetime:Y-m-d\TH:i",
         "finish_at" => "datetime:Y-m-d\TH:i",
+        "review_reminder_at" => "datetime:Y-m-d\TH:i",
     ];
 
     protected $guarded = [

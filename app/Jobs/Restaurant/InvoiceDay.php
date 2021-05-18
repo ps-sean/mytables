@@ -63,6 +63,7 @@ class InvoiceDay implements ShouldQueue
         foreach($tables as $index => $table){
             // check if table was bookable by getting the history at the start of the day
             if(!$table->checkHistory("bookable", 1, $start, $end)){
+
                 // table was not bookable
                 $tables->forget($index);
             }
@@ -78,7 +79,7 @@ class InvoiceDay implements ShouldQueue
 
         try{
             // check if today is the billing date and bill
-            if(date('d') == 1){
+            if(date('d') == $this->restaurant->billing_date){
                 // invoice for all items
                 $this->restaurant->payday();
             }
