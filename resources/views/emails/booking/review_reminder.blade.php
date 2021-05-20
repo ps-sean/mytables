@@ -1,7 +1,7 @@
 @component('mail::message')
 Hi {{ $booking->name }},
 
-Your we hope you enjoyed your booking with {{ $booking->restaurant }}.
+We hope you enjoyed your booking with {{ $booking->restaurant }}.
 
 We would be grateful if you could leave a review of your experience to help other diners.
 
