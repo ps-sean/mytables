@@ -79,7 +79,7 @@
         </div>
 
         @if(!empty($booking->booked_by) && strtolower($booking->status) === "confirmed" && $booking->booked_at->isPast())
-            <div class="px-5 py-3 bg-red-800 text-white font-bold">
+            <div class="px-5 py-3 bg-red-800 text-white font-bold" id="review">
                 Leave a Review
             </div>
             @livewire("restaurant.review", compact(["booking"]))
