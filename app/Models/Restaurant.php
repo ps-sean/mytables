@@ -209,7 +209,7 @@ class Restaurant extends Model
     public function getNextPaymentAmountAttribute()
     {
         // get all outstanding invoice items
-        $amount = $this->invoiceItems->sum("amount");
+        $amount = $this->invoiceItems->sum("amount")/100;
 
         $amount += Carbon::now()->startOfDay()->diffInDays($this->next_billing_date) * $this->tables()->where("bookable", 1)->count() * $this->calculateDailyRate();
 
