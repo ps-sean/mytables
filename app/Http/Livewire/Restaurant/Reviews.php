@@ -19,7 +19,7 @@ class Reviews extends Component
 
     public function render()
     {
-        $reviews = $this->restaurant->reviews()->orderBy("created_at", "DESC")->paginate(5);
+        $reviews = $this->restaurant->reviews()->orderBy("created_at", "DESC")->paginate(3);
 
         return view('livewire.restaurant.reviews', compact(["reviews"]));
     }

@@ -1,11 +1,11 @@
-<div class="space-y-6">
+<div class="bg-white">
     @if($reviews->count() < 1)
         <div class="py-6">
             <p class="text-center">This restaurant has not been reviewed yet.</p>
         </div>
     @else
         @foreach($reviews as $review)
-            <div class="grid md:grid-cols-2 gap-4 p-6">
+            <div class="grid md:grid-cols-2 gap-4 p-6 border-b">
                 <div class="space-y-2">
                     <h5 class="font-bold text-xl">{{ $review->title }}</h5>
                     <p>{{ $review->review }}</p>
@@ -86,5 +86,9 @@
                 </div>
             </div>
         @endforeach
+
+        <div class="px-6 py-3">
+            {!! $reviews->links() !!}
+        </div>
     @endif
 </div>
