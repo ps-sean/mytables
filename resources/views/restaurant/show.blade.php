@@ -91,5 +91,11 @@
         </iframe>
 
         @livewire("restaurant.book", compact(["restaurant"]))
+
+        <div class="px-5 py-3 bg-red-800 text-white font-bold" id="review">
+            Reviews
+        </div>
+
+        @livewire("restaurant.reviews", compact(["restaurant"]))
     </div>
 </x-app-layout>
