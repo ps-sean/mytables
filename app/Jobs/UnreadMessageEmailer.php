@@ -78,7 +78,7 @@ class UnreadMessageEmailer implements ShouldQueue
 
         foreach($emails as $type => $email){
             foreach($email as $recipient => $values){
-                Mail::to($recipient)->send(new UnreadMessage($values));
+                Mail::to($recipient)->queue(new UnreadMessage($values));
             }
         }
     }

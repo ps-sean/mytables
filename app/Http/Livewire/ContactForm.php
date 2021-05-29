@@ -55,7 +55,7 @@ class ContactForm extends Component
             $text = implode("\r\n", $this->extras) . "\r\n \r\n" . $text;
         }
 
-        Mail::to($this->to)->send(new MailContactForm($this->name, $this->email, $this->subject, $text));
+        Mail::to($this->to)->queue(new MailContactForm($this->name, $this->email, $this->subject, $text));
 
         if(Mail::failures()){
             $this->emitSelf("failed");

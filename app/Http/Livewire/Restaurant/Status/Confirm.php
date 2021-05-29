@@ -37,7 +37,7 @@ class Confirm extends Component
         $restaurant->status = $this->status;
         $restaurant->save();
 
-        Mail::to($restaurant->email)->send(new StatusUpdated($restaurant));
+        Mail::to($restaurant->email)->queue(new StatusUpdated($restaurant));
 
         $this->status = null;
 

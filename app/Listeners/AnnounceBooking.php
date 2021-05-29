@@ -41,7 +41,7 @@ class AnnounceBooking
             }
         }
 
-        Mail::to($event->booking->restaurant->email)->send(new Created($event->booking));
+        Mail::to($event->booking->restaurant->email)->queue(new Created($event->booking));
         Notification::send($event->booking->restaurant->staff, new Booking($event->booking));
     }
 }

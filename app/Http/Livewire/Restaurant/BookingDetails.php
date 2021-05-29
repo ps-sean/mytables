@@ -44,7 +44,7 @@ class BookingDetails extends Component
         if($this->booking->isDirty("booked_at")){
             // booking time has changed
             if(!empty($this->booking->email)){
-                Mail::to($this->booking->email)->send(new \App\Mail\Booking\StatusUpdate($this->booking));
+                Mail::to($this->booking->email)->queue(new \App\Mail\Booking\StatusUpdate($this->booking));
             }
 
             if($this->booking->booker){

@@ -36,7 +36,7 @@ class AutoConfirmBooking
 
             if(!empty($event->booking->email)){
                 // send the confirmation email
-                Mail::to($event->booking->email)->send(new StatusUpdate($event->booking));
+                Mail::to($event->booking->email)->queue(new StatusUpdate($event->booking));
             }
         }
     }

@@ -438,7 +438,7 @@ class Restaurant extends Model
 
     public function sendEmailVerification()
     {
-        Mail::to($this->email)->send(new EmailVerification($this));
+        Mail::to($this->email)->queue(new EmailVerification($this));
     }
 
     public function checkBookingRule($covers)

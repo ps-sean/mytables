@@ -38,7 +38,7 @@ class AnnounceBookingStatusUpdate
         }
 
         if(!empty($mailTo)){
-            Mail::to($mailTo)->send(new \App\Mail\Booking\StatusUpdate($event->booking));
+            Mail::to($mailTo)->queue(new \App\Mail\Booking\StatusUpdate($event->booking));
         }
 
         if($users){
