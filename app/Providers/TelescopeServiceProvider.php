@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Models\Team;
 use Illuminate\Support\Facades\Gate;
+use Laravel\Telescope\EntryType;
 use Laravel\Telescope\IncomingEntry;
 use Laravel\Telescope\Telescope;
 use Laravel\Telescope\TelescopeApplicationServiceProvider;
@@ -17,7 +18,7 @@ class TelescopeServiceProvider extends TelescopeApplicationServiceProvider
      */
     public function register()
     {
-        // Telescope::night();
+         Telescope::night();
 
         $this->hideSensitiveRequestDetails();
 
@@ -30,6 +31,8 @@ class TelescopeServiceProvider extends TelescopeApplicationServiceProvider
                    $entry->isFailedRequest() ||
                    $entry->isFailedJob() ||
                    $entry->isScheduledTask() ||
+                   $entry->type === EntryType::JOB ||
+                   $entry->type === EntryType::MAIL ||
                    $entry->hasMonitoredTag();
         });
     }
