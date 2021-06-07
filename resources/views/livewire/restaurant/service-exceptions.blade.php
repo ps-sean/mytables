@@ -107,10 +107,12 @@
                                 <td class="p-3">{{ $booking->booked_at->format("h:ia") }}</td>
                                 @switch($booking->status)
                                     @case("confirmed")
+                                    @case("seated")
                                     <td class="text-green-400"><x-icons.check class="h-5 inline mr-2"/> {{ ucwords($booking->status) }}</td>
                                     @break
                                     @case("rejected")
                                     @case("cancelled")
+                                    @case("no show")
                                     <td class="text-red-600"><x-icons.cross class="h-5 inline mr-2"/> {{ ucwords($booking->status) }}</td>
                                     @break
                                     @default

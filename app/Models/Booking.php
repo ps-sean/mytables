@@ -88,7 +88,7 @@ class Booking extends Model
                 ["finish_at", ">=", $this->finish_at->addMinutes($this->restaurant->turnaround_time)],
             ]);
         })
-            ->whereIn("status", ["pending", "confirmed"])
+            ->whereIn("status", ["pending", "confirmed", "seated"])
             ->get();
 
         foreach($seatedBookings as $booking){
@@ -141,7 +141,7 @@ class Booking extends Model
                     ["finish_at", ">=", $this->finish_at->addMinutes($this->restaurant->turnaround_time)],
                 ]);
             })->where("table_id", $this->table_id)
-                ->whereIn("status", ["pending", "confirmed"])
+                ->whereIn("status", ["pending", "confirmed", "seated"])
                 ->where("id", "!=", $this->id)
                 ->count();
 
@@ -156,7 +156,7 @@ class Booking extends Model
             ["booked_at", ">", $this->booked_at->clone()->subMinutes($this->restaurant->booking_timeframe["minutes"])],
             ["booked_at", "<", $this->booked_at->clone()->addMinutes($this->restaurant->booking_timeframe["minutes"])],
         ])
-            ->whereIn("status", ["pending", "confirmed"])
+            ->whereIn("status", ["pending", "confirmed", "seated"])
             ->count();
 
         if($currentBookingsLimit < $this->restaurant->booking_timeframe["tables"]){

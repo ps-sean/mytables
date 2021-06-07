@@ -11,6 +11,10 @@ At: {{ $booking->booked_at->toDayDateTimeString() }}<br>
 Comments: {{ $booking->comments }}<br>
 @endif
 
+@if(!empty($booking->reject_reason))
+Reason: {{ $booking->reject_reason }}
+@endif
+
 @if(!empty($booking->booked_by))
 @component('mail::button', ['url' => config('app.url') . "/bookings/" . $booking->id])
     View Booking

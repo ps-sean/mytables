@@ -17,7 +17,8 @@ class Table extends Model
 
     protected $fillable = [
         "name",
-        "seats"
+        "seats",
+        "bookable",
     ];
 
     public function __toString()

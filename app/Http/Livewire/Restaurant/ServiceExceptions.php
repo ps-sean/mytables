@@ -34,7 +34,7 @@ class ServiceExceptions extends Component
             $this->openDate = $this->exceptions->sortBy("service_date")->first()->service_date->format("Y-m-d");
             $this->bookings = $restaurant->bookings()
                 ->whereDate("booked_at", $this->openDate)
-                ->whereNotIn("status", ["cancelled", "rejected"])
+                ->whereNotIn("status", ["cancelled", "rejected", "no show"])
                 ->get();
         }
     }
@@ -78,7 +78,7 @@ class ServiceExceptions extends Component
             $this->openDate = $this->exceptions->last()->service_date->format("Y-m-d");
             $this->bookings = $this->restaurant->bookings()
                 ->whereDate("booked_at", $this->openDate)
-                ->whereNotIn("status", ["cancelled", "rejected"])
+                ->whereNotIn("status", ["cancelled", "rejected", "no show"])
                 ->get();
 
             $this->newDate = null;
@@ -90,7 +90,7 @@ class ServiceExceptions extends Component
         $this->openDate = $date;
         $this->bookings = $this->restaurant->bookings()
             ->whereDate("booked_at", $this->openDate)
-            ->whereNotIn("status", ["cancelled", "rejected"])
+            ->whereNotIn("status", ["cancelled", "rejected", "no show"])
             ->get();
     }
 
@@ -116,7 +116,7 @@ class ServiceExceptions extends Component
             $this->openDate = $this->exceptions->sortBy("service_date")->first()->service_date->format("Y-m-d");
             $this->bookings = $this->restaurant->bookings()
                 ->whereDate("booked_at", $this->openDate)
-                ->whereNotIn("status", ["cancelled", "rejected"])
+                ->whereNotIn("status", ["cancelled", "rejected", "no show"])
                 ->get();
         } else {
             $this->openDate = null;

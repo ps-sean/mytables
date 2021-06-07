@@ -37,12 +37,15 @@ class AnnounceBookingStatusUpdate
             $mailTo = $event->booking->restaurant->email;
         }
 
-        if(!empty($mailTo)){
-            Mail::to($mailTo)->queue(new \App\Mail\Booking\StatusUpdate($event->booking));
-        }
+        if(!in_array($event->booking->status, ["no show", "seated"])){
+            // dont send notifications if we're just seating the table
+            if(!empty($mailTo)){
+                Mail::to($mailTo)->queue(new \App\Mail\Booking\StatusUpdate($event->booking));
+            }
 
-        if($users){
-            Notification::send($users, new StatusUpdate($event->booking));
+            if($users){
+                Notification::send($users, new StatusUpdate($event->booking));
+            }
         }
     }
 }

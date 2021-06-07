@@ -70,7 +70,7 @@
             @livewire("restaurant.booking-details", compact(["booking"]))
 
             <div class="p-5">
-                @if(!empty($booking->booked_by))
+                @if(!empty($booking->booked_by) && !empty($booking->booker->password))
                     @livewire("restaurant.booking-messenger", compact(["booking"]))
                 @else
                     <p class="italic">Messenger is not available as the booking was not created by a registered user.</p>
@@ -78,11 +78,13 @@
             </div>
         </div>
 
-        @if(!empty($booking->booked_by) && strtolower($booking->status) === "confirmed" && $booking->booked_at->isPast())
-            <div class="px-5 py-3 bg-red-800 text-white font-bold" id="review">
-                Leave a Review
-            </div>
-            @livewire("restaurant.review", compact(["booking"]))
-        @endif
+        @auth
+            @if(!empty($booking->booked_by) && $booking->booked_by == auth()->user()->id && in_array(strtolower($booking->status), ["confirmed", "seated"]) && $booking->booked_at->isPast())
+                <div class="px-5 py-3 bg-red-800 text-white font-bold" id="review">
+                    Leave a Review
+                </div>
+                @livewire("restaurant.review", compact(["booking"]))
+            @endif
+        @endauth
     </div>
 </x-app-layout>

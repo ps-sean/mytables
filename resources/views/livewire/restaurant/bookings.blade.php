@@ -17,6 +17,8 @@
                         <option value="pending">Pending</option>
                         <option value="confirmed">Confirmed</option>
                         <option value="rejected">Rejected</option>
+                        <option value="no show">No Show</option>
+                        <option value="seated">Seated</option>
                     </x-select>
                 </div>
             @else
@@ -94,7 +96,7 @@
                                     @php($cols = 0)
                                     @foreach($period as $time)
                                         @if($cols < 1)
-                                            @if($booking = $table->bookings()->whereNotIn("status", ["cancelled", "rejected"])->whereBetween("booked_at", [$time, $time->copy()->addMinutes($restaurant->interval - 1)])->first())
+                                            @if($booking = $table->bookings()->whereNotIn("status", ["cancelled", "rejected", "no show"])->whereBetween("booked_at", [$time, $time->copy()->addMinutes($restaurant->interval - 1)])->first())
                                                 @php($cols = $booking->columns())
                                                 <td class="border p-0" data-covers="{{ $booking->covers }}" colspan="{{ $cols }}">
                                                     <a class="h-full" href="{{ route("restaurant.booking", [$restaurant, $booking]) }}">
@@ -176,10 +178,12 @@
                                 <td class="p-3">{{ $booking->comments }}</td>
                                 @switch($booking->status)
                                     @case("confirmed")
+                                    @case("seated")
                                     <td class="text-green-400"><x-icons.check class="h-5 inline mr-2"/> {{ ucwords($booking->status) }}</td>
                                     @break
                                     @case("rejected")
                                     @case("cancelled")
+                                    @case("no show")
                                     <td class="text-red-600"><x-icons.cross class="h-5 inline mr-2"/> {{ ucwords($booking->status) }}</td>
                                     @break
                                     @default

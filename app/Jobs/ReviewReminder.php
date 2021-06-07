@@ -36,17 +36,19 @@ class ReviewReminder implements ShouldQueue
         // get all bookings that finished over 2 hours ago
         $bookings = Booking::where("finish_at", "<", Carbon::now()->subHours(2))
             ->whereNull("review_reminder_at")
-            ->where("status", "confirmed")
+            ->whereIn("status", ["confirmed", "seated"])
             ->whereNotNull("booked_by")
             ->get();
 
         foreach($bookings as $booking){
-            // send an email asking to review
-            Mail::to($booking->email)->send(new \App\Mail\Booking\ReviewReminder($booking));
+            if(!empty($booking->booker->password)){
+                // send an email asking to review
+                Mail::to($booking->email)->queue(new \App\Mail\Booking\ReviewReminder($booking));
 
-            $booking->review_reminder_at = Carbon::now();
+                $booking->review_reminder_at = Carbon::now();
 
-            $booking->save();
+                $booking->save();
+            }
         }
     }
 }

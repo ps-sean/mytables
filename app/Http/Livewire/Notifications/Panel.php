@@ -20,7 +20,7 @@ class Panel extends Component
         $this->count = Auth::user()->unreadNotifications->count();
 
         return view('livewire.notifications.panel', [
-            'notifications' => Auth::user()->notifications()->paginate(15)
+            'notifications' => Auth::user()->notifications()->simplePaginate(15)
         ]);
     }
 

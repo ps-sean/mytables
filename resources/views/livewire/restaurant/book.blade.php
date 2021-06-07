@@ -1,4 +1,4 @@
-<div wire:keydown.escape="hideBooking">
+<div wire:keydown.escape="hideBooking" x-data="{card_method: @entangle('card_method')}">
     <div class="p-5 space-y-5">
         <div class="flex overflow-auto rounded border mx-auto max-w-full" style="width: fit-content;">
             @foreach($dates as $date)
@@ -169,14 +169,14 @@
                                         </div>
                                     </div>
                                 @else
-                                    <div class="flex">
+                                    <div class="flex items-center">
                                         <div class="px-2">
                                             <svg class="h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                                             </svg>
                                         </div>
                                         <div class="w-full">
-                                            <x-jet-input type="text" wire:model="booking.name" class="w-full" placeholder="Name" />
+                                            <x-jet-input type="text" wire:model="booking.name" class="w-full" placeholder="Name" id="booking-name" />
                                             @error("booking.name")<span class="text-red-600">{{ $message }}</span>@enderror
                                             <x-jet-input type="email" wire:model="booking.email" class="w-full" placeholder="Email" />
                                             @error("booking.email")<span class="text-red-600">{{ $message }}</span>@enderror
@@ -207,14 +207,68 @@
                                         @error("booking.comments")<span class="text-red-600">{{ $message }}</span>@enderror
                                     </div>
                                 </div>
+
+                                @if($restaurant->no_show_fee > 0)
+                                    <div class="flex">
+                                        <div class="px-2">
+                                            <x-icons.credit-card class="h-6"/>
+                                        </div>
+                                        <div class="w-full space-y-2">
+                                            <p>
+                                                <strong>{{ $restaurant }}</strong> will pre-authorise a fee of
+                                                <strong>&pound;{{ number_format($restaurant->no_show_fee, 2) }}</strong>
+                                                on or after
+                                                <strong>{{ $preAuthDate->toDayDateTimeString() }}</strong>.
+                                                These funds will be held by your bank and only charged if you fail to
+                                                make your booking. (Cancelled bookings will not be charged)
+                                                <br>
+                                                <a class="text-red-800 hover:text-red-700 transition-all duration-150 ease-in-out" href="{{ route("about-pre-auth") }}">More about pre-authorisations</a>
+                                            </p>
+
+                                            <div>
+                                                @auth
+                                                    @if(auth()->user()->hasDefaultPaymentMethod())
+                                                        <label class="block flex items-center py-5 border-t"><input class="mr-2" type="radio" wire:model="card_method" value="default"/> Use Default Payment Method ({{ ucwords(auth()->user()->card_brand) }} {{ auth()->user()->card_last_four }})</label>
+                                                    @endif
+                                                    <label class="block flex items-center py-5 border-t border-b"><input class="mr-2" type="radio" wire:model="card_method" value="add"/> Add New Payment Method</label>
+                                                @endauth
+                                            </div>
+
+                                            <div x-show.transition.in="card_method === 'add'" class="space-y-2">
+                                                <div wire:ignore class="w-full py-3 border-b" id="card-element"></div>
+                                                @auth
+                                                    <label><input type="checkbox" wire:model="save_method"> Make Default Payment Method</label>
+                                                @endauth
+                                            </div>
+                                            <span class="text-red-600" id="card-error"></span>
+                                            @error("payment-error")<span class="text-red-600">{{ $message }}</span>@enderror
+                                        </div>
+                                    </div>
+                                @endif
+
+                                @if($errors->any())
+                                    <x-alert class="border-red-600 text-red-600 bg-red-200">
+                                        <ul>
+                                            @foreach($errors->all() as $error)
+                                                <li>{{ $error }}</li>
+                                            @endforeach
+                                        </ul>
+                                    </x-alert>
+                                @endif
                             @endif
                         </div>
                     </div>
-                    <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse gap-2">
+                    <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex items-center sm:flex-row-reverse gap-2">
                         @if(empty($booking->id) && !session()->has("timeTaken"))
-                            <x-button wire:loading.attr="disabled" wire:click.prevent="book" type="button" class="justify-center bg-green-500 hover:bg-green-600">
-                                Book
-                            </x-button>
+                            @if($restaurant->no_show_fee > 0)
+                                <x-button wire:loading.attr="disabled" type="button" class="justify-center bg-green-500 hover:bg-green-600" id="book-btn">
+                                    Book
+                                </x-button>
+                            @else
+                                <x-button wire:loading.attr="disabled" wire:click.prevent="book" type="button" class="justify-center bg-green-500 hover:bg-green-600">
+                                    Book
+                                </x-button>
+                            @endif
                         @endif
                         <x-button wire:click.prevent="hideBooking" type="button" class="justify-center border border-gray-300 bg-white text-gray-700 hover:bg-gray-50">
                             {{ empty($booking->id) ? 'Cancel' : 'Close' }}
@@ -222,9 +276,73 @@
                         @if(session()->has("timeTaken"))
                             <span class="text-red-600">This time has now been taken, please try another time.</span>
                         @endif
+                        <span wire:loading.flex class="text-gray-600 flex items-center">
+                            <svg class="animate-spin -ml-1 mr-3 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                            Working...
+                        </span>
                     </div>
                 </div>
             </div>
         </div>
+    @endif
+
+    @if($restaurant->no_show_fee > 0)
+        @push("scripts")
+            <script src="https://js.stripe.com/v3/"></script>
+
+            <script>
+                document.addEventListener('livewire:load', () => {
+                    const stripe = Stripe('{{ config("services.stripe.public") }}')
+
+                    const elements = stripe.elements()
+                    const cardElement = elements.create('card')
+
+                    @this.on('initiate-booking', () => {
+                        cardElement.mount('#card-element')
+
+                        const bookBtn = document.getElementById("book-btn")
+                        const cardErrors = document.getElementById("card-error")
+
+                        bookBtn.addEventListener("click", async (e) => {
+                            e.preventDefault()
+
+                            bookBtn.disabled = true
+
+                            if(@this.card_method === "default"){
+                                @this.book()
+                                bookBtn.disabled = false
+                            } else {
+                                if(!@this.setup_intent){
+                                    await @this.setupCard()
+                                    bookBtn.disabled = true
+                                }
+
+                                if(@this.setup_intent){
+                                    const { setupIntent, error } = await stripe.confirmCardSetup(
+                                        @this.setup_intent, {
+                                            payment_method: {
+                                                card: cardElement,
+                                                billing_details: { name: @this.booking.name }
+                                            }
+                                        }
+                                    )
+
+                                    if(error) {
+                                        cardErrors.innerText = error.message
+                                    } else {
+                                        @this.book(setupIntent.payment_method)
+                                    }
+
+                                    bookBtn.disabled = false
+                                }
+                            }
+                        })
+                    })
+                })
+            </script>
+        @endpush
     @endif
 </div>

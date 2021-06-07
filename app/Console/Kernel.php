@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use App\Console\Commands\BookingPreAuths;
 use App\Jobs\ReviewReminder;
 use App\Jobs\UnreadMessageEmailer;
 use Illuminate\Console\Scheduling\Schedule;
@@ -31,6 +32,8 @@ class Kernel extends ConsoleKernel
         $schedule->job(new UnreadMessageEmailer)->everyFiveMinutes();
 
         $schedule->job(new ReviewReminder)->everyFiveMinutes();
+
+        $schedule->job(new BookingPreAuths)->everyFiveMinutes();
 
         $schedule->command("restaurant:invoice")->dailyAt("06:00");
 

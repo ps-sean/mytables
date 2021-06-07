@@ -63,17 +63,17 @@ class Dashboard extends Component
 
         foreach($period as $day){
             $bookings = $this->restaurant->bookings()
-                ->whereNotIn("status", ["cancelled", "rejected"])
+                ->whereNotIn("status", ["cancelled", "rejected", "no show"])
                 ->whereDate("booked_at", $day)
                 ->get();
 
             $lastWeekBookings = $this->restaurant->bookings()
-                ->whereNotIn("status", ["cancelled", "rejected"])
+                ->whereNotIn("status", ["cancelled", "rejected", "no show"])
                 ->whereDate("booked_at", $day->copy()->subWeek())
                 ->get();
 
             $nextWeekBookings = $this->restaurant->bookings()
-                ->whereNotIn("status", ["cancelled", "rejected"])
+                ->whereNotIn("status", ["cancelled", "rejected", "no show"])
                 ->whereDate("booked_at", $day->copy()->addWeek())
                 ->get();
 

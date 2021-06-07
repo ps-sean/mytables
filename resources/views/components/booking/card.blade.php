@@ -13,10 +13,12 @@
         <div class="flex justify-center items-center">
             @switch($booking->status)
                 @case("confirmed")
+                @case("seated")
                 <p class="text-green-400 flex text-base"><x-icons.check class="h-5 inline mr-2"/> {{ ucwords($booking->status) }}</p>
                 @break
                 @case("rejected")
                 @case("cancelled")
+                @case("no show")
                 <p class="text-red-600 flex text-base"><x-icons.cross class="h-5 inline mr-2"/> {{ ucwords($booking->status) }}</p>
                 @break
                 @default

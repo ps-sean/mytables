@@ -68,7 +68,7 @@ class Bookings extends Component
         $period = $this->restaurant->servicePeriod(Carbon::parse($this->date));
 
         if($this->view === "grid"){
-            $bookings = $this->restaurant->bookings()->whereDate("booked_at", $this->date)->whereNotIn("status", ["cancelled", "rejected"])->orderBy("booked_at")->get();
+            $bookings = $this->restaurant->bookings()->whereDate("booked_at", $this->date)->whereNotIn("status", ["cancelled", "rejected", "no show"])->orderBy("booked_at")->get();
         } else {
             $bookings = $this->restaurant->bookings()->whereDate("booked_at", ">=", Carbon::now())->orderBy("booked_at");
 
@@ -91,7 +91,7 @@ class Bookings extends Component
 
     public function setTables()
     {
-        $this->bookings = $this->restaurant->bookings()->whereDate("booked_at", $this->date)->whereNotIn("status", ["cancelled", "rejected"])->orderBy("booked_at");
+        $this->bookings = $this->restaurant->bookings()->whereDate("booked_at", $this->date)->whereNotIn("status", ["cancelled", "rejected", "no show"])->orderBy("booked_at");
 
         $this->tables = $this->restaurant->tables->sortBy("table_group_id")->sortBy("name", SORT_NATURAL);
 
@@ -112,7 +112,7 @@ class Bookings extends Component
         $this->newBooking->booked_at = $time;
         $this->newBooking->table_id = $table;
 
-        $this->nextBooking = $this->newBooking->tableNumber->bookings()->whereNotIn("status", ["rejected", "cancelled"])->where("booked_at", ">", $time)->first();
+        $this->nextBooking = $this->newBooking->tableNumber->bookings()->whereNotIn("status", ["rejected", "cancelled", "no show"])->where("booked_at", ">", $time)->first();
 
         $this->createBooking = true;
     }

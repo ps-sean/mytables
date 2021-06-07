@@ -23,16 +23,33 @@ class CreateNewUser implements CreatesNewUsers
     {
         Validator::make($input, [
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'email' => ['required', 'string', 'email', 'max:255'],
             'password' => $this->passwordRules(),
         ])->validate();
 
         return DB::transaction(function () use ($input) {
-            return tap(User::create([
-                'name' => $input['name'],
-                'email' => $input['email'],
-                'password' => Hash::make($input['password']),
-            ]), function (User $user) {
+            $user = User::where("email", $input['email'])->first();
+
+            if($user){
+                if(!empty($user->password)){
+                    Validator::make($input, [
+                        'email' => 'unique:users'
+                    ])->validate();
+                } else {
+                    $user->update([
+                        'name' => $input['name'],
+                        'password' => Hash::make($input['password']),
+                    ]);
+                }
+            } else {
+                $user = User::create([
+                    'name' => $input['name'],
+                    'email' => $input['email'],
+                    'password' => Hash::make($input['password']),
+                ]);
+            }
+
+            return tap($user, function (User $user) {
                 $customers = Team::find(2);
                 $customers->users()->attach($user, ['role' => 'customer']);
 
