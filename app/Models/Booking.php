@@ -123,6 +123,34 @@ class Booking extends Model
         return $tables->first();
     }
 
+    public function checkServices()
+    {
+        // check for exception services first
+        $services = $this->restaurant->service_exceptions()->whereDate("service_date", $this->booked_at)->orderBy("start")->get();
+
+        if($services->count()){
+            $closed = $services->where("closed", 1);
+
+            if($closed->count()){
+                return collect([]);
+            }
+
+        } else {
+            $services = $this->restaurant->services()->where("day", $this->booked_at->shortEnglishDayOfWeek)->orderBy("start")->get();
+        }
+
+        foreach($services as $index => $service){
+            $start = $service->start->setDateFrom($this->booked_at);
+            $finish = $service->last_booking->setDateFrom($this->booked_at);
+
+            if($start > $this->booked_at || $finish < $this->booked_at){
+                $services->forget($index);
+            }
+        }
+
+        return $services;
+    }
+
     public function checkTime($group = "all")
     {
         if($this->exists){

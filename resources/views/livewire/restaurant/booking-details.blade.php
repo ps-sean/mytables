@@ -13,28 +13,42 @@
                 <a href="mailto:{{ $booking->email }}">{{ $booking->email }}</a>
             </p>
         @endif
-        @if($booking->booked_at->isFuture() && $restaurant->staff->contains(auth()->user()))
+        @if($booking->booked_at->format("Y-m-d H:i:s") > \Carbon\Carbon::now()->setTimezone("Europe/London")->format("Y-m-d H:i:s") && ($booking->booked_by == auth()->user()->id || $restaurant->staff->contains(auth()->user())))
             <div>
                 <label><x-icons.user class="h-5 inline mr-2"/> Guests</label>
                 <x-jet-input class="w-full" type="number" min="1" wire:model="booking.covers"/>
                 @error("booking.covers")<span class="text-red-600">{{ $message }}</span>@enderror
             </div>
-            <div>
-                <label><x-icons.table class="h-5 inline mr-2"/> Table</label>
-                <x-select class="w-full" wire:model="booking.table_id">
-                    @foreach($restaurant->tables()->orderBy("table_group_id")->orderBy("name")->get() as $table)
-                        <option value="{{ $table->id }}">{{ $table }}</option>
-                    @endforeach
-                </x-select>
-            </div>
+            @if($restaurant->staff->contains(auth()->user()))
+                <div>
+                    <label><x-icons.table class="h-5 inline mr-2"/> Table</label>
+                    <x-select class="w-full" wire:model="booking.table_id">
+                        @foreach($restaurant->tables()->orderBy("table_group_id")->orderBy("name")->get() as $table)
+                            <option value="{{ $table->id }}">{{ $table }}</option>
+                        @endforeach
+                    </x-select>
+                </div>
+            @else
+                <p class="text-gray-700 text-base flex items-start">
+                    <x-icons.table class="h-5 inline mr-2"/>
+                    {{ $booking->tableNumber }}
+                </p>
+            @endif
             <div>
                 <label><x-icons.clock class="h-5 inline mr-2"/> Booked At</label>
                 <x-jet-input class="w-full" type="datetime-local" wire:model="booking.booked_at"/>
             </div>
-            <div>
-                <label><x-icons.clock class="h-5 inline mr-2"/> Finish At</label>
-                <x-jet-input class="w-full" type="datetime-local" wire:model="booking.finish_at"/>
-            </div>
+            @if($restaurant->staff->contains(auth()->user()))
+                <div>
+                    <label><x-icons.clock class="h-5 inline mr-2"/> Finish At</label>
+                    <x-jet-input class="w-full" type="datetime-local" wire:model="booking.finish_at"/>
+                </div>
+            @else
+                <div class="space-y-2">
+                    <label><x-icons.clock class="h-5 inline mr-2"/> Finish At</label>
+                    <p class="text-lg font-bold text-center">{{ $booking->finish_at->format("h:ia") }}</p>
+                </div>
+            @endif
         @else
             <p class="text-gray-700 text-base flex items-start">
                 <x-icons.user class="h-5 inline mr-2"/>
@@ -60,11 +74,11 @@
             </p>
         @endif
 
-        @if($booking->booked_at->isFuture() && $restaurant->staff->contains(auth()->user()))
+        @if($booking->booked_at->isFuture() && ($booking->booked_by == auth()->user()->id || $restaurant->staff->contains(auth()->user())))
             <div class="col-span-2">
                 <x-button type="submit" class="w-full justify-center bg-green-400 hover:bg-green-300">
                     <x-icons.save class="h-6 mr-2"/>
-                    Save Details
+                    Update Booking
                 </x-button>
                 @error("booking")<span class="text-red-600">{{ $message }}</span>@enderror
                 <x-jet-action-message on="saved" class="text-center my-3">Saved</x-jet-action-message>
