@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Laravel\Cashier\Billable;
 use Spatie\Activitylog\Traits\LogsActivity;
+use Stripe\Customer;
 use Stripe\StripeClient;
 
 class Restaurant extends Model
@@ -209,7 +210,9 @@ class Restaurant extends Model
     public function getNextPaymentAmountAttribute()
     {
         // get all outstanding invoice items
-        $amount = $this->invoiceItems->sum("amount")/100;
+        $amount = $this->asStripeCustomer()->balance/100;
+
+        $amount += $this->invoiceItems->sum("amount")/100;
 
         $amount += Carbon::now()->startOfDay()->diffInDays($this->next_billing_date) * $this->tables()->where("bookable", 1)->count() * $this->calculateDailyRate();
 

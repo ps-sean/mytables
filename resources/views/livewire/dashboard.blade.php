@@ -9,7 +9,7 @@
 
     <div>
         <h2 class="font-bold text-3xl">Billing</h2>
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 p-6 border border-gray-100 shadow rounded">
+        <div class="grid grid-flow-row lg:grid-flow-col lg:auto-cols-fr gap-6 p-6 border border-gray-100 shadow rounded">
             <div class="flex flex-col items-center justify-center px-6 text-center">
                 <p class="text-6xl">&pound;{{ $restaurant->monthly_payment }}</p>
                 <p>Your typical monthly payment</p>
@@ -32,11 +32,20 @@
                     This is calculated based on the costs you have already accrued, plus the number of bookable tables
                     you have at this moment in time multiplied by the number of days left until your next payment date.
                 </p>
-                <p class="text-gray-600 text-sm mt-3 italic">
-                    Due to the strain on the hospitality industry during these difficult times, we are not charging for
-                    any costs accrued before 19th May 2021.
-                </p>
             </div>
+            @if($balance = $restaurant->asStripeCustomer()->balance)
+                <div class="flex flex-col items-center justify-center px-6 text-center lg:border-l">
+                    <p class="text-6xl">{{ $balance < 0 ? "-" : "" }}&pound;{{ number_format(abs($balance)/100, 2) }}</p>
+                    <p>Account Balance</p>
+                    <p class="text-gray-600 text-sm mt-3">
+                        @if($balance < 0)
+                            A credit will be applied to your next invoice.
+                        @else
+                            A debit will be applied to your next invoice.
+                        @endif
+                    </p>
+                </div>
+            @endif
         </div>
     </div>
 

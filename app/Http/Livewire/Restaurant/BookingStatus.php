@@ -80,6 +80,12 @@ class BookingStatus extends Component
             if($intent && $this->fee){
                 if($charge){
                     $intent->capture();
+
+                    // deduct the amount from the restaurants invoice
+                    $this->booking->restaurant->invoiceItems()->create([
+                        "description" => "No show charged for booking #" . $this->booking->id . " (minus myTables fee)",
+                        "amount" => $this->fee * -90,
+                    ]);
                 } else {
                     // cancel the payment intent
                     $intent->cancel();
