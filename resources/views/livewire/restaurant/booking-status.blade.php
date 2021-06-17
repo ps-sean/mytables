@@ -28,6 +28,10 @@
             @endif
                 <x-button wire:loading.attr="disabled" wire:click.prevent="$set('seat_table', true)" class="bg-green-400 hover:bg-green-300 font-bold"><x-icons.check class="h-5 mr-1"/> <span class="hidden sm:flex">Seat Table</span></x-button>
         @endif
+
+        @if($booking->status === "seated" && $booking->finish_at->format("Y-m-d H:i:s") > \Carbon\Carbon::now()->setTimezone("Europe/London")->format("Y-m-d H:i:s"))
+            <x-button wire:loading.attr="disabled" wire:click.prevent="$set('finish_table', true)" class="bg-green-400 hover:bg-green-300 font-bold"><x-icons.flag class="h-5 mr-1"/> <span class="hidden sm:flex">Finished</span></x-button>
+        @endif
     </div>
 
     <x-jet-confirmation-modal wire:model="reject_confirmation">
@@ -135,4 +139,21 @@
             </x-jet-button>
         </x-slot>
     </x-jet-dialog-modal>
+
+    <x-jet-confirmation-modal wire:model="finish_table">
+        <x-slot name="title">
+            Finished
+        </x-slot>
+        <x-slot name="content">
+            Please confirm that this table is finished and is now free?
+        </x-slot>
+        <x-slot name="footer">
+            <x-jet-secondary-button wire:loading.attr="disabled" wire:click.prevent="$set('finish_table', false)">
+                Cancel
+            </x-jet-secondary-button>
+            <x-jet-button class="bg-green-400 hover:bg-green-300" wire:loading.attr="disabled" wire:click.prevent="finished">
+                Confirm
+            </x-jet-button>
+        </x-slot>
+    </x-jet-confirmation-modal>
 </div>

@@ -198,6 +198,6 @@ class Booking extends Model
     {
         $length = $this->booked_at->diffInMinutes($this->finish_at);
 
-        return $length/$this->restaurant->interval;
+        return floor($length/$this->restaurant->interval);
     }
 }

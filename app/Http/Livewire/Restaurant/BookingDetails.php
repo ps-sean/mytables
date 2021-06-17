@@ -22,6 +22,8 @@ class BookingDetails extends Component
         "booking.finish_at" => "required",
     ];
 
+    protected $listeners = ["update-booking" => "refresh"];
+
     public function mount(Booking $booking)
     {
         $this->booking = $booking;
@@ -102,5 +104,10 @@ class BookingDetails extends Component
         $this->booking->refresh();
 
         $this->emitSelf("saved");
+    }
+
+    public function refresh()
+    {
+        $this->booking->refresh();
     }
 }

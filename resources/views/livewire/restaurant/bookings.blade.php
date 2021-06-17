@@ -1,4 +1,4 @@
-<div>
+<div x-data="{ show: false }">
     <x-slot name="header">
         <div class="flex justify-between items-center">
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
@@ -23,8 +23,31 @@
                 </div>
             @else
                 <x-jet-input class="w-full md:w-auto" wire:model="date" type="date"/>
+                <div class="relative flex items-center">
+                    <a class="block flex items-center border-b border-gray-300 py-2 w-full md:w-auto justify-between space-x-2" x-on:click.prevent="show = !show" href="#show"><span>Show Info ({{ count($show) }})</span><x-icons.chevron-down class="h-4"/></a>
+                    <div class="absolute top-full left-0 w-full md:w-32 bg-white p-2 rounded-b border border-gray-300" x-show.transition.in="show" x-cloak x-on:click.away="show = false">
+                        <ul class="list-inside">
+                            @foreach(["name", "guests", "table", "time", "comments"] as $s)
+                                <li>
+                                    <label>
+                                        <input type="checkbox" wire:model="show" value="{{ $s }}">
+                                        {{ ucwords($s) }}
+                                    </label>
+                                </li>
+                            @endforeach
+                        </ul>
+                    </div>
+                </div>
+                <div class="w-full md:w-auto text-center md:text-right">
+                    Text:&nbsp;
+                    <x-select wire:model="size">
+                        <option value="small">Small</option>
+                        <option value="medium">Medium</option>
+                        <option value="large">Large</option>
+                    </x-select>
+                </div>
             @endif
-            <div class="w-full md:w-auto">
+            <div class="w-full md:w-auto text-center md:text-right">
                 View:&nbsp;
                 <x-select wire:model="view">
                     <option value="grid">Grid</option>
@@ -40,41 +63,33 @@
                         <p class="text-3xl">No services for this date.</p>
                     </div>
                 @else
-                    <div wire:loading.class="opacity-50" class="overflow-auto">
+                    <div wire:loading.class="opacity-50" class="overflow-auto {{ $sizes[$size]['text'] }}">
                         <table>
                             <thead>
-                            <tr class="bg-red-800 text-white">
+                            <tr class="bg-red-800 text-white block">
                                 <th class="border" style="min-width: 200px;"></th>
                                 @foreach($period as $time)
                                     @if($loop->index%4 === 0)
-                                        <th class="border text-left px-3 py-2" colspan="4">{{  $time->format("h:ia") }}</th>
+                                        <th class="border text-left p-1 overflow-hidden" colspan="{{ $loop->remaining >= 4 ? 4 : ($loop->remaining + 1) }}" style="min-width: {{ $sizes[$size]['col']*($loop->remaining >= 4 ? 4 : ($loop->remaining+1)) }}px;max-width: {{ $sizes[$size]['col']*($loop->remaining >= 4 ? 4 : ($loop->remaining+1)) }}px;">{{  $time->format("h:ia") }}</th>
                                     @endif
                                 @endforeach
                             </tr>
-                            <tr>
-                                <th class="p-0 h-0"></th>
-                                @foreach($period as $time)
-                                    <td class="p-0 h-0" style="min-width: 50px;"></td>
-                                @endforeach
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr>
-                                <th class="text-left px-3 py-2 border bg-gray-600 text-white border-white" colspan="{{ $period->count() + 1 }}">Services</th>
+                            <tr class="block">
+                                <th class="text-left p-1 border bg-gray-600 text-white border-white" colspan="{{ $period->count() + 1 }}" style="min-width: {{ $sizes[$size]['col']*($period->count() + 4) }}px;">Services</th>
                             </tr>
                             @if($services->count())
                                 @foreach($services as $service)
                                     @php($serviceStart = \Carbon\Carbon::parse($date . " " . $service->start->format("H:i:s")))
-                                    <tr>
-                                        <th class="border px-3 py-2 {{ $loop->even ? '' : 'bgr-gray-100' }}">{{ $service }}</th>
+                                    <tr class="block">
+                                        <th class="border p-1 {{ $loop->even ? '' : 'bgr-gray-100' }}" style="min-width:200px;">{{ $service }}</th>
                                         @php($cols = 0)
                                         @foreach($period as $time)
                                             @if($cols < 1)
                                                 @if($time->equalTo($serviceStart))
                                                     @php($cols = $service->columns())
-                                                    <td class="border bg-red-800 text-white text-center" colspan="{{ $cols }}">{{ \Carbon\Carbon::parse(date("Y-m-d " . $service->start->format("H:i:s")))->format("h:ia") }} - {{ \Carbon\Carbon::parse(date("Y-m-d " . $service->finish->format("H:i:s")))->format("h:ia") }}</td>
+                                                    <td class="border bg-red-800 text-white text-center" colspan="{{ $cols }}" style="min-width: {{ $sizes[$size]['col']*$cols }}px;">{{ \Carbon\Carbon::parse(date("Y-m-d " . $service->start->format("H:i:s")))->format("h:ia") }} - {{ \Carbon\Carbon::parse(date("Y-m-d " . $service->finish->format("H:i:s")))->format("h:ia") }}</td>
                                                 @else
-                                                    <td class="border bg-gray-300 border-white"></td>
+                                                    <td class="border bg-gray-300 border-white" style="min-width: {{ $sizes[$size]['col'] }}px;"></td>
                                                 @endif
                                             @endif
                                             @php($cols--)
@@ -82,45 +97,59 @@
                                     </tr>
                                 @endforeach
                             @else
-                                <tr>
-                                    <td class="border text-center px-3 py-2 bg-red-800 text-white" colspan="{{ $period->count() + 1 }}">No Services</td>
+                                <tr class="block">
+                                    <td class="border text-center p-1 bg-red-800 text-white" colspan="{{ $period->count() + 1 }}" style="min-width: {{ $sizes[$size]['col']*($period->count() + 4) }}px;">No Services</td>
                                 </tr>
                             @endif
-                            <tr>
-                                <th class="text-left px-3 py-2 border bg-gray-600 text-white border-white" colspan="{{ $period->count() + 1 }}">Bookings</th>
+                            <tr class="block">
+                                <th class="text-left p-1 border bg-gray-600 text-white border-white" colspan="{{ $period->count() + 1 }}" style="min-width: {{ $sizes[$size]['col']*($period->count() + 4) }}px;">Bookings</th>
                             </tr>
+                            </thead>
+                            <tbody class="block max-h-75vh overflow-auto">
                             @foreach($tables as $table)
                                 @php($bgGray = $loop->even)
-                                <tr>
-                                    <th class="border px-3 py-2 {{ $loop->even ? '' : 'bg-gray-100' }}">{{ $table }}</th>
+                                <tr class="block">
+                                    <th class="border p-1 {{ $loop->even ? '' : 'bg-gray-100' }}" style="min-width:200px;max-width:200px;">{{ $table }}</th>
                                     @php($cols = 0)
                                     @foreach($period as $time)
                                         @if($cols < 1)
                                             @if($booking = $table->bookings()->whereNotIn("status", ["cancelled", "rejected", "no show"])->whereBetween("booked_at", [$time, $time->copy()->addMinutes($restaurant->interval - 1)])->first())
                                                 @php($cols = $booking->columns())
-                                                <td class="border p-0" data-covers="{{ $booking->covers }}" colspan="{{ $cols }}">
-                                                    <a class="h-full" href="{{ route("restaurant.booking", [$restaurant, $booking]) }}">
-                                                        <div  class="relative w-full h-full px-3 py-2 hover:bg-red-700 hover:text-white transition-all duration-150 ease-in-out {{ (!empty($search) && preg_match("/{$search}/i", $booking->name)) ? 'bg-red-800 text-white' : ($bgGray ? 'bg-gray-100' : '') }}">
-                                                            <div class="flex justify-between">
-                                                                <h5 class="flex space-x-2">
-                                                                    <span class="font-bold">{{ $booking->name }}</span>
-                                                                    <span class="flex">
-                                                                    <svg class="h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                                                                    </svg>
-                                                                    {{ $booking->covers }}
-                                                                </span>
-                                                                </h5>
-                                                                <p>{{ $booking->tableNumber }}</p>
-                                                            </div>
-                                                            <p>{{ $booking->booked_at->format("h:ia") }} - {{ $booking->finish_at->format("h:ia") }}</p>
-                                                            @if(!empty($booking->comments))
-                                                                @if(strlen($booking->comments) > 25)
-                                                                    <p title="{{ $booking->comments }}">{{ substr($booking->comments, 0, 25) }}...</p>
-                                                                @else
-                                                                    <p>{{ $booking->comments }}</p>
+                                                <td class="border p-0" data-covers="{{ $booking->covers }}" colspan="{{ $cols }}" style="min-width: {{ $sizes[$size]['col']*$cols }}px;">
+                                                    <a class="block h-full" href="{{ route("restaurant.booking", [$restaurant, $booking]) }}">
+                                                        <div  class="relative w-full h-full p-1 hover:bg-red-700 hover:text-white transition-all duration-150 ease-in-out {{ (!empty($search) && preg_match("/{$search}/i", $booking->name)) ? 'bg-red-800 text-white scroll-me' : ($bgGray ? 'bg-gray-100' : '') }}">
+                                                            <div class="grid grid-cols-2">
+                                                                @if(in_array("name", $show) || in_array("guests", $show))
+                                                                    <h5 class="flex space-x-2">
+                                                                        @if(in_array("name", $show))
+                                                                            <span class="font-bold">{{ $booking->name }}</span>
+                                                                        @endif
+                                                                        @if(in_array("guests", $show))
+                                                                            <span class="flex">
+                                                                                <svg class="h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                                                                </svg>
+                                                                                {{ $booking->covers }}
+                                                                            </span>
+                                                                        @endif
+                                                                    </h5>
                                                                 @endif
-                                                            @endif
+                                                                @if(in_array("table", $show))
+                                                                    <p class="text-right">{{ $booking->tableNumber }}</p>
+                                                                @endif
+                                                                @if(in_array("time", $show))
+                                                                    <p class="col-span-2">{{ $booking->booked_at->format("h:ia") }} - {{ $booking->finish_at->format("h:ia") }}</p>
+                                                                @endif
+                                                                @if(in_array("comments", $show) && !empty($booking->comments))
+                                                                    <div class="col-span-2">
+                                                                        @if(strlen($booking->comments) > 25)
+                                                                            <p title="{{ $booking->comments }}">{{ substr($booking->comments, 0, 25) }}...</p>
+                                                                        @else
+                                                                            <p>{{ $booking->comments }}</p>
+                                                                        @endif
+                                                                    </div>
+                                                                @endif
+                                                            </div>
                                                             @if($booking->status === "pending")
                                                                 <div class="flex justify-center items-center absolute inset-0 bg-gray-300 bg-opacity-75 text-gray-700 hover:text-gray-500">
                                                                     <i>Pending</i>
@@ -131,7 +160,7 @@
                                                 </td>
                                                 @php($bgGray = !$bgGray)
                                             @else
-                                                <td wire:click="createNewBooking('{{ $time }}', '{{ $table->id }}')" x-data="{ hover: false }" x-on:mouseenter="hover = true" x-on:mouseleave="hover = false" class="border border-white bg-gray-300 text-center cursor-pointer justify-center align-middle text-white hover:bg-red-800 transition-all ease-in-out duration-150" style="min-width: 50px;">
+                                                <td wire:click="createNewBooking('{{ $time }}', '{{ $table->id }}')" x-data="{ hover: false }" x-on:mouseenter="hover = true" x-on:mouseleave="hover = false" class="border border-white bg-gray-300 text-center cursor-pointer justify-center align-middle text-white hover:bg-red-800 transition-all ease-in-out duration-150" style="min-width: {{ $sizes[$size]['col'] }}px;">
                                                     <x-icons.plus x-cloak x-show.transition.in="hover" class="h-8 mx-auto"/>
                                                 </td>
                                             @endif
@@ -141,6 +170,16 @@
                                 </tr>
                             @endforeach
                             </tbody>
+                            <tfoot>
+                            <tr class="bg-red-800 text-white block">
+                                <th class="border" style="min-width: 200px;"></th>
+                                @foreach($period as $time)
+                                    @if($loop->index%4 === 0)
+                                        <th class="border text-left p-1 overflow-hidden" colspan="{{ $loop->remaining >= 4 ? 4 : ($loop->remaining + 1) }}" style="min-width: {{ $sizes[$size]['col']*($loop->remaining >= 4 ? 4 : ($loop->remaining+1)) }}px;max-width: {{ $sizes[$size]['col']*($loop->remaining >= 4 ? 4 : ($loop->remaining+1)) }}px;">{{  $time->format("h:ia") }}</th>
+                                    @endif
+                                @endforeach
+                            </tr>
+                            </tfoot>
                         </table>
                     </div>
                 @endif
@@ -282,4 +321,20 @@
             <x-button class="bg-red-800 hover:bg-red-700" wire:loading.attr="disabled" wire:click="submitBooking">Save</x-button>
         </x-slot>
     </x-jet-dialog-modal>
+
+    @push("scripts")
+        <script>
+            document.addEventListener("livewire:load", () => {
+                window.addEventListener("search", () => {
+                    let found = document.getElementsByClassName("scroll-me")
+
+                    if(found.length){
+                        found[0].scrollIntoView({
+                            behavior: "smooth"
+                        })
+                    }
+                })
+            })
+        </script>
+    @endpush
 </div>

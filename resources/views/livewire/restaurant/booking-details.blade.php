@@ -13,7 +13,7 @@
                 <a href="mailto:{{ $booking->email }}">{{ $booking->email }}</a>
             </p>
         @endif
-        @if($booking->booked_at->format("Y-m-d H:i:s") > \Carbon\Carbon::now()->setTimezone("Europe/London")->format("Y-m-d H:i:s") && ($booking->booked_by == auth()->user()->id || $restaurant->staff->contains(auth()->user())))
+        @if(($booking->booked_at->format("Y-m-d H:i:s") > \Carbon\Carbon::now()->setTimezone("Europe/London")->format("Y-m-d H:i:s") && $booking->booked_by == auth()->user()->id) || $restaurant->staff->contains(auth()->user()))
             <div>
                 <label><x-icons.user class="h-5 inline mr-2"/> Guests</label>
                 <x-jet-input class="w-full" type="number" min="1" wire:model="booking.covers"/>
@@ -74,7 +74,7 @@
             </p>
         @endif
 
-        @if($booking->booked_at->isFuture() && ($booking->booked_by == auth()->user()->id || $restaurant->staff->contains(auth()->user())))
+        @if(($booking->booked_at->format("Y-m-d H:i:s") > \Carbon\Carbon::now()->setTimezone("Europe/London")->format("Y-m-d H:i:s") && $booking->booked_by == auth()->user()->id) || $restaurant->staff->contains(auth()->user()))
             <div class="col-span-2">
                 <x-button type="submit" class="w-full justify-center bg-green-400 hover:bg-green-300">
                     <x-icons.save class="h-6 mr-2"/>

@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Restaurant;
 
 use App\Events\BookingStatusUpdated;
 use App\Models\Booking;
+use Carbon\Carbon;
 use Livewire\Component;
 use Stripe\PaymentIntent;
 
@@ -15,6 +16,7 @@ class BookingStatus extends Component
     public $seat_table = false;
     public $reject_confirmation = false;
     public $confirm_confirmation = false;
+    public $finish_table = false;
     public $fee = 0.00;
 
     protected $rules = [
@@ -69,6 +71,7 @@ class BookingStatus extends Component
         $this->reject_confirmation = false;
         $this->confirm_confirmation = false;
 
+        $this->emit("update-booking");
         BookingStatusUpdated::dispatch($this->booking);
     }
 
@@ -94,5 +97,16 @@ class BookingStatus extends Component
         }
 
         $this->bookingStatus("no show");
+    }
+
+    public function finished()
+    {
+        $this->booking->finish_at = Carbon::now()->setTimezone("Europe/London");
+
+        $this->booking->save();
+
+        $this->finish_table = false;
+
+        $this->emit("update-booking");
     }
 }

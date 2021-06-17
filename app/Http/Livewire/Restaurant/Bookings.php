@@ -20,8 +20,24 @@ class Bookings extends Component
     public $status = "all";
     public $createBooking = false;
     public $view = "grid";
+    public $show = ["name", "guests", "table", "time", "comments"];
+    public $size = "medium";
+    public $sizes = [
+        "small" => [
+            "text" => "text-sm",
+            "col" => "25",
+        ],
+        "medium" => [
+            "text" => "text-md",
+            "col" => "50",
+        ],
+        "large" => [
+            "text" => "text-lg",
+            "col" => "75",
+        ],
+    ];
 
-    protected $queryString = ['search', 'date', 'view', 'status'];
+    protected $queryString = ['search', 'date', 'view', 'status', 'show', 'size'];
 
     protected $rules = [
         "newBooking.restaurant_id" => "required",
@@ -54,6 +70,11 @@ class Bookings extends Component
         }
 
         return $listenOn;
+    }
+
+    public function updatedSearch()
+    {
+        $this->dispatchBrowserEvent("search");
     }
 
     public function updatedNewBookingCovers()
