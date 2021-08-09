@@ -123,7 +123,7 @@ class Bookings extends Component
         }
     }
 
-    public function createNewBooking($time, $table)
+    public function createNewBooking($time = null, $table = null)
     {
         $this->resetErrorBag();
 
@@ -133,22 +133,24 @@ class Bookings extends Component
         $this->newBooking->booked_at = $time;
         $this->newBooking->table_id = $table;
 
-        $this->nextBooking = $this->newBooking->tableNumber->bookings()->whereNotIn("status", ["rejected", "cancelled", "no show"])->where("booked_at", ">", $time)->first();
-
         $this->createBooking = true;
     }
 
     public function submitBooking()
     {
+        $this->validate();
+
+        $this->newBooking->load('tableNumber');
+        $time = $this->newBooking->booked_at;
+        $this->nextBooking = $this->newBooking->tableNumber->bookings()->whereNotIn("status", ["rejected", "cancelled", "no show"])->where("booked_at", ">", $time)->first();
+
         if($this->nextBooking){
             $this->validate([
                 "newBooking.finish_at" => "required|before_or_equal:" . $this->nextBooking->booked_at->format("Y-m-d H:i")
             ]);
         }
 
-        $this->validate();
-
-        $this->newBooking->status = "confirmed";
+	    $this->newBooking->status = "confirmed";
 
         $this->newBooking->save();
 

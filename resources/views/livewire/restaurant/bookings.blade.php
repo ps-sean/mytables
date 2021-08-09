@@ -7,7 +7,8 @@
         </div>
     </x-slot>
     <div class="bg-white p-5">
-        <div class="container mx-auto md:flex justify-between space-y-3 mb-6">
+        <div class="container mx-auto md:flex justify-between gap-3 mb-6">
+            <x-button class="bg-red-800 hover:bg-red-700" wire:loading.attr="disabled" wire:click="createNewBooking">New Booking</x-button>
             <x-jet-input class="w-full md:w-auto" wire:model="search" placeholder="Search"/>
             @if($view === "list")
                 <div class="w-full md:w-auto">
@@ -113,7 +114,7 @@
                                     @php($cols = 0)
                                     @foreach($period as $time)
                                         @if($cols < 1)
-                                            @if($booking = $table->bookings()->whereNotIn("status", ["cancelled", "rejected", "no show"])->whereBetween("booked_at", [$time, $time->copy()->addMinutes($restaurant->interval - 1)])->first())
+                                            @if($booking = $bookings->where("table_id", $table->id)->whereBetween("booked_at", [$time, $time->copy()->addMinutes($restaurant->interval - 1)])->first())
                                                 @php($cols = $booking->columns())
                                                 <td class="border p-0" data-covers="{{ $booking->covers }}" colspan="{{ $cols }}" style="min-width: {{ $sizes[$size]['col']*$cols }}px;">
                                                     <a class="block h-full" href="{{ route("restaurant.booking", [$restaurant, $booking]) }}">
@@ -249,12 +250,19 @@
         <x-slot name="content">
             @if(!empty($newBooking))
                 <div class="space-y-2">
+                    <ul class="list-inside list-disc text-red-600">
+                        @foreach($errors as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+
                     <div class="flex pt-3">
                         <div class="px-2">
                             <x-icons.enter class="h-6"/>
                         </div>
-                        <div>
-                            <h5 class="font-bold text-lg">{{ $newBooking->booked_at->toDayDateTimeString() }}</h5>
+                        <div class="w-full">
+                            <x-jet-input class="w-full" type="datetime-local" wire:model="newBooking.booked_at" />
+                            @error("newBooking.booked_at") <p class="text-red-600">{{ $message }}</p> @enderror
                         </div>
                     </div>
 
@@ -270,11 +278,27 @@
 
                     <div class="flex items-center">
                         <div class="px-2">
+                            <x-icons.table class="h-6"/>
+                        </div>
+                        <div class="w-full">
+                            <x-select wire:model="newBooking.table_id">
+                                <option value="">--</option>
+                                @foreach($restaurant->tables as $table)
+                                    <option value="{{ $table->id }}">{{ $table }}</option>"
+                                @endforeach
+                            </x-select>
+                            @error("newBooking.table_id") <p class="text-red-600">{{ $message }}</p> @enderror
+                        </div>
+                    </div>
+
+
+                    <div class="flex items-center">
+                        <div class="px-2">
                             <x-icons.group class="h-6"/>
                         </div>
                         <div class="w-full">
                             <x-jet-input class="w-auto" type="number" wire:model="newBooking.covers" min="1" /> guests
-                            @if($newBooking->covers > $newBooking->tableNumber->seats)
+                            @if(!empty($newBooking->table_id) && $newBooking->covers > $newBooking->tableNumber->seats)
                                 <p class="text-gray-500">If another table is being used for this booking, please book out that table too!</p>
                             @endif
                             @error("newBooking.covers") <p class="text-red-600">{{ $message }}</p> @enderror
