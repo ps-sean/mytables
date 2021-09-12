@@ -40,7 +40,7 @@ task('websockets', function () {
 
 host('18.133.49.69')
     ->user('ec2-user')
-    ->identityFile('~/.ssh/myTables.pem')
+    ->identityFile('~/.ssh/mt2.pem')
     ->set('deploy_path', '/var/www/html');
 
 // Tasks

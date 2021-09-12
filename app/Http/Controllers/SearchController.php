@@ -20,10 +20,14 @@ class SearchController extends Controller
         $restaurants = collect([]);
 
         if(!empty($request->search)){
-            $restaurants = Restaurant::where([
-                ["name", "LIKE", "%" . $_GET['search'] . "%"],
-                ["status", "live"],
-            ])->get();
+            $restaurants = Restaurant::where("name", "LIKE", "%" . $_GET['search'] . "%")
+                ->where(function ($query) {
+                    $query->where("status", "live");
+                    $query->orWhereHas("staff", function ($query) {
+                        $query->where("user_id", Auth::user()->id);
+                    });
+                })
+                ->get();
 
             $restaurants = $restaurants->merge(SearchController::byLocation($request));
 
@@ -70,7 +74,12 @@ class SearchController extends Controller
 
     public static function byRadius($lat, $lng, $distance = 5)
     {
-        return Restaurant::where("status", "live")
+        return Restaurant::where(function ($query) {
+            $query->where("status", "live");
+            $query->orWhereHas("staff", function ($query) {
+                $query->where("user_id", Auth::user()->id);
+            });
+        })
             ->whereRaw(SearchController::radiusQuery($lat, $lng) . "<" . $distance)
             ->selectRaw("*, " . SearchController::radiusQuery($lat, $lng) . " as distance")
             ->get();

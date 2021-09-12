@@ -17,7 +17,7 @@ class TableSettings extends Component
         'tables.*.id' => '',
         'tables.*.name' => 'required',
         'tables.*.seats' => 'min:1',
-        'tables.*.table_group_id' => '',
+        'tables.*.table_group_id' => 'required',
         'tables.*.bookable' => 'boolean',
     ];
 
@@ -64,6 +64,8 @@ class TableSettings extends Component
 
     public function submit()
     {
+        $this->validate();
+        
         // delete any tables that are no longer present
         // get a list of ID's
         $existingTables = $this->tables->whereNotNull("id")->pluck("id");

@@ -81,7 +81,9 @@ class RestaurantController extends Controller
     public function show(Restaurant $restaurant, $name = null)
     {
         if(strtolower($restaurant->status->text) !== "live"){
-            return view("restaurant.offline");
+            if (!$restaurant->staff->contains(Auth::user())) {
+                return view("restaurant.offline");
+            }
         }
 
         $specialHours = $restaurant->open_hours_exceptions()
