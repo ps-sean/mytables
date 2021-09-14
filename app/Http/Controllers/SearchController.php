@@ -23,9 +23,12 @@ class SearchController extends Controller
             $restaurants = Restaurant::where("name", "LIKE", "%" . $_GET['search'] . "%")
                 ->where(function ($query) {
                     $query->where("status", "live");
-                    $query->orWhereHas("staff", function ($query) {
-                        $query->where("user_id", Auth::user()->id);
-                    });
+
+                    if (Auth::check()) {
+                        $query->orWhereHas("staff", function ($query) {
+                            $query->where("user_id", Auth::user()->id);
+                        });
+                    }
                 })
                 ->get();
 
@@ -76,9 +79,12 @@ class SearchController extends Controller
     {
         return Restaurant::where(function ($query) {
             $query->where("status", "live");
-            $query->orWhereHas("staff", function ($query) {
-                $query->where("user_id", Auth::user()->id);
-            });
+
+            if (Auth::check()) {
+                $query->orWhereHas("staff", function ($query) {
+                    $query->where("user_id", Auth::user()->id);
+                });
+            }
         })
             ->whereRaw(SearchController::radiusQuery($lat, $lng) . "<" . $distance)
             ->selectRaw("*, " . SearchController::radiusQuery($lat, $lng) . " as distance")
