@@ -45,7 +45,7 @@
                         <a href="#" wire:click.prevent="showBooking('{{ $serviceTime->time }}')" class="shadow rounded p-5 text-center hover:bg-red-800 hover:text-white transition ease-in-out duration-500 cursor-pointer">
                             <h5 class="font-bold text-lg">{{ $serviceTime->time->format("H:ia") }}</h5>
                             @foreach($serviceTime->services as $service)
-                                <p>
+                                <p class="{{ !$loop->first ? 'border-t border-gray-200' : '' }}">
                                     @if(!empty($service->description))
                                         <svg class="h-4 inline text-gray-400 hover:text-gray-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                             <title>{{ $service->description }}</title>
