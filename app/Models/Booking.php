@@ -59,7 +59,7 @@ class Booking extends Model
 
     public function setBookedAtAttribute($value)
     {
-        if(!$value instanceof Carbon){
+        if (!$value instanceof Carbon) {
             $value = Carbon::parse(urldecode($value));
         }
 
@@ -74,7 +74,7 @@ class Booking extends Model
         $tablesUsed = collect([]);
 
         // there is a free timeslot, now check how many tables are booked in between the start and finish time
-        $seatedBookings = $this->restaurant->bookings()->where(function($query){
+        $seatedBookings = $this->restaurant->bookings()->where(function ($query) {
             $query->where([
                 ["booked_at", ">=", $this->booked_at->subMinutes($this->restaurant->turnaround_time)],
                 ["booked_at", "<", $this->finish_at->addMinutes($this->restaurant->turnaround_time)],
@@ -91,8 +91,8 @@ class Booking extends Model
             ->whereIn("status", ["pending", "confirmed", "seated"])
             ->get();
 
-        foreach($seatedBookings as $booking){
-            if(!$tablesUsed->contains($booking->tableNumber)){
+        foreach ($seatedBookings as $booking) {
+            if (!$tablesUsed->contains($booking->tableNumber)) {
                 $tablesUsed->push($booking->tableNumber);
             }
         }
@@ -104,7 +104,7 @@ class Booking extends Model
             ->where("end_date", ">", $this->booked_at)
             ->get();
 
-        foreach($blocks as $block){
+        foreach ($blocks as $block) {
             $blockedTables = array_merge($blockedTables, $block->tables);
         }
 
@@ -116,7 +116,7 @@ class Booking extends Model
             ->whereNotIn("id", $blockedTables)
             ->orderBy("seats");
 
-        if($group != "all"){
+        if ($group != "all") {
             $tables->where("table_group_id", $group);
         }
 
@@ -128,10 +128,10 @@ class Booking extends Model
         // check for exception services first
         $services = $this->restaurant->service_exceptions()->whereDate("service_date", $this->booked_at)->orderBy("start")->get();
 
-        if($services->count()){
+        if ($services->count()) {
             $closed = $services->where("closed", 1);
 
-            if($closed->count()){
+            if ($closed->count()) {
                 return collect([]);
             }
 
@@ -139,11 +139,11 @@ class Booking extends Model
             $services = $this->restaurant->services()->where("day", $this->booked_at->shortEnglishDayOfWeek)->orderBy("start")->get();
         }
 
-        foreach($services as $index => $service){
+        foreach ($services as $index => $service) {
             $start = $service->start->setDateFrom($this->booked_at);
             $finish = $service->last_booking->setDateFrom($this->booked_at);
 
-            if($start > $this->booked_at || $finish < $this->booked_at){
+            if ($start > $this->booked_at || $finish < $this->booked_at) {
                 $services->forget($index);
             }
         }
@@ -153,9 +153,9 @@ class Booking extends Model
 
     public function checkTime($group = "all")
     {
-        if($this->exists){
+        if ($this->exists) {
             // booking already exists, check if the new table and/or time is available
-            $tableBookings = $this->restaurant->bookings()->where(function($query){
+            $tableBookings = $this->restaurant->bookings()->where(function ($query) {
                 $query->where([
                     ["booked_at", ">=", $this->booked_at->subMinutes($this->restaurant->turnaround_time)],
                     ["booked_at", "<", $this->finish_at->addMinutes($this->restaurant->turnaround_time)],
@@ -173,7 +173,7 @@ class Booking extends Model
                 ->where("id", "!=", $this->id)
                 ->count();
 
-            if($tableBookings > 0){
+            if ($tableBookings > 0) {
                 return false;
             }
 
@@ -185,9 +185,9 @@ class Booking extends Model
             ["booked_at", "<", $this->booked_at->clone()->addMinutes($this->restaurant->booking_timeframe["minutes"])],
         ])
             ->whereIn("status", ["pending", "confirmed", "seated"])
-            ->count();
+            ->sum("covers");
 
-        if($currentBookingsLimit < $this->restaurant->booking_timeframe["tables"]){
+        if (($currentBookingsLimit + $this->covers) <= $this->restaurant->booking_timeframe["covers"]) {
             return $this->assignTable($group);
         }
 
@@ -198,6 +198,6 @@ class Booking extends Model
     {
         $length = $this->booked_at->diffInMinutes($this->finish_at);
 
-        return floor($length/$this->restaurant->interval);
+        return floor($length / $this->restaurant->interval);
     }
 }

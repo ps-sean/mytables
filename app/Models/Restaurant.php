@@ -181,14 +181,14 @@ class Restaurant extends Model
         $parts = explode(":", $value);
 
         return [
-            "tables" => $parts[0],
+            "covers" => $parts[0],
             "minutes" => $parts[1]
         ];
     }
 
     public function setBookingTimeframeAttribute($value)
     {
-        $this->attributes['booking_timeframe'] = $value['tables'] . ":" . $value['minutes'];
+        $this->attributes['booking_timeframe'] = $value['covers'] . ":" . $value['minutes'];
     }
 
     public function getMonthlyPaymentAttribute()
@@ -413,7 +413,7 @@ class Restaurant extends Model
                 $todays = $this->service_exceptions()->whereDate("service_date", $time)
                     ->where("start", "<=", $time->format("H:i"))
                     ->where(function($query) use ($time){
-                        $query->where("finish", ">=", $time->format("H:i"));
+                        $query->where("last_booking", ">=", $time->format("H:i"));
                         $query->orWhereRaw("finish<=start");
                     })->get();
 
@@ -422,7 +422,7 @@ class Restaurant extends Model
                         ["day", $time->shortEnglishDayOfWeek],
                         ["start", "<=", $time->format("H:i")],
                     ])->where(function($query) use ($time){
-                        $query->where("finish", ">=", $time->format("H:i"));
+                        $query->where("last_booking", ">=", $time->format("H:i"));
                         $query->orWhereRaw("finish<=start");
                     })->get();
                 }

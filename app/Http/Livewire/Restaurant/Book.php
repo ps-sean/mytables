@@ -18,6 +18,7 @@ class Book extends Component
     public $covers = 2;
     public $save_method = false;
     public $card_method = "add";
+    public $max_covers;
 
     protected $rules = [
         "booking.covers" => ["required", "min:1"],
@@ -41,7 +42,9 @@ class Book extends Component
             $this->group = $restaurant->table_groups->first()->id;
         }
 
-        $this->rules["booking.covers"][] = "max:" . $restaurant->max_booking_size($this->group);
+        $this->max_covers = $this->restaurant->max_booking_size($this->group);
+
+        $this->rules["booking.covers"][] = "max:" . $this->max_covers;
 
         $this->table_groups = $restaurant->table_groups()->whereHas("tables", function($query){
             return $query->where("bookable", 1);
@@ -63,6 +66,13 @@ class Book extends Component
     public function selectDate($newDate)
     {
         $this->selectedDate = Carbon::parse($newDate);
+    }
+
+    public function updatedGroup($value)
+    {
+        $this->max_covers = $this->restaurant->max_booking_size($value);
+
+        $this->rules["booking.covers"][] = "max:" . $this->max_covers;
     }
 
     public function showBooking($time)

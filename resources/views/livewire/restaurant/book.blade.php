@@ -1,4 +1,4 @@
-<div wire:keydown.escape="hideBooking" x-data="{card_method: @entangle('card_method')}">
+<div wire:keydown.escape="hideBooking" x-data="{ card_method: @entangle('card_method'), covers: @entangle('covers'), max_covers: @entangle('max_covers') }">
     <div class="p-5 space-y-5">
         <div class="flex overflow-auto rounded border mx-auto max-w-full" style="width: fit-content;">
             @foreach($dates as $date)
@@ -31,14 +31,14 @@
             <img class="mx-auto h-16" src="{{ asset("img/loading.gif") }}"/>
         </div>
 
-        @if($covers > $restaurant->max_booking_size($group))
-            <div class="lg:wd-1/2 space-y-5">
-                <p>{{ $restaurant }} can only take bookings of up to {{ $restaurant->max_booking_size($group) }} guests online in the {{ \App\Models\TableGroup::find($group) }}. Please contact the restaurant using the form below to book bigger tables and they will get back to you as soon as possible.</p>
-                <div class="md:w-1/2 mx-auto">
-                    @livewire("contact-form", ["subject" => "Booking Enquiry", "to" => $restaurant->email, "extras" => ["Date: " . $selectedDate->toDayDateTimeString(), "Guests: " . $covers]])
-                </div>
+        <div x-cloak x-show.transition="covers > max_covers" class="lg:wd-1/2 space-y-5">
+            <p>{{ $restaurant }} can only take bookings of up to {{ $restaurant->max_booking_size($group) }} guests online in the {{ \App\Models\TableGroup::find($group) }}. Please contact the restaurant using the form below to book bigger tables and they will get back to you as soon as possible.</p>
+            <div class="md:w-1/2 mx-auto">
+                @livewire("contact-form", ["subject" => "Booking Enquiry", "to" => $restaurant->email, "extras" => ["Date: " . $selectedDate->toDayDateTimeString(), "Guests: " . $covers]])
             </div>
-        @else
+        </div>
+
+        @if($covers <= $restaurant->max_booking_size($group))
             <div wire:loading.remove wire:target="selectDate" class="grid grid-cols-2 lg:grid-cols-4 xl:grid-cols-6 gap-4">
                 @if($services->count())
                     @foreach($services as $serviceTime)

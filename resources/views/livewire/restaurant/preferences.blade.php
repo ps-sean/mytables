@@ -25,13 +25,13 @@
         </p>
         @error("restaurant.table_confirmation")<p class="col-span-6 text-red-600">{{ $message }}</p>@enderror
         <p class="col-span-6">
-            The maximum number of bookings within a timeframe is
-            <x-jet-input wire:model="restaurant.booking_timeframe.tables" type="number" min="0" max="{{ $restaurant->tables->count() }}"/>
-            tables every
+            Accept a maximum of
+            <x-jet-input wire:model="restaurant.booking_timeframe.covers" type="number" min="0" max="{{ $restaurant->tables->count() }}"/>
+            covers every
             <x-jet-input wire:model="restaurant.booking_timeframe.minutes" type="number" min="0" max="90"/>
             minutes.
         </p>
-        @error("restaurant.booking_timeframe.tables")<p class="col-span-6 text-red-600">{{ $message }}</p>@enderror
+        @error("restaurant.booking_timeframe.covers")<p class="col-span-6 text-red-600">{{ $message }}</p>@enderror
         @error("restaurant.booking_timeframe.minutes")<p class="col-span-6 text-red-600">{{ $message }}</p>@enderror
         <p class="col-span-6">Leave a minimum of <x-jet-input wire:model="restaurant.turnaround_time" type="number" min="0" max="90"/> minutes between bookings. (Time to clean table before next booking)</p>
         @error("restaurant.turnaround_time")<p class="col-span-6 text-red-600">{{ $message }}</p>@enderror
