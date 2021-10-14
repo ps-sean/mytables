@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTableGroupsTable extends Migration
+class CreateRestaurantSectionsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateTableGroupsTable extends Migration
      */
     public function up()
     {
-        Schema::create('table_groups', function (Blueprint $table) {
+        Schema::create('restaurant_sections', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
             $table->foreignId("restaurant_id");
@@ -28,6 +28,6 @@ class CreateTableGroupsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('table_groups');
+        Schema::dropIfExists('restaurant_sections');
     }
 }

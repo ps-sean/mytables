@@ -19,7 +19,7 @@ class CreateBookingsTable extends Migration
             $table->integer("restaurant_id");
             $table->dateTime("booked_at");
             $table->dateTime("finish_at");
-            $table->integer("table_id");
+            $table->string("table_ids");
             $table->integer("covers");
             $table->integer("booked_by")->nullable();
             $table->string("name");

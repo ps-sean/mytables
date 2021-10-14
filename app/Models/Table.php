@@ -25,20 +25,25 @@ class Table extends Model
     {
         $string = $this->name;
 
-        if($this->table_group){
-            $string .= " - " . $this->table_group;
+        if($this->section){
+            $string .= " - " . $this->section;
         }
 
         return $string;
     }
 
-    public function bookings()
+    public function section()
     {
-        return $this->hasMany(Booking::class);
+        return $this->belongsTo(RestaurantSection::class, "restaurant_section_id");
     }
 
-    public function table_group()
+    public function bookings()
     {
-        return $this->belongsTo(TableGroup::class);
+        return Booking::whereRaw("FIND_IN_SET(?,`table_ids`)", [$this->getKey()]);
+    }
+
+    public function getBookingsAttribute()
+    {
+        $this->bookings()->get();
     }
 }

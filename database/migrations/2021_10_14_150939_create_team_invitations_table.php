@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTablesTable extends Migration
+class CreateTeamInvitationsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,12 @@ class CreateTablesTable extends Migration
      */
     public function up()
     {
-        Schema::create('tables', function (Blueprint $table) {
+        Schema::create('team_invitations', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('team_id')->constrained()->cascadeOnDelete();
+            $table->string('email')->unique();
+            $table->string('role')->nullable();
             $table->timestamps();
-            $table->foreignId("restaurant_id");
-            $table->foreignId("restaurant_section_id")->nullable();
-            $table->string("name")->nullable();
-            $table->integer("seats")->default(2);
-            $table->softDeletes();
         });
     }
 
@@ -31,6 +29,6 @@ class CreateTablesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('tables');
+        Schema::dropIfExists('team_invitations');
     }
 }

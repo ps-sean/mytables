@@ -10,18 +10,18 @@ class TableSettings extends Component
 {
     public $restaurant, $tables;
     public $show = false;
-    public $groupModal = false;
+    public $sectionModal = false;
     public $blockModal = false;
 
     protected $rules = [
         'tables.*.id' => '',
         'tables.*.name' => 'required',
         'tables.*.seats' => 'min:1',
-        'tables.*.table_group_id' => 'required',
+        'tables.*.restaurant_section_id' => 'required',
         'tables.*.bookable' => 'boolean',
     ];
 
-    protected $listeners = ["groups-update" => "groupsUpdate"];
+    protected $listeners = ["sections-update" => "sectionsUpdate"];
 
     public function mount(Restaurant $restaurant)
     {
@@ -34,7 +34,7 @@ class TableSettings extends Component
         return view('livewire.restaurant.table-settings');
     }
 
-    public function groupsUpdate()
+    public function sectionsUpdate()
     {
         $this->restaurant->refresh();
     }
@@ -65,7 +65,7 @@ class TableSettings extends Component
     public function submit()
     {
         $this->validate();
-        
+
         // delete any tables that are no longer present
         // get a list of ID's
         $existingTables = $this->tables->whereNotNull("id")->pluck("id");
@@ -75,8 +75,8 @@ class TableSettings extends Component
         foreach($this->tables as $table){
             $table->restaurant_id = $this->restaurant->id;
 
-            if(empty($table->table_group_id)){
-                $table->table_group_id = null;
+            if(empty($table->restaurant_section_id)){
+                $table->restaurant_section_id = null;
             }
 
             $table->save();

@@ -37,11 +37,6 @@ class Booking extends Model
         return $this->belongsTo(Restaurant::class);
     }
 
-    public function tableNumber()
-    {
-        return $this->belongsTo(Table::class, "table_id");
-    }
-
     public function messages()
     {
         return $this->hasMany(BookingMessage::class);
@@ -57,6 +52,22 @@ class Booking extends Model
         return $this->hasOne(Review::class);
     }
 
+    public function getTablesAttribute()
+    {
+        if (!$this->relationLoaded('tables')) {
+            $tables = Table::whereIn('id', $this->table_ids)->get();
+
+            $this->setRelation('tables', $tables);
+        }
+
+        return $this->getRelation('tables');
+    }
+
+    public function tables()
+    {
+        return Table::whereIn("id", $this->table_ids);
+    }
+
     public function setBookedAtAttribute($value)
     {
         if (!$value instanceof Carbon) {
@@ -69,9 +80,30 @@ class Booking extends Model
         $this->attributes["finish_at"] = $value->clone()->addMinutes($this->restaurant->checkBookingRule($this->covers)->minutes);
     }
 
-    public function assignTable($group = "all")
+    public function setTableIdsAttribute($value)
     {
-        $tablesUsed = collect([]);
+        $this->attributes["table_ids"] = is_string($value) ? $value : implode(",", array_filter($value ?? []));
+    }
+
+    public function getTableIdsAttribute($value)
+    {
+        return is_string($value) ? explode(",", $value) : $value;
+    }
+
+    public function getTableNamesAttribute()
+    {
+        $names = [];
+
+        foreach ($this->tables as $table) {
+            $names[] = (string)$table;
+        }
+
+        return implode(", ", $names);
+    }
+
+    public function assignTable($section = "all")
+    {
+        $tablesUsed = [];
 
         // there is a free timeslot, now check how many tables are booked in between the start and finish time
         $seatedBookings = $this->restaurant->bookings()->where(function ($query) {
@@ -92,9 +124,7 @@ class Booking extends Model
             ->get();
 
         foreach ($seatedBookings as $booking) {
-            if (!$tablesUsed->contains($booking->tableNumber)) {
-                $tablesUsed->push($booking->tableNumber);
-            }
+            $tablesUsed = array_merge($tablesUsed, $booking->table_ids);
         }
 
         $blockedTables = [];
@@ -112,12 +142,12 @@ class Booking extends Model
         $tables = $this->restaurant->tables()
             ->where("bookable", 1)
             ->where("seats", ">=", $this->covers)
-            ->whereNotIn("id", $tablesUsed->whereNotNull("id")->pluck("id"))
+            ->whereNotIn("id", $tablesUsed)
             ->whereNotIn("id", $blockedTables)
             ->orderBy("seats");
 
-        if ($group != "all") {
-            $tables->where("table_group_id", $group);
+        if ($section != "all") {
+            $tables->where("restaurant_section_id", $section);
         }
 
         return $tables->first();
@@ -151,30 +181,33 @@ class Booking extends Model
         return $services;
     }
 
-    public function checkTime($group = "all")
+    public function checkTime($section = "all")
     {
         if ($this->exists) {
             // booking already exists, check if the new table and/or time is available
-            $tableBookings = $this->restaurant->bookings()->where(function ($query) {
-                $query->where([
-                    ["booked_at", ">=", $this->booked_at->subMinutes($this->restaurant->turnaround_time)],
-                    ["booked_at", "<", $this->finish_at->addMinutes($this->restaurant->turnaround_time)],
-                ]);
-                $query->orWhere([
-                    ["finish_at", ">", $this->booked_at->subMinutes($this->restaurant->turnaround_time)],
-                    ["finish_at", "<=", $this->finish_at->addMinutes($this->restaurant->turnaround_time)],
-                ]);
-                $query->orWhere([
-                    ["booked_at", "<=", $this->booked_at->subMinutes($this->restaurant->turnaround_time)],
-                    ["finish_at", ">=", $this->finish_at->addMinutes($this->restaurant->turnaround_time)],
-                ]);
-            })->where("table_id", $this->table_id)
-                ->whereIn("status", ["pending", "confirmed", "seated"])
-                ->where("id", "!=", $this->id)
-                ->count();
+            // check for other bookings on these tables at the same time
+            foreach ($this->table_ids as $tableID) {
+                $tableBookings = $this->restaurant->bookings()->where(function ($query) {
+                    $query->where([
+                        ["booked_at", ">=", $this->booked_at->subMinutes($this->restaurant->turnaround_time)],
+                        ["booked_at", "<", $this->finish_at->addMinutes($this->restaurant->turnaround_time)],
+                    ]);
+                    $query->orWhere([
+                        ["finish_at", ">", $this->booked_at->subMinutes($this->restaurant->turnaround_time)],
+                        ["finish_at", "<=", $this->finish_at->addMinutes($this->restaurant->turnaround_time)],
+                    ]);
+                    $query->orWhere([
+                        ["booked_at", "<=", $this->booked_at->subMinutes($this->restaurant->turnaround_time)],
+                        ["finish_at", ">=", $this->finish_at->addMinutes($this->restaurant->turnaround_time)],
+                    ]);
+                })->whereRaw("FIND_IN_SET(?, `table_ids`)", [$tableID])
+                    ->whereIn("status", ["pending", "confirmed", "seated"])
+                    ->where("id", "!=", $this->id)
+                    ->count();
 
-            if ($tableBookings > 0) {
-                return false;
+                if ($tableBookings > 0) {
+                    return false;
+                }
             }
 
             return true;
@@ -188,7 +221,7 @@ class Booking extends Model
             ->sum("covers");
 
         if (($currentBookingsLimit + $this->covers) <= $this->restaurant->booking_timeframe["covers"]) {
-            return $this->assignTable($group);
+            return $this->assignTable($section);
         }
 
         return false;

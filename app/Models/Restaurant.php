@@ -87,9 +87,9 @@ class Restaurant extends Model
         return $this->hasMany(BookingRule::class);
     }
 
-    public function table_groups()
+    public function sections()
     {
-        return $this->hasMany(TableGroup::class);
+        return $this->hasMany(RestaurantSection::class);
     }
 
     public function reviews()
@@ -220,16 +220,16 @@ class Restaurant extends Model
     }
 
     // functions
-    public function max_booking_size($group = "all")
+    public function max_booking_size($section = "all")
     {
-        if($group === "all"){
+        if($section === "all"){
             $largestTable = $this->tables()
                 ->where("bookable", 1)
                 ->orderBy("seats", "DESC")
                 ->first();
         } else {
             $largestTable = $this->tables()
-                ->where("table_group_id", $group)
+                ->where("restaurant_section_id", $section)
                 ->where("bookable", 1)
                 ->orderBy("seats", "DESC")
                 ->first();
@@ -347,7 +347,7 @@ class Restaurant extends Model
         return $times;
     }
 
-    public function allTimes(Carbon $date, $covers, $group = "all")
+    public function allTimes(Carbon $date, $covers, $section = "all")
     {
         $serviceTimes = [];
 
@@ -372,7 +372,7 @@ class Restaurant extends Model
                         "booked_at" => $currentTime,
                     ]);
 
-                    if($booking->checkTime($group)){
+                    if($booking->checkTime($section)){
                         $serviceTimes[] = $currentTime->clone();
                     }
 
@@ -384,9 +384,9 @@ class Restaurant extends Model
         return collect($serviceTimes)->unique();
     }
 
-    public function loadServices(Carbon $date, $covers, $group = "all")
+    public function loadServices(Carbon $date, $covers, $section = "all")
     {
-        $times = $this->allTimes($date, $covers, $group);
+        $times = $this->allTimes($date, $covers, $section);
 
         $available = [];
 

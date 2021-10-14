@@ -3,10 +3,12 @@
         <p class="text-gray-700 text-2xl font-bold col-span-2">
             {{ $booking->name }}
         </p>
-        <p class="text-gray-700 text-base flex items-start col-span-2">
-            <x-icons.phone class="h-5 inline mr-2"/>
-            <a href="tel:{{ $booking->contact_number }}">{{ $booking->contact_number }}</a>
-        </p>
+        @if(!empty($booking->contact_number))
+            <p class="text-gray-700 text-base flex items-start col-span-2">
+                <x-icons.phone class="h-5 inline mr-2"/>
+                <a href="tel:{{ $booking->contact_number }}">{{ $booking->contact_number }}</a>
+            </p>
+        @endif
         @if(!empty($booking->email))
             <p class="text-gray-700 text-base flex items-start col-span-2">
                 <x-icons.at class="h-5 inline mr-2"/>
@@ -14,24 +16,29 @@
             </p>
         @endif
         @if(($booking->booked_at->format("Y-m-d H:i:s") > \Carbon\Carbon::now()->setTimezone("Europe/London")->format("Y-m-d H:i:s") && $booking->booked_by == auth()->user()->id) || $restaurant->staff->contains(auth()->user()))
-            <div>
+            <div class="col-span-2">
                 <label><x-icons.user class="h-5 inline mr-2"/> Guests</label>
                 <x-jet-input class="w-full" type="number" min="1" wire:model="booking.covers"/>
                 @error("booking.covers")<span class="text-red-600">{{ $message }}</span>@enderror
             </div>
             @if($restaurant->staff->contains(auth()->user()))
-                <div>
+                <div class="col-span-2">
                     <label><x-icons.table class="h-5 inline mr-2"/> Table</label>
-                    <x-select class="w-full" wire:model="booking.table_id">
-                        @foreach($restaurant->tables()->orderBy("table_group_id")->orderBy("name")->get() as $table)
-                            <option value="{{ $table->id }}">{{ $table }}</option>
+                    <div class="border border-gray-200 rounded-sm w-full h-48 overflow-auto p-2 space-y-2 shadow-inner">
+                        @foreach($restaurant->tables as $table)
+                            <div>
+                                <label class="block">
+                                    <input type="checkbox" wire:model="bookingTables.{{ $table->getKey() }}" />
+                                    {{ $table }}
+                                </label>
+                            </div>
                         @endforeach
-                    </x-select>
+                    </div>
                 </div>
             @else
-                <p class="text-gray-700 text-base flex items-start">
+                <p class="text-gray-700 text-base flex items-start col-span-2">
                     <x-icons.table class="h-5 inline mr-2"/>
-                    {{ $booking->tableNumber }}
+                    {{ $booking->tableNames }}
                 </p>
             @endif
             <div>
@@ -56,7 +63,7 @@
             </p>
             <p class="text-gray-700 text-base flex items-start">
                 <x-icons.table class="h-5 inline mr-2"/>
-                {{ $booking->tableNumber }}
+                {{ $booking->tableNames }}
             </p>
             <p class="text-gray-700 text-base flex items-start">
                 <x-icons.calendar class="h-5 inline mr-2"/>

@@ -16,7 +16,8 @@ class Bookings extends Component
 {
     use WithPagination;
 
-    public $restaurant, $date, $tables, $search, $newBooking, $nextBooking, $services;
+    public $restaurant, $date, $tables, $search, $newBooking, $nextBooking, $services, $bookings;
+    public $newBookingTables = [];
     public $status = "all";
     public $createBooking = false;
     public $view = "grid";
@@ -44,11 +45,11 @@ class Bookings extends Component
         "newBooking.covers" => "required|min:1",
         "newBooking.booked_at" => "required",
         "newBooking.finish_at" => "required",
-        "newBooking.table_id" => "required",
         "newBooking.name" => "required",
         "newBooking.email" => "email",
         "newBooking.contact_number" => "min:11|max:16|phone",
         "newBooking.comments" => "",
+        "newBookingTables.*" => "",
     ];
 
     public function mount(Restaurant $restaurant, $date)
@@ -89,37 +90,35 @@ class Bookings extends Component
         $period = $this->restaurant->servicePeriod(Carbon::parse($this->date));
 
         if($this->view === "grid"){
-            $bookings = $this->restaurant->bookings()->whereDate("booked_at", $this->date)->whereNotIn("status", ["cancelled", "rejected", "no show"])->orderBy("booked_at")->get();
+            $reservations = $this->bookings;
         } else {
-            $bookings = $this->restaurant->bookings()->whereDate("booked_at", ">=", Carbon::now())->orderBy("booked_at");
+            $reservations = $this->restaurant->bookings()->whereDate("booked_at", ">=", Carbon::now())->orderBy("booked_at");
 
             if($this->status !== "all"){
-                $bookings = $bookings->where("status", $this->status);
+                $reservations = $reservations->where("status", $this->status);
             }
 
             if(!empty($this->search)){
-                $bookings = $bookings->where("name", 'like', '%' . $this->search . '%');
+                $reservations = $reservations->where("name", 'like', '%' . $this->search . '%');
             }
 
-            $bookings = $bookings->paginate(25);
+            $reservations = $reservations->paginate(25);
         }
 
         return view('livewire.restaurant.bookings', compact([
             "period",
-            "bookings"
+            "reservations"
         ]));
     }
 
     public function setTables()
     {
-        $this->bookings = $this->restaurant->bookings()->whereDate("booked_at", $this->date)->whereNotIn("status", ["cancelled", "rejected", "no show"])->orderBy("booked_at");
+        $this->bookings = $this->restaurant->bookings()->whereDate("booked_at", $this->date)->whereNotIn("status", ["cancelled", "rejected", "no show"])->orderBy("booked_at")->get();
 
-        $this->tables = $this->restaurant->tables->sortBy("table_group_id")->sortBy("name", SORT_NATURAL);
+        $this->tables = $this->restaurant->tables->sortBy("restaurant_section_id")->sortBy("name", SORT_NATURAL);
 
-        foreach($this->bookings->get() as $booking){
-            if(!$this->tables->contains($booking->tableNumber)){
-                $this->tables->push($booking->tableNumber);
-            }
+        foreach($this->bookings as $booking){
+            $this->tables = $this->tables->merge($booking->tables);
         }
     }
 
@@ -131,7 +130,12 @@ class Bookings extends Component
 
         $this->newBooking->covers = 2;
         $this->newBooking->booked_at = $time;
-        $this->newBooking->table_id = $table;
+
+        if ($table) {
+            $this->newBookingTables = [
+                (int)$table => true,
+            ];
+        }
 
         $this->createBooking = true;
     }
@@ -140,14 +144,21 @@ class Bookings extends Component
     {
         $this->validate();
 
-        $this->newBooking->load('tableNumber');
-        $time = $this->newBooking->booked_at;
-        $this->nextBooking = $this->newBooking->tableNumber->bookings()->whereNotIn("status", ["rejected", "cancelled", "no show"])->where("booked_at", ">", $time)->first();
+        if (count($this->newBookingTables) < 1) {
+            return $this->addError("newBookingTables", "PLease select at least 1 table");
+        }
 
-        if($this->nextBooking){
-            $this->validate([
-                "newBooking.finish_at" => "required|before_or_equal:" . $this->nextBooking->booked_at->format("Y-m-d H:i")
-            ]);
+        $this->newBooking->table_ids = array_keys(array_filter($this->newBookingTables));
+
+        foreach ($this->newBooking->tables as $table) {
+            $nextBooking = $table->bookings()
+                ->whereNotIn("status", ["rejected", "cancelled", "no show"])
+                ->where("booked_at", ">", $this->newBooking->booked_at)
+                ->first();
+
+            if ($nextBooking->booked_at < $this->newBooking->finish_at) {
+                return $this->addError("newBooking.finish_at", $table . " is being used by " . $nextBooking);
+            }
         }
 
 	    $this->newBooking->status = "confirmed";
@@ -155,5 +166,13 @@ class Bookings extends Component
         $this->newBooking->save();
 
         $this->createBooking = false;
+    }
+
+    public function fetchBooking($bookings, $table, $time)
+    {
+        return $bookings->filter(function ($booking, $key) use ($table) {
+            return $booking->tables->contains($table);
+        })->whereBetween("booked_at", [$time, $time->copy()->addMinutes($this->restaurant->interval - 1)])
+            ->first();
     }
 }

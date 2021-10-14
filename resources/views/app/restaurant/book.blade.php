@@ -1,5 +1,5 @@
 <x-frame-app-layout>
-    @if($booking->checkTime($group))
+    @if($booking->checkTime($section))
         <form method="POST">
             <div class="bg-white">
                 <div class="relative w-full h-64 bg-cover bg-center" style="background-image: url({{ $booking->restaurant->image }});">

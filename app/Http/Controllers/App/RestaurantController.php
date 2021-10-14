@@ -24,19 +24,19 @@ class RestaurantController extends Controller
             ->orderBy("open_date")
             ->get();
 
-        $defaultGroup = "all";
+        $defaultSection = "all";
 
-        if($restaurant->table_groups->count()){
-            $defaultGroup = $restaurant->table_groups->first()->id;
+        if($restaurant->sections->count()){
+            $defaultSection = $restaurant->sections->first()->id;
         }
 
         $dates = CarbonPeriod::create(Carbon::now(), Carbon::now()->addDays($restaurant->show_days))->toArray();
         $covers = $request->covers ?? 2;
-        $group = $request->group ?? $defaultGroup;
+        $section = $request->section ?? $defaultSection;
 
         $selectedDate = $request->has("date") ? Carbon::parse($request->date) : Carbon::now();
 
-        $services = $restaurant->loadServices($selectedDate, $covers, $group);
+        $services = $restaurant->loadServices($selectedDate, $covers, $section);
 
         return view("app.restaurant.show", compact([
             "restaurant",
@@ -45,7 +45,7 @@ class RestaurantController extends Controller
             "selectedDate",
             "specialHours",
             "covers",
-            "group"
+            "section"
         ]));
     }
 
@@ -63,13 +63,13 @@ class RestaurantController extends Controller
             "booked_at" => $request->time,
         ]);
 
-        $group = $request->group;
+        $section = $request->section;
 
         if(!empty($request->booking)){
             $booking->fill($request->booking);
 
-            if($table = $booking->checkTime($group)){
-                $booking->table_id = $table->id;
+            if($table = $booking->checkTime($section)){
+                $booking->table_ids = [$table->id];
                 $booking->save();
             }
         }
@@ -77,7 +77,7 @@ class RestaurantController extends Controller
         return view("app.restaurant.book", compact([
             "restaurant",
             "booking",
-            "group",
+            "section",
         ]));
     }
 }

@@ -114,7 +114,7 @@
                                     @php($cols = 0)
                                     @foreach($period as $time)
                                         @if($cols < 1)
-                                            @if($booking = $bookings->where("table_id", $table->id)->whereBetween("booked_at", [$time, $time->copy()->addMinutes($restaurant->interval - 1)])->first())
+                                            @if($booking = $this->fetchBooking($reservations, $table, $time))
                                                 @php($cols = $booking->columns())
                                                 <td class="border p-0" data-covers="{{ $booking->covers }}" colspan="{{ $cols }}" style="min-width: {{ $sizes[$size]['col']*$cols }}px;">
                                                     <a class="block h-full" href="{{ route("restaurant.booking", [$restaurant, $booking]) }}">
@@ -136,7 +136,7 @@
                                                                     </h5>
                                                                 @endif
                                                                 @if(in_array("table", $show))
-                                                                    <p class="text-right">{{ $booking->tableNumber }}</p>
+                                                                    <p class="text-right">{{ $booking->tableNames }}</p>
                                                                 @endif
                                                                 @if(in_array("time", $show))
                                                                     <p class="col-span-2">{{ $booking->booked_at->format("h:ia") }} - {{ $booking->finish_at->format("h:ia") }}</p>
@@ -161,7 +161,7 @@
                                                 </td>
                                                 @php($bgGray = !$bgGray)
                                             @else
-                                                <td wire:click="createNewBooking('{{ $time }}', '{{ $table->id }}')" x-data="{ hover: false }" x-on:mouseenter="hover = true" x-on:mouseleave="hover = false" class="border border-white bg-gray-300 text-center cursor-pointer justify-center align-middle text-white hover:bg-red-800 transition-all ease-in-out duration-150" style="min-width: {{ $sizes[$size]['col'] }}px;">
+                                                <td wire:click="createNewBooking('{{ $time }}', {{ $table->id }})" x-data="{ hover: false }" x-on:mouseenter="hover = true" x-on:mouseleave="hover = false" class="border border-white bg-gray-300 text-center cursor-pointer justify-center align-middle text-white hover:bg-red-800 transition-all ease-in-out duration-150" style="min-width: {{ $sizes[$size]['col'] }}px;">
                                                     <x-icons.plus x-cloak x-show.transition.in="hover" class="h-8 mx-auto"/>
                                                 </td>
                                             @endif
@@ -200,7 +200,7 @@
                         </tr>
                         </thead>
                         <tbody>
-                        @foreach($bookings as $booking)
+                        @foreach($reservations as $booking)
                             <tr class="{{ $booking->booked_at->isPast() ? 'opacity-50' : '' }} {{ $loop->even ? 'bg-gray-100' : '' }} border-b border-gray-500">
                                 <th class="p-3 text-left">
                                     <a class="text-red-800 hover:text-red-500 underline transition-all duration-150 ease-in-out" href="{{ route("restaurant.booking", [$restaurant, $booking]) }}">
@@ -208,7 +208,7 @@
                                     </a>
                                 </th>
                                 <td class="p-3">{{ $booking->covers }}</td>
-                                <td class="p-3">{{ $booking->tableNumber }}</td>
+                                <td class="p-3">{{ $booking->tableNames }}</td>
                                 <td class="p-3">
                                     {{ $booking->booked_at->toDayDateTimeString() }}
                                 </td>
@@ -237,7 +237,7 @@
                 </div>
 
                 <div class="my-6">
-                    {!! $bookings->links() !!}
+                    {!! $reservations->links() !!}
                 </div>
             @break
         @endswitch
@@ -271,7 +271,7 @@
                             <x-icons.exit class="h-6"/>
                         </div>
                         <div class="w-full">
-                            <x-jet-input class="w-full" type="datetime-local" wire:model="newBooking.finish_at" :min="$newBooking->booked_at->format('Y-m-d\TH:i')" :max="$nextBooking ? $nextBooking->booked_at->format('Y-m-d\TH:i') : ''" />
+                            <x-jet-input class="w-full" type="datetime-local" wire:model="newBooking.finish_at" :min="$newBooking->booked_at->format('Y-m-d\TH:i')" />
                             @error("newBooking.finish_at") <p class="text-red-600">{{ $message }}</p> @enderror
                         </div>
                     </div>
@@ -281,13 +281,17 @@
                             <x-icons.table class="h-6"/>
                         </div>
                         <div class="w-full">
-                            <x-select wire:model="newBooking.table_id">
-                                <option value="">--</option>
+                            <div class="border border-gray-200 rounded-sm w-full h-48 overflow-auto p-2 space-y-2 shadow-inner">
                                 @foreach($restaurant->tables as $table)
-                                    <option value="{{ $table->id }}">{{ $table }}</option>"
+                                    <div>
+                                        <label class="block">
+                                            <input type="checkbox" wire:model="newBookingTables.{{ $table->getKey() }}" />
+                                            {{ $table }}
+                                        </label>
+                                    </div>
                                 @endforeach
-                            </x-select>
-                            @error("newBooking.table_id") <p class="text-red-600">{{ $message }}</p> @enderror
+                            </div>
+                            @error("newBookingTables") <p class="text-red-600">{{ $message }}</p> @enderror
                         </div>
                     </div>
 
@@ -298,9 +302,6 @@
                         </div>
                         <div class="w-full">
                             <x-jet-input class="w-auto" type="number" wire:model="newBooking.covers" min="1" /> guests
-                            @if(!empty($newBooking->table_id) && $newBooking->covers > $newBooking->tableNumber->seats)
-                                <p class="text-gray-500">If another table is being used for this booking, please book out that table too!</p>
-                            @endif
                             @error("newBooking.covers") <p class="text-red-600">{{ $message }}</p> @enderror
                         </div>
                     </div>

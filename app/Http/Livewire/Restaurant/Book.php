@@ -12,9 +12,9 @@ use Livewire\Component;
 
 class Book extends Component
 {
-    public $restaurant, $dates, $selectedDate, $times, $services, $booking, $table_groups, $setup_intent, $user,
+    public $restaurant, $dates, $selectedDate, $times, $services, $booking, $restaurant_sections, $setup_intent, $user,
         $preAuthDate;
-    public $group = "all";
+    public $section = "all";
     public $covers = 2;
     public $save_method = false;
     public $card_method = "add";
@@ -38,15 +38,15 @@ class Book extends Component
         $this->restaurant = $restaurant;
         $this->selectedDate = Carbon::now();
 
-        if($restaurant->table_groups->count()){
-            $this->group = $restaurant->table_groups->first()->id;
+        if($restaurant->sections->count()){
+            $this->section = $restaurant->sections->first()->id;
         }
 
-        $this->max_covers = $this->restaurant->max_booking_size($this->group);
+        $this->max_covers = $this->restaurant->max_booking_size($this->section);
 
         $this->rules["booking.covers"][] = "max:" . $this->max_covers;
 
-        $this->table_groups = $restaurant->table_groups()->whereHas("tables", function($query){
+        $this->restaurant_sections = $restaurant->sections()->whereHas("tables", function($query){
             return $query->where("bookable", 1);
         })->get();
 
@@ -58,7 +58,7 @@ class Book extends Component
     public function render()
     {
         $this->dates = CarbonPeriod::create(Carbon::now(), Carbon::now()->addDays($this->restaurant->show_days))->toArray();
-        $this->services = $this->restaurant->loadServices($this->selectedDate, $this->covers, $this->group);
+        $this->services = $this->restaurant->loadServices($this->selectedDate, $this->covers, $this->section);
 
         return view('livewire.restaurant.book');
     }
@@ -68,7 +68,7 @@ class Book extends Component
         $this->selectedDate = Carbon::parse($newDate);
     }
 
-    public function updatedGroup($value)
+    public function updatedSection($value)
     {
         $this->max_covers = $this->restaurant->max_booking_size($value);
 
@@ -90,7 +90,7 @@ class Book extends Component
         }
 
         // before passing back, check booking is valid
-        if(!$this->booking->checkTime($this->group)){
+        if(!$this->booking->checkTime($this->section)){
             session()->flash("timeTaken");
             return;
         }
@@ -190,8 +190,8 @@ class Book extends Component
         $this->booking->no_show_fee = $this->restaurant->no_show_fee;
 
         // check one last time for a table
-        if($table = $this->booking->checkTime($this->group)){
-            $this->booking->table_id = $table->id;
+        if($table = $this->booking->checkTime($this->section)){
+            $this->booking->table_ids = [$table->id];
 
             $this->booking->save();
 

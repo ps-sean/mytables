@@ -6,7 +6,7 @@
         <x-slot name="description">
             Update your Table Details.
             <br>
-            <x-button x-on:click="modal = true" class="bg-red-800 hover:bg-red-700 mt-3">Table Groups</x-button>
+            <x-button x-on:click="modal = true" class="bg-red-800 hover:bg-red-700 mt-3">Restaurant Sections</x-button>
             <br>
             <x-button x-on:click="blockModal = true" class="bg-red-800 hover:bg-red-700 mt-3">Block Tables</x-button>
         </x-slot>
@@ -27,14 +27,14 @@
                                 @error("tables.$index.seats")<span class="text-red-600">{{ $message }}</span>@enderror
                             </div>
                             <div>
-                                <label>Group</label>
-                                <x-select class="w-full" wire:model="tables.{{ $index }}.table_group_id">
+                                <label>Section</label>
+                                <x-select class="w-full" wire:model="tables.{{ $index }}.restaurant_section_id">
                                     <option value="">--</option>
-                                    @foreach($this->restaurant->table_groups as $group)
-                                        <option value="{{ $group->id }}">{{ $group->name }}</option>
+                                    @foreach($this->restaurant->sections as $section)
+                                        <option value="{{ $section->id }}">{{ $section->name }}</option>
                                     @endforeach
                                 </x-select>
-                                @error("tables.$index.table_group_id")<span class="text-red-600">{{ $message }}</span>@enderror
+                                @error("tables.$index.restaurant_section_id")<span class="text-red-600">{{ $message }}</span>@enderror
                             </div>
                             <div class="text-center">
                                 <label><input type="checkbox" wire:model="tables.{{ $index }}.bookable"/> Bookable</label>
@@ -101,7 +101,7 @@
             <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
 
             <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-3xl sm:w-full" role="dialog" aria-modal="true" aria-labelledby="modal-headline">
-                @livewire('restaurant.table-groups', compact(["restaurant"]))
+                @livewire('restaurant.sections', compact(["restaurant"]))
             </div>
 
         </div>
