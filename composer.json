@@ -27,6 +27,7 @@
         "predis/predis": "^1.1",
         "pusher/pusher-php-server": "~3.0",
         "spatie/laravel-activitylog": "^3.16",
+        "staudenmeir/eloquent-json-relations": "^1.5",
         "stevebauman/location": "^6.1",
         "stripe/stripe-php": "^7.67"
     },

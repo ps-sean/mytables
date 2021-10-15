@@ -171,6 +171,8 @@ class Bookings extends Component
         $this->newBooking->save();
 
         $this->createBooking = false;
+
+        $this->setTables();
     }
 
     public function fetchBooking($bookings, $table, $time)

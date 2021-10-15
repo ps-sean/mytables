@@ -8,10 +8,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Activitylog\Traits\LogsActivity;
+use Staudenmeir\EloquentJsonRelations\HasJsonRelationships;
 
 class Table extends Model
 {
-    use HasFactory, SoftDeletes, History;
+    use HasFactory, SoftDeletes, History, HasJsonRelationships;
 
     protected $connection = "mysql";
 
@@ -39,11 +40,6 @@ class Table extends Model
 
     public function bookings()
     {
-        return Booking::whereRaw("FIND_IN_SET(?,`table_ids`)", [$this->getKey()]);
-    }
-
-    public function getBookingsAttribute()
-    {
-        $this->bookings()->get();
+        return $this->hasManyJson(Booking::class, "table_ids");
     }
 }

@@ -6,14 +6,16 @@ use App\Events\BookingCreated;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Staudenmeir\EloquentJsonRelations\HasJsonRelationships;
 
 class Booking extends Model
 {
-    use HasFactory;
+    use HasFactory, HasJsonRelationships;
 
     protected $connection = "mysql";
 
     protected $casts = [
+        "table_ids" => "json",
         "booked_at" => "datetime:Y-m-d\TH:i",
         "finish_at" => "datetime:Y-m-d\TH:i",
         "review_reminder_at" => "datetime:Y-m-d\TH:i",
@@ -52,18 +54,9 @@ class Booking extends Model
         return $this->hasOne(Review::class);
     }
 
-    public function getTablesAttribute()
-    {
-        if (!$this->relationLoaded('tables')) {
-            $this->setRelation('tables', $this->tables()->get());
-        }
-
-        return $this->getRelation('tables');
-    }
-
     public function tables()
     {
-        return Table::whereIn("id", $this->table_ids);
+        return $this->belongsToJson(Table::class, "table_ids");
     }
 
     public function setBookedAtAttribute($value)
@@ -76,16 +69,6 @@ class Booking extends Model
 
         // set this based on the number of people at the table, from restaurant settings
         $this->attributes["finish_at"] = $value->clone()->addMinutes($this->restaurant->checkBookingRule($this->covers)->minutes);
-    }
-
-    public function setTableIdsAttribute($value)
-    {
-        $this->attributes["table_ids"] = is_string($value) ? $value : implode(",", array_filter($value ?? []));
-    }
-
-    public function getTableIdsAttribute($value)
-    {
-        return is_string($value) ? explode(",", $value) : $value;
     }
 
     public function getTableNamesAttribute()
