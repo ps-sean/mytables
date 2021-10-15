@@ -16,7 +16,7 @@ class Bookings extends Component
 {
     use WithPagination;
 
-    public $restaurant, $date, $tables, $search, $newBooking, $nextBooking, $services, $bookings;
+    public $restaurant, $date, $tables, $search, $newBooking, $services, $bookings;
     public $newBookingTables = [];
     public $status = "all";
     public $createBooking = false;
@@ -156,7 +156,7 @@ class Bookings extends Component
                 ->where("booked_at", ">", $this->newBooking->booked_at)
                 ->first();
 
-            if ($nextBooking->booked_at < $this->newBooking->finish_at) {
+            if ($nextBooking && $nextBooking->booked_at < $this->newBooking->finish_at) {
                 return $this->addError("newBooking.finish_at", $table . " is being used by " . $nextBooking);
             }
         }

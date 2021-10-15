@@ -9,6 +9,7 @@
     "license": "MIT",
     "require": {
         "php": "^7.3|^8.0",
+        "ext-curl": "*",
         "beyondcode/laravel-websockets": "^1.9",
         "bugsnag/bugsnag-laravel": "^2.0",
         "deployer/recipes": "^6.2",
@@ -27,8 +28,7 @@
         "pusher/pusher-php-server": "~3.0",
         "spatie/laravel-activitylog": "^3.16",
         "stevebauman/location": "^6.1",
-        "stripe/stripe-php": "^7.67",
-        "ext-curl": "*"
+        "stripe/stripe-php": "^7.67"
     },
     "require-dev": {
         "facade/ignition": "^2.5",

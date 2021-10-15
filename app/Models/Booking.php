@@ -55,9 +55,7 @@ class Booking extends Model
     public function getTablesAttribute()
     {
         if (!$this->relationLoaded('tables')) {
-            $tables = Table::whereIn('id', $this->table_ids)->get();
-
-            $this->setRelation('tables', $tables);
+            $this->setRelation('tables', $this->tables()->get());
         }
 
         return $this->getRelation('tables');
