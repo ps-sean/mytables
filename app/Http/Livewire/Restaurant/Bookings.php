@@ -84,6 +84,11 @@ class Bookings extends Component
         $this->newBooking->setBookedAtAttribute($this->newBooking->booked_at);
     }
 
+    public function updatedDate($value)
+    {
+        $this->setTables();
+    }
+
     public function render()
     {
         $this->services = $this->restaurant->servicesByDate(Carbon::parse($this->date));
