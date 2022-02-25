@@ -67,8 +67,10 @@ class Booking extends Model
 
         $this->attributes["booked_at"] = $value;
 
-        // set this based on the number of people at the table, from restaurant settings
-        $this->attributes["finish_at"] = $value->clone()->addMinutes($this->restaurant->checkBookingRule($this->covers)->minutes);
+        if (!empty($this->covers)) {
+            // set this based on the number of people at the table, from restaurant settings
+            $this->attributes["finish_at"] = $value->clone()->addMinutes($this->restaurant->checkBookingRule($this->covers)->minutes);
+        }
     }
 
     public function getTableNamesAttribute()

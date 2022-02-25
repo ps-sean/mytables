@@ -60,11 +60,11 @@
         @switch($view)
             @case("grid")
                 @if($restaurant->servicesByDate(\Carbon\Carbon::parse($date))->count() < 1 && $restaurant->bookings()->whereDate("booked_at", $date)->count() < 1)
-                    <div wire:loading.class="opacity-25" class="flex justify-center text-center">
+                    <div class="flex justify-center text-center">
                         <p class="text-3xl">No services for this date.</p>
                     </div>
                 @else
-                    <div wire:loading.class="opacity-50" class="overflow-auto {{ $sizes[$size]['text'] }}">
+                    <div class="overflow-auto {{ $sizes[$size]['text'] }}">
                         <table>
                             <thead>
                             <tr class="bg-red-800 text-white block">
@@ -272,6 +272,7 @@
                         </div>
                         <div class="w-full">
                             <x-jet-input class="w-full" type="datetime-local" wire:model="newBooking.finish_at" :min="$newBooking->booked_at->format('Y-m-d\TH:i')" />
+                            <small>This field auto updates when you edit the booking time or guests.</small>
                             @error("newBooking.finish_at") <p class="text-red-600">{{ $message }}</p> @enderror
                         </div>
                     </div>

@@ -133,8 +133,10 @@ class Bookings extends Component
 
         $this->newBooking = $this->restaurant->bookings()->make();
 
-        $this->newBooking->covers = 2;
+//        $this->newBooking->covers = 2;
         $this->newBooking->booked_at = $time;
+
+        $this->newBookingTables = [];
 
         if ($table) {
             $this->newBookingTables = [
