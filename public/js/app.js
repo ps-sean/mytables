@@ -27425,7 +27425,7 @@ __webpack_require__(/*! alpinejs */ "./node_modules/alpinejs/dist/alpine.js");
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var laravel_echo__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! laravel-echo */ "./node_modules/laravel-echo/dist/echo.js");
+/* WEBPACK VAR INJECTION */(function(process) {/* harmony import */ var laravel_echo__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! laravel-echo */ "./node_modules/laravel-echo/dist/echo.js");
 window._ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
 /**
  * We'll load the axios HTTP library which allows us to easily issue requests
@@ -27443,18 +27443,18 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
 
 window.Pusher = __webpack_require__(/*! pusher-js */ "./node_modules/pusher-js/dist/web/pusher.js");
-
-if (true) {
-  window.Echo = new laravel_echo__WEBPACK_IMPORTED_MODULE_0__["default"]({
-    broadcaster: 'pusher',
-    key: "myTables_key",
-    cluster: "mt1",
-    wsHost: window.location.hostname,
-    wsPort: 6001,
-    forceTLS: false,
-    disableStats: true
-  });
-} else {}
+var laravelEcho = new laravel_echo__WEBPACK_IMPORTED_MODULE_0__["default"]({
+  broadcaster: 'pusher',
+  key: "app-key",
+  wsHost: process.env.MIX_PUSHER_HOST,
+  wsPort: process.env.MIX_PUSHER_PORT,
+  wssPort: process.env.MIX_PUSHER_PORT,
+  forceTLS: false,
+  encrypted: true,
+  disableStats: true,
+  enabledTransports: ['ws', 'wss']
+});
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../node_modules/process/browser.js */ "./node_modules/process/browser.js")))
 
 /***/ }),
 
@@ -27465,8 +27465,8 @@ if (true) {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! /Users/Sean/code/mytables/resources/js/app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! /Users/Sean/code/mytables/resources/css/app.css */"./resources/css/app.css");
+__webpack_require__(/*! /var/www/html/resources/js/app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! /var/www/html/resources/css/app.css */"./resources/css/app.css");
 
 
 /***/ })
