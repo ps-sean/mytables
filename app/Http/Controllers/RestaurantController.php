@@ -97,6 +97,13 @@ class RestaurantController extends Controller
         ]));
     }
 
+    public function resendVerificationEmail(Restaurant $restaurant)
+    {
+        $restaurant->sendEmailVerification();
+
+        return redirect()->back()->with("verify_email.success", "Verification email sent");
+    }
+
     public function verifyEmail(Request $request, Restaurant $restaurant)
     {
         if(!$request->hasValidSignature()){

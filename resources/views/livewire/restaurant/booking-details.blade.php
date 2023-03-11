@@ -74,11 +74,18 @@
                 {{ $booking->booked_at->format("h:ia") }} - {{ $booking->finish_at->format("h:ia") }}
             </p>
         @endif
-        @if(!empty($booking->comments))
-            <p class="text-gray-700 text-base flex items-start col-span-2">
-                <x-icons.info class="h-5 inline mr-2"/>
-                <span class="whitespace-pre-line">{{ $booking->comments }}</span>
-            </p>
+        @if($restaurant->staff->contains(auth()->user()))
+            <div class="col-span-2">
+                <label><x-icons.info class="h-5 inline mr-2"/> Additional Info</label>
+                <x-jet-input textarea class="w-full" wire:model="booking.comments"/>
+            </div>
+        @else
+            @if(!empty($booking->comments))
+                <p class="text-gray-700 text-base flex items-start col-span-2">
+                    <x-icons.info class="h-5 inline mr-2"/>
+                    <span class="whitespace-pre-line">{{ $booking->comments }}</span>
+                </p>
+            @endif
         @endif
 
         @if(($booking->booked_at->format("Y-m-d H:i:s") > \Carbon\Carbon::now()->setTimezone("Europe/London")->format("Y-m-d H:i:s") && $booking->booked_by == auth()->user()->id) || $restaurant->staff->contains(auth()->user()))

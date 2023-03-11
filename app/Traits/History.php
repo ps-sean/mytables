@@ -5,13 +5,12 @@ namespace App\Traits;
 
 
 use Carbon\Carbon;
+use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
 
 trait History
 {
     use LogsActivity;
-
-    protected static $logAttributes = ['*'];
 
     public function checkHistory($attribute, $value, Carbon $start, Carbon $end)
     {
@@ -76,5 +75,14 @@ trait History
         }
 
         return $value == $check;
+    }
+
+    /**
+     * @return LogOptions
+     */
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logAll();
     }
 }

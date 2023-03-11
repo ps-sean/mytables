@@ -11,15 +11,26 @@
     <div class="container mx-auto bg-white py-5 px-3">
         <div class="space-y-3">
             @empty($restaurant->email_verified_at)
-                <x-alert class="bg-orange-100 border-orange-500 text-orange-900">
-                    <p class="font-bold">Unverified Email Address</p>
-                    <p>
-                        You have not yet verified your restaurant's email address. Please verify your email address
-                        using the link that was emailed to you.
-                        <a class="text-orange-600 hover:text-orange-300 underline" wire:click="resendVerification"
-                           href="#">Resend Verification Link</a>
-                    </p>
-                </x-alert>
+                @if(session()->has('verify_email.success'))
+                    <x-alert class="bg-green-100 border-green-500 text-green-900">
+                        <p class="font-bold">Email Address Verification Email Sent</p>
+                        <p>
+                            We have sent a verification link to your registered email address. Please check your inbox.
+                        </p>
+                    </x-alert>
+                @else
+                    <x-alert class="bg-orange-100 border-orange-500 text-orange-900">
+                        <p class="font-bold">Unverified Email Address</p>
+                        <p>
+                            You have not yet verified your restaurant's email address. Please verify your email address
+                            using the link that was emailed to you.
+                            <a class="text-orange-600 hover:text-orange-300 underline"
+                               href="{{ route('restaurant.verify_email.resend', [$restaurant->id]) }}">
+                                Resend Verification Link
+                            </a>
+                        </p>
+                    </x-alert>
+                @endif
             @endempty
 
             @livewire('restaurant.status.offline', compact('restaurant'))

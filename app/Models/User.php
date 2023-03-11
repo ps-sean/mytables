@@ -128,35 +128,17 @@ class User extends Authenticatable implements MustVerifyEmail
         return $bookings;
     }
 
-    public function top3restaurants()
+    public function topRestaurants()
     {
-        $restaurants = collect([]);
-        $bookings = $this->bookings()
-            ->with(["restaurant" => function($q){
-                $q->where("status", "live");
-            }])
-            ->whereDate("booked_at", ">=", Carbon::now()->subYear())
-            ->get();
-
-        $grouped = $bookings->groupBy(function($item, $key){
-            if($item->restaurant){
-                return $item->restaurant->id;
-            }
-        });
-
-        $groupCount = $grouped->map(function($item, $key){
-            return collect($item)->count();
-        });
-
-        foreach($groupCount as $key => $count){
-            $restaurant = Restaurant::find($key);
-
-            if($restaurants->count() < 3 && $restaurant){
-                $restaurant->timesBooked = $count;
-                $restaurants->push($restaurant);
-            }
-        }
-
-        return $restaurants;
+        return Restaurant::query()
+            ->where('status', 'live')
+            ->whereHas('bookings', function($q){
+                $q->where('booked_by', $this->getKey())
+                    ->whereDate("booked_at", ">=", Carbon::now()->subYear());
+            })
+            ->withCount(['bookings' => function($q){
+                $q->where('booked_by', $this->getKey())
+                    ->whereDate("booked_at", ">=", Carbon::now()->subYear());
+            }])->get();
     }
 }

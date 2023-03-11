@@ -7,13 +7,8 @@ use Livewire\Component;
 
 class Nearby extends Component
 {
-    public $restaurants;
+    public $restaurants = [];
     public $limit = 6;
-
-    public function mount()
-    {
-        $this->restaurants = collect([]);
-    }
 
     public function render()
     {
@@ -28,6 +23,8 @@ class Nearby extends Component
     public function load($lat, $lng)
     {
         $this->restaurants = SearchController::byRadius($lat, $lng)
-            ->sortBy("distance");
+            ->orderBy("distance")
+            ->limit(6)
+            ->get();
     }
 }

@@ -44,4 +44,5 @@ Route::middleware(['auth:sanctum', 'verified', 'restaurant'])->group(function(){
     Route::get('/restaurants/{restaurant}/bookings', [RestaurantController::class, 'bookings'])->name("restaurant.bookings");
     Route::get('/restaurants/{restaurant}/bookings/{booking}', [RestaurantController::class, 'booking'])->name("restaurant.booking");
     Route::get('/restaurants/{restaurant}/manage', [RestaurantController::class, 'manage'])->name("restaurant.manage");
+    Route::get('/restaurant/email/verify/{restaurant}/resend', [RestaurantController::class, 'resendVerificationEmail'])->name("restaurant.verify_email.resend");
 });

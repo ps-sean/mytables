@@ -20,6 +20,11 @@ class CreateTeamsTable extends Migration
             $table->boolean('personal_team');
             $table->timestamps();
         });
+
+        \Illuminate\Support\Facades\Artisan::call('db:seed', [
+            '--class' => 'TeamSeeder',
+            '--force' => true,
+        ]);
     }
 
     /**

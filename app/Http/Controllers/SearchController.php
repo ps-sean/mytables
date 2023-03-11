@@ -17,8 +17,6 @@ class SearchController extends Controller
 {
     public function index(Request $request)
     {
-        $restaurants = collect([]);
-
         if(!empty($request->search)){
             $restaurants = Restaurant::where("name", "LIKE", "%" . $_GET['search'] . "%")
                 ->where(function ($query) {
@@ -35,11 +33,26 @@ class SearchController extends Controller
             $restaurants = $restaurants->merge(SearchController::byLocation($request));
 
             $restaurants = $this->paginate($restaurants->unique(), 15);
-        }
 
-        return view("welcome", compact([
-            "restaurants"
-        ]));
+            return view("search", compact([
+                "restaurants"
+            ]));
+        } else {
+            $favouriteRestaurants = Auth::check() ? Auth::user()->topRestaurants() : collect([]);
+
+            $restaurants = Restaurant::where("status", "live")
+                ->withCount(['bookings' => function ($query) {
+                    $query->where("created_at", ">", now()->subDays(7));
+                }])
+                ->orderBy("bookings_count", "desc")
+                ->limit(3)
+                ->get();
+
+            return view("welcome", compact([
+                "favouriteRestaurants",
+                "restaurants"
+            ]));
+        }
     }
 
     public static function byLocation(Request $request)
@@ -65,7 +78,7 @@ class SearchController extends Controller
 
             if(count($results)){
                 foreach($results as $result){
-                    $restaurants = $restaurants->merge(SearchController::byRadius($result->geometry->location->lat, $result->geometry->location->lng, $request->distance ?? 5));
+                    $restaurants = $restaurants->merge(SearchController::byRadius($result->geometry->location->lat, $result->geometry->location->lng, $request->distance ?? 5)->get());
                 }
             }
         } catch (\Exception $e) {
@@ -87,8 +100,7 @@ class SearchController extends Controller
             }
         })
             ->whereRaw(SearchController::radiusQuery($lat, $lng) . "<" . $distance)
-            ->selectRaw("*, " . SearchController::radiusQuery($lat, $lng) . " as distance")
-            ->get();
+            ->selectRaw("*, " . SearchController::radiusQuery($lat, $lng) . " as distance");
     }
 
     public static function radiusQuery($lat, $lng)

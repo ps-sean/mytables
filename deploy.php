@@ -43,12 +43,6 @@ host('18.133.49.69')
     ->identityFile('~/.ssh/mt2.pem')
     ->set('deploy_path', '/var/www/html');
 
-host('new')
-    ->hostname('13.40.46.35')
-    ->user('ec2-user')
-    ->identityFile('~/.ssh/mt2.pem')
-    ->set('deploy_path', '/var/www/html');
-
 // Tasks
 
 task('build', function () {
