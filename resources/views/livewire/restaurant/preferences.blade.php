@@ -26,7 +26,7 @@
         @error("restaurant.table_confirmation")<p class="col-span-6 text-red-600">{{ $message }}</p>@enderror
         <p class="col-span-6">
             Accept a maximum of
-            <x-jet-input wire:model="restaurant.booking_timeframe.covers" type="number" min="0" max="{{ $restaurant->tables->count() }}"/>
+            <x-jet-input wire:model="restaurant.booking_timeframe.covers" type="number" min="0"/>
             covers every
             <x-jet-input wire:model="restaurant.booking_timeframe.minutes" type="number" min="0" max="90"/>
             minutes.

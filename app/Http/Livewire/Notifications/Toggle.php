@@ -28,7 +28,7 @@ class Toggle extends Component
             $listenOn["echo-notification:App.Models.User.{$userID},Restaurant\\Status"] = "updateCount";
         }
 
-        if(Auth::user()->restaurants->count()){
+        if(Auth::user()->restaurants()->count()){
             $listenOn["echo-notification:App.Models.User.{$userID},Restaurant\\Booking"] = "updateCount";
         }
 
