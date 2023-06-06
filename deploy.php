@@ -6,6 +6,7 @@ require 'recipe/laravel.php';
 // Config
 
 set('repository', 'https://github.com/ps-sean/mytables.git');
+set('keep_releases', 3);
 
 add('shared_files', []);
 add('shared_dirs', []);
@@ -13,9 +14,9 @@ add('writable_dirs', []);
 
 // Hosts
 
-host('18.133.49.69')
-    ->set('remote_user', 'ec2-user')
-    ->set('deploy_path', '/var/www/html');
+host('18.132.63.39')
+    ->set('remote_user', 'ubuntu')
+    ->set('deploy_path', '/var/www/mytables');
 
 // Tasks
 

@@ -38,6 +38,8 @@ class Kernel extends ConsoleKernel
         $schedule->command("restaurant:invoice")->dailyAt("06:00");
 
         $schedule->command('horizon:snapshot')->everyFiveMinutes();
+
+        $schedule->command('telescope:prune')->daily();
     }
 
     /**
