@@ -14,7 +14,7 @@ add('writable_dirs', []);
 
 // Hosts
 
-host('18.132.63.39')
+host('35.178.192.48')
     ->set('remote_user', 'ubuntu')
     ->set('deploy_path', '/var/www/mytables');
 
