@@ -34,6 +34,12 @@ return [
         'key' => env('GOOGLE_API_KEY'),
     ],
 
+    'recaptcha' => [
+        'key' => env('RECAPTCHA_SITE_KEY'),
+        'secret' => env('RECAPTCHA_SECRET_KEY'),
+        'minimum_score' => env('RECAPTCHA_MINIMUM_SCORE', 0.5),
+    ],
+
     'stripe' => [
         'public' => env('STRIPE_PUBLIC_KEY'),
         'secret' => env('STRIPE_PRIVATE_KEY'),

@@ -60,11 +60,11 @@ class Profile extends Component
             // a new image was submitted, lets save it
             $oldImage = $this->restaurant->image_location;
 
-            $this->restaurant->image_location = $this->image->store('restaurant/images', ["disk" => "public"]);
+            $this->restaurant->image_location = $this->image->store($this->restaurant->getKey() . '/images', ['disk' => 's3']);
 
             if(!empty($oldImage)){
                 // now that it's saved, delete the old one
-                Storage::disk("public")->delete($oldImage);
+                Storage::delete($oldImage);
             }
         }
 
@@ -72,11 +72,11 @@ class Profile extends Component
             // a new image was submitted, lets save it
             $oldLogo = $this->restaurant->logo_location;
 
-            $this->restaurant->logo_location = $this->logo->store('restaurant/images', ["disk" => "public"]);
+            $this->restaurant->logo_location = $this->logo->store($this->restaurant->getKey() . '/images', ['disk' => 's3']);
 
             if(!empty($oldLogo)){
                 // now that it's saved, delete the old one
-                Storage::disk("public")->delete($oldLogo);
+                Storage::delete($oldLogo);
             }
         }
 

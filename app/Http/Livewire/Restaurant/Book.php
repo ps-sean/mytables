@@ -8,6 +8,7 @@ use App\Models\User;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
 use Livewire\Component;
 
 class Book extends Component
@@ -32,6 +33,8 @@ class Book extends Component
         "save_method" => [],
         "card_method" => ["required", "in:add,default"],
     ];
+
+    protected $listeners = ['captchaResponse' => 'processCaptcha'];
 
     public function mount(Restaurant $restaurant)
     {
@@ -152,6 +155,18 @@ class Book extends Component
         }
 
         $this->setup_intent = $this->user->createSetupIntent()->client_secret;
+    }
+
+    public function processCaptcha($token)
+    {
+        $response = Http::post('https://www.google.com/recaptcha/api/siteverify?secret=' . config('services.recaptcha.secret') . '&response=' . $token);
+        $captcha = $response->json()['score'];
+
+        if ( $captcha >= config('services.recaptcha.minimum_score') ) {
+            $this->book();
+        } else {
+            $this->addError("captcha-error", "Something went wrong, please try again.");
+        }
     }
 
     public function book($payment_method = null)

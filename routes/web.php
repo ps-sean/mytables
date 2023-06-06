@@ -3,6 +3,7 @@
 use App\Http\Controllers\RestaurantController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\BookingController;
+use App\Http\Controllers\StorageController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -24,6 +25,10 @@ Route::view('/about-pre-authorisation', 'about-pre-authorisation')->name('about-
 Route::get('/restaurant/{restaurant}', [RestaurantController::class, 'redirectWithName']);
 Route::get('/restaurant/{restaurant}/{name}', [RestaurantController::class, 'show'])->name("restaurant.show");
 Route::get('/restaurant/email/verify/{restaurant}', [RestaurantController::class, 'verifyEmail'])->name("restaurant.verify_email");
+
+Route::get('/storage/files/{file}', [StorageController::class, 'show'])
+    ->where('file', '.*')
+    ->name("storage.file");
 
 Route::middleware(['auth:sanctum', 'verified', 'admin'])->group(function(){
     Route::get('restaurants/status/{status}', [RestaurantController::class, 'status'])->name('restaurant.status');

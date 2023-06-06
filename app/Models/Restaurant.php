@@ -115,7 +115,7 @@ class Restaurant extends Model
             return $this->logo;
         }
 
-        return Storage::url($this->image_location);
+        return route('storage.file', ['file' => $this->image_location]);
     }
 
     // Accessors & Mutators
@@ -125,7 +125,7 @@ class Restaurant extends Model
             return asset("/img/placeholder.jpg");
         }
 
-        return Storage::url($this->logo_location);
+        return route('storage.file', ['file' => $this->logo_location]);
     }
 
     public function getAddressAttribute()
