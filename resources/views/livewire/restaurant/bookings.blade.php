@@ -314,6 +314,14 @@
                         <div class="w-full">
                             <x-jet-input type="text" wire:model="newBooking.name" class="w-full" placeholder="Name" />
                             @error("newBooking.name")<span class="text-red-600">{{ $message }}</span>@enderror
+                        </div>
+                    </div>
+
+                    <div class="flex items-center">
+                        <div class="px-2">
+                            <x-icons.at class="h-6"/>
+                        </div>
+                        <div class="w-full">
                             <x-jet-input type="email" wire:model="newBooking.email" class="w-full" placeholder="Email" />
                             @error("newBooking.email")<span class="text-red-600">{{ $message }}</span>@enderror
                         </div>
@@ -321,7 +329,7 @@
 
                     <div class="flex items-center">
                         <div class="px-2">
-                            <x-icons.edit class="h-6"/>
+                            <x-icons.phone class="h-6"/>
                         </div>
                         <div class="w-full">
                             <x-jet-input type="tel" wire:model="newBooking.contact_number" class="w-full" placeholder="Contact Number" />
@@ -331,7 +339,7 @@
 
                     <div class="flex items-center">
                         <div class="px-2">
-                            <x-icons.phone class="h-6"/>
+                            <x-icons.edit class="h-6"/>
                         </div>
                         <div class="w-full">
                             <x-jet-input textarea wire:model="newBooking.comments" class="w-full" placeholder="Additional Comments"/>
