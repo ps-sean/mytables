@@ -46,8 +46,8 @@ class Bookings extends Component
         "newBooking.booked_at" => "required",
         "newBooking.finish_at" => "required",
         "newBooking.name" => "required",
-        "newBooking.email" => "email",
-        "newBooking.contact_number" => "min:11|max:16|phone",
+        "newBooking.email" => "email|nullable",
+        "newBooking.contact_number" => "min:11|max:16|phone|nullable",
         "newBooking.comments" => "",
         "newBookingTables.*" => "",
     ];
