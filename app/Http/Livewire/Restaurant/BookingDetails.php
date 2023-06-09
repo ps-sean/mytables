@@ -18,6 +18,7 @@ class BookingDetails extends Component
 
     protected $rules = [
         "booking.covers" => "required|min:1",
+        "booking.comments" => "",
         "booking.booked_at" => "required",
         "booking.finish_at" => "required",
         "bookingTables.*" => "",
