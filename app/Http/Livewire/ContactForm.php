@@ -57,11 +57,7 @@ class ContactForm extends Component
 
         Mail::to($this->to)->queue(new MailContactForm($this->name, $this->email, $this->subject, $text));
 
-        if(Mail::failures()){
-            $this->emitSelf("failed");
-        } else {
-            $this->emitSelf("sent");
-            $this->reset(['name', 'email', 'text']);
-        }
+        $this->emitSelf("sent");
+        $this->reset(['name', 'email', 'text']);
     }
 }
