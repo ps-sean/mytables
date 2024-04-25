@@ -152,7 +152,7 @@
                                                                 @endif
                                                             </div>
                                                             @if($booking->status === "pending")
-                                                                <div class="flex justify-center items-center absolute inset-0 bg-gray-300 bg-opacity-75 text-gray-700 hover:text-gray-500">
+                                                                <div class="flex justify-center items-center absolute inset-0 bg-gray-300/75 text-gray-700 hover:text-gray-500">
                                                                     <i>Pending</i>
                                                                 </div>
                                                             @endif

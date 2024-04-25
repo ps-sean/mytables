@@ -19,9 +19,9 @@
             <div class="px-4 bg-white sm:p-6 space-y-4">
                 <div class="flex h-16 space-x-8 overflow-auto">
                     @foreach($exceptions->pluck("service_date")->unique()->sort() as $date)
-                        <x-jet-nav-link class="whitespace-no-wrap" wire:click="changeOpenDate('{{ $date->format('Y-m-d') }}')" href="#" :active="$openDate === $date->format('Y-m-d')">{{ $date->toFormattedDateString() }}</x-jet-nav-link>
+                        <x-jet-nav-link class="whitespace-nowrap" wire:click="changeOpenDate('{{ $date->format('Y-m-d') }}')" href="#" :active="$openDate === $date->format('Y-m-d')">{{ $date->toFormattedDateString() }}</x-jet-nav-link>
                     @endforeach
-                    <x-jet-nav-link class="whitespace-no-wrap" wire:click="addException" href="#">&plus; Add Exception</x-jet-nav-link>
+                    <x-jet-nav-link class="whitespace-nowrap" wire:click="addException" href="#">&plus; Add Exception</x-jet-nav-link>
                 </div>
                 @foreach($exceptions->where("service_date", \Carbon\Carbon::parse($openDate)) as $index => $exception)
                     @if($exception->closed)

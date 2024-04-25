@@ -12,7 +12,7 @@
                 From: "opacity-100"
                 To: "opacity-0"
             -->
-            <div class="absolute inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
+            <div class="absolute inset-0 bg-gray-500/75 transition-opacity" aria-hidden="true"></div>
             <section x-show.transition="open" class="absolute inset-y-0 right-0 pl-10 max-w-full flex" aria-labelledby="slide-over-heading">
                 <!--
                   Slide-over panel, show/hide based on slide-over state.

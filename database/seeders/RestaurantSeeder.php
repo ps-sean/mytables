@@ -13,6 +13,8 @@ use Illuminate\Database\Seeder;
 
 class RestaurantSeeder extends Seeder
 {
+    use WithoutModelEvents;
+
     /**
      * Run the database seeds.
      *

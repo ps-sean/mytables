@@ -1,6 +1,6 @@
 <x-app-layout>
     <div class="bg-top bg-cover" style="background-image: url('{{ asset("img/background.jpg") }}')">
-        <div class="bg-gray-800 bg-opacity-75 py-20 px-5 sm:px-10 md:px-32 lg:py-32 lg:px-48 xl:py-48 xl:px-64">
+        <div class="bg-gray-800/75 py-20 px-5 sm:px-10 md:px-32 lg:py-32 lg:px-48 xl:py-48 xl:px-64">
             <h2 class="text-lg text-gray-200 font-bold ml-3">Search for a local restaurant</h2>
             <div class="bg-white rounded-full overflow-hidden">
                 <form class="flex justify-between" method="GET" action="/">
