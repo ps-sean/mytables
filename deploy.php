@@ -23,7 +23,7 @@ host('mytables.co.uk')
 task('build', function () {
     cd('{{release_path}}');
     run('npm install');
-    run('npm run production');
+    run('npm run build');
 });
 
 // Hooks
