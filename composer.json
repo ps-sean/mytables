@@ -15,7 +15,7 @@
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
         "laravel/cashier": "^12.12",
-        "laravel/framework": "^9.0",
+        "laravel/framework": "^9.19",
         "laravel/horizon": "^5.6",
         "laravel/jetstream": "^2.0",
         "laravel/sanctum": "^2.6",

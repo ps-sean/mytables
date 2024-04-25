@@ -25,7 +25,7 @@ add('shared_dirs', []);
 add('writable_dirs', []);
 
 task('webpack', function () {
-    run("cd {{release_path}} && npm run production");
+    run("cd {{release_path}} && npm run build");
 });
 
 task('horizon', function () {
