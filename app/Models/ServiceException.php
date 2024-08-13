@@ -7,8 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class ServiceException extends Service
 {
-    protected $dates = [
-        "service_date"
+    protected $casts = [
+        "service_date" => "datetime",
     ];
 
     protected $fillable = [

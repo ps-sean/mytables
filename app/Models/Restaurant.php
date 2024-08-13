@@ -38,12 +38,9 @@ class Restaurant extends Model
         'created' => RestaurantCreated::class,
     ];
 
-    protected $dates = [
-        "email_verified_at"
-    ];
-
     protected $casts = [
-        'open_hours' => 'array'
+        'open_hours' => 'array',
+        'email_verified_at' => 'datetime',
     ];
 
     public function __toString()

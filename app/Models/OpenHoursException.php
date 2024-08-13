@@ -11,8 +11,8 @@ class OpenHoursException extends Model
 
     protected $connection = "mysql";
 
-    protected $dates = [
-        "open_date"
+    protected $casts = [
+        "open_date" => "datetime",
     ];
 
     protected $fillable = [

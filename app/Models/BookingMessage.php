@@ -17,8 +17,8 @@ class BookingMessage extends Model
         "message"
     ];
 
-    protected $dates = [
-        "read_at"
+    protected $casts = [
+        "read_at" => "datetime",
     ];
 
     protected $dispatchesEvents = [
