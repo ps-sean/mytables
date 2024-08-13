@@ -1,4 +1,4 @@
-<x-jet-form-section submit="submit">
+<x-form-section submit="submit">
     <x-slot name="title">
         Profile
     </x-slot>
@@ -27,32 +27,32 @@
         </div>
         <div class="col-span-6 sm:col-span-4">
             <label>Name</label>
-            <x-jet-input wire:model.live="restaurant.name" class="w-full" />
+            <x-input wire:model.live="restaurant.name" class="w-full" />
             @error("restaurant.name")<span class="text-red-600">{{ $message }}</span>@enderror
         </div>
         <div class="col-span-6 sm:col-span-4">
             <label>Email</label>
-            <x-jet-input wire:model.live="restaurant.email" class="w-full" />
+            <x-input wire:model.live="restaurant.email" class="w-full" />
             @error("restaurant.email")<span class="text-red-600">{{ $message }}</span>@enderror
         </div>
         <div class="col-span-6 sm:col-span-4">
             <label>Phone</label>
-            <x-jet-input wire:model.live="restaurant.phone" class="w-full" />
+            <x-input wire:model.live="restaurant.phone" class="w-full" />
             @error("restaurant.phone")<span class="text-red-600">{{ $message }}</span>@enderror
         </div>
         <div class="col-span-6 sm:col-span-4">
             <label>Description</label>
-            <x-jet-input textarea wire:model.live="restaurant.description" class="w-full" rows="5" placeholder="A short description of your restaurant" />
+            <x-input textarea wire:model.live="restaurant.description" class="w-full" rows="5" placeholder="A short description of your restaurant" />
             @error("restaurant.description")<span class="text-red-600">{{ $message }}</span>@enderror
         </div>
     </x-slot>
     <x-slot name="actions">
-        <x-jet-action-message class="mr-3" on="saved">
+        <x-action-message class="mr-3" on="saved">
             {{ __('Saved.') }}
-        </x-jet-action-message>
+        </x-action-message>
 
-        <x-jet-button wire:loading.attr="disabled">
+        <x-button class="bg-red-800 hover:bg-red-700 text-white" wire:loading.attr="disabled">
             {{ __('Save') }}
-        </x-jet-button>
+        </x-button>
     </x-slot>
-</x-jet-form-section>
+</x-form-section>

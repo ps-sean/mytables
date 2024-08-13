@@ -1,4 +1,4 @@
-<x-jet-form-section submit="submit">
+<x-form-section submit="submit">
     <x-slot name="title">
         Staff
     </x-slot>
@@ -17,21 +17,21 @@
             @endforeach
         </div>
         <div class="col-span-5">
-            <x-jet-input class="w-full" placeholder="Add Staff By Email Address" wire:model.live="search" wire:keydown.enter.prevent="addStaff"/>
+            <x-input class="w-full" placeholder="Add Staff By Email Address" wire:model.live="search" wire:keydown.enter.prevent="addStaff"/>
         </div>
         <x-button class="bg-red-800 hover:bg-red-700 justify-center" wire:click="addStaff"><x-icons.plus class="h-6 mr-1"/> Add</x-button>
         <div class="col-span-6">
             @error("search")<span class="text-red-600">{{ $message }}</span>@enderror
-            <x-jet-action-message on="staffAdded">Staff member added, click save to make changes permanent.</x-jet-action-message>
+            <x-action-message on="staffAdded">Staff member added, click save to make changes permanent.</x-action-message>
         </div>
     </x-slot>
     <x-slot name="actions">
-        <x-jet-action-message class="mr-3" on="saved">
+        <x-action-message class="mr-3" on="saved">
             {{ __('Saved.') }}
-        </x-jet-action-message>
+        </x-action-message>
 
-        <x-jet-button wire:loading.attr="disabled">
+        <x-button class="bg-red-800 hover:bg-red-700 text-white" wire:loading.attr="disabled">
             {{ __('Save') }}
-        </x-jet-button>
+        </x-button>
     </x-slot>
-</x-jet-form-section>
+</x-form-section>

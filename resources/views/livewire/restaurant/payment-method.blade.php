@@ -1,5 +1,5 @@
 <div>
-    <x-jet-form-section submit="submit">
+    <x-form-section submit="submit">
         <x-slot name="title">
             Payment Method
         </x-slot>
@@ -24,7 +24,7 @@
                     <h3 class="font-bold">Add New Payment Method</h3>
                     <div class="space-y-2">
                         <label>Cardholder Name</label>
-                        <x-jet-input class="w-full" id="card-holder-name" type="text" placeholder="Cardholder Name"/>
+                        <x-input class="w-full" id="card-holder-name" type="text" placeholder="Cardholder Name"/>
                     </div>
                     <div class="space-y-2">
                         <label>Card Details</label>
@@ -35,15 +35,15 @@
             </div>
         </x-slot>
         <x-slot name="actions">
-            <x-jet-action-message class="mr-3" on="saved">
+            <x-action-message class="mr-3" on="saved">
                 {{ __('Saved.') }}
-            </x-jet-action-message>
+            </x-action-message>
 
-            <x-jet-button type="button" id="save-card" data-secret="{{ $restaurant->createSetupIntent()->client_secret }}" wire:loading.attr="disabled">
+            <x-button class="bg-red-800 hover:bg-red-700 text-white" type="button" id="save-card" data-secret="{{ $restaurant->createSetupIntent()->client_secret }}" wire:loading.attr="disabled">
                 {{ __('Save') }}
-            </x-jet-button>
+            </x-button>
         </x-slot>
-    </x-jet-form-section>
+    </x-form-section>
 
     @push("scripts")
         <script src="https://js.stripe.com/v3/"></script>

@@ -5,12 +5,12 @@
                 @foreach($blocks as $index => $block)
                     <div>
                         <label>Start</label>
-                        <x-jet-input class="w-full" type="datetime-local" wire:model.live="blocks.{{ $index }}.start_date"/>
+                        <x-input class="w-full" type="datetime-local" wire:model.live="blocks.{{ $index }}.start_date"/>
                         @error("blocks.$index.start_date")<span class="text-red-600">{{ $message }}</span>@enderror
                     </div>
                     <div>
                         <label>End</label>
-                        <x-jet-input class="w-full" type="datetime-local" wire:model.live="blocks.{{ $index }}.end_date"/>
+                        <x-input class="w-full" type="datetime-local" wire:model.live="blocks.{{ $index }}.end_date"/>
                         @error("blocks.$index.end_date")<span class="text-red-600">{{ $message }}</span>@enderror
                     </div>
                     <div class="md:col-span-2 grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -34,13 +34,13 @@
         </div>
 
         <div class="flex items-center justify-end px-4 py-3 bg-gray-50 text-right sm:px-6">
-            <x-jet-action-message class="mr-3" on="saved">
+            <x-action-message class="mr-3" on="saved">
                 {{ __('Saved.') }}
-            </x-jet-action-message>
+            </x-action-message>
 
-            <x-jet-button wire:loading.attr="disabled">
+            <x-button class="bg-red-800 hover:bg-red-700 text-white" wire:loading.attr="disabled">
                 {{ __('Save') }}
-            </x-jet-button>
+            </x-button>
         </div>
     </div>
 </form>

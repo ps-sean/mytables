@@ -1,5 +1,5 @@
 <div x-data="{ modal: false, blockModal: false }">
-    <x-jet-form-section submit="submit">
+    <x-form-section submit="submit">
         <x-slot name="title">
             Tables
         </x-slot>
@@ -18,12 +18,12 @@
                             <input type="hidden" wire:model.live="tables.*.id">
                             <div>
                                 <label class="text-gray-600">Name</label>
-                                <x-jet-input class="w-full" wire:model.live="tables.{{ $index }}.name" placeholder="Table Name" required />
+                                <x-input class="w-full" wire:model.live="tables.{{ $index }}.name" placeholder="Table Name" required />
                                 @error("tables.$index.name")<span class="text-red-600">{{ $message }}</span>@enderror
                             </div>
                             <div>
                                 <label class="text-gray-600">Seats</label>
-                                <x-jet-input type="number" class="w-full" wire:model.live="tables.{{ $index }}.seats" min="1" required />
+                                <x-input type="number" class="w-full" wire:model.live="tables.{{ $index }}.seats" min="1" required />
                                 @error("tables.$index.seats")<span class="text-red-600">{{ $message }}</span>@enderror
                             </div>
                             <div>
@@ -73,9 +73,9 @@
         </x-slot>
         @if($show)
             <x-slot name="actions">
-                <x-jet-action-message class="mr-3" on="saved">
+                <x-action-message class="mr-3" on="saved">
                     {{ __('Saved.') }}
-                </x-jet-action-message>
+                </x-action-message>
 
                 <x-button wire:click.prevent="toggleShow" class="bg-red-800 hover:bg-red-700 mr-3">
                     <svg class="h-4 mr-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -84,12 +84,12 @@
                     Hide
                 </x-button>
 
-                <x-jet-button wire:loading.attr="disabled">
+                <x-button wire:loading.attr="disabled">
                     {{ __('Save') }}
-                </x-jet-button>
+                </x-button>
             </x-slot>
         @endif
-    </x-jet-form-section>
+    </x-form-section>
 
     <div x-cloak x-show="modal" x-on:keydown.escape="modal = false" class="fixed z-10 inset-0 overflow-y-auto">
         <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">

@@ -3,13 +3,13 @@
         <div class="px-4 py-5 bg-white sm:p-6 flex justify-between space-x-3 items-center">
             <div>
                 <label>Date</label>
-                <x-jet-input class="w-full" type="date" wire:model.live="newDate" :min="$newDate" required/>
+                <x-input class="w-full" type="date" wire:model.live="newDate" :min="$newDate" required/>
                 @error("newDate")<span class="text-red-600">{{ $message }}</span>@enderror
             </div>
 
             <div class="flex items-center space-x-3">
                 <x-button wire:click.prevent="$set('newDate', null)" class="bg-gray-500 hover:bg-gray-400">Cancel</x-button>
-                <x-jet-button wire:loading.attr="disabled">Save</x-jet-button>
+                <x-button class="bg-red-800 hover:bg-red-700 text-white" wire:loading.attr="disabled">Save</x-button>
             </div>
         </div>
     </form>
@@ -19,9 +19,9 @@
             <div class="px-4 bg-white sm:p-6 space-y-4">
                 <div class="flex h-16 space-x-8 overflow-auto">
                     @foreach($exceptions->pluck("service_date")->unique()->sort() as $date)
-                        <x-jet-nav-link class="whitespace-nowrap" wire:click="changeOpenDate('{{ $date->format('Y-m-d') }}')" href="#" :active="$openDate === $date->format('Y-m-d')">{{ $date->toFormattedDateString() }}</x-jet-nav-link>
+                        <x-nav-link class="whitespace-nowrap" wire:click="changeOpenDate('{{ $date->format('Y-m-d') }}')" href="#" :active="$openDate === $date->format('Y-m-d')">{{ $date->toFormattedDateString() }}</x-nav-link>
                     @endforeach
-                    <x-jet-nav-link class="whitespace-nowrap" wire:click="addException" href="#">&plus; Add Exception</x-jet-nav-link>
+                    <x-nav-link class="whitespace-nowrap" wire:click="addException" href="#">&plus; Add Exception</x-nav-link>
                 </div>
                 @foreach($exceptions->where("service_date", \Carbon\Carbon::parse($openDate)) as $index => $exception)
                     @if($exception->closed)
@@ -36,29 +36,29 @@
                             <div class="space-y-2">
                                 <div>
                                     <label>Title</label>
-                                    <x-jet-input wire:model.live="exceptions.{{ $index }}.title" placeholder="Title" class="w-full" required/>
+                                    <x-input wire:model.live="exceptions.{{ $index }}.title" placeholder="Title" class="w-full" required/>
                                     @error("exceptions.$index.title")<span class="text-red-600">{{ $message }}</span>@enderror
                                 </div>
                                 <div>
                                     <label>Description</label>
-                                    <x-jet-input textarea wire:model.live="exceptions.{{ $index }}.description" placeholder="Description" class="w-full"/>
+                                    <x-input textarea wire:model.live="exceptions.{{ $index }}.description" placeholder="Description" class="w-full"/>
                                     @error("exceptions.$index.description")<span class="text-red-600">{{ $message }}</span>@enderror
                                 </div>
                             </div>
                             <div>
                                 <label>Open</label>
-                                <x-jet-input type="time" wire:model.live="exceptions.{{ $index }}.start" class="w-full" required/>
+                                <x-input type="time" wire:model.live="exceptions.{{ $index }}.start" class="w-full" required/>
                                 @error("exceptions.$index.start")<span class="text-red-600">{{ $message }}</span>@enderror
                             </div>
                             <div class="space-y-2">
                                 <div>
                                     <label>Finish</label>
-                                    <x-jet-input type="time" wire:model.live="exceptions.{{ $index }}.finish" class="w-full" required/>
+                                    <x-input type="time" wire:model.live="exceptions.{{ $index }}.finish" class="w-full" required/>
                                     @error("exceptions.$index.finish")<span class="text-red-600">{{ $message }}</span>@enderror
                                 </div>
                                 <div>
                                     <label>Last Booking</label>
-                                    <x-jet-input type="time" wire:model.live="exceptions.{{ $index }}.last_booking" class="w-full" required/>
+                                    <x-input type="time" wire:model.live="exceptions.{{ $index }}.last_booking" class="w-full" required/>
                                     @error("exceptions.$index.last_booking")<span class="text-red-600">{{ $message }}</span>@enderror
                                 </div>
                             </div>
@@ -137,13 +137,13 @@
             @endif
 
             <div class="flex items-center justify-end px-4 py-3 bg-gray-50 text-right sm:px-6">
-                <x-jet-action-message class="mr-3" on="saved">
+                <x-action-message class="mr-3" on="saved">
                     {{ __('Saved.') }}
-                </x-jet-action-message>
+                </x-action-message>
 
-                <x-jet-button wire:loading.attr="disabled">
+                <x-button class="bg-red-800 hover:bg-red-700 text-white" wire:loading.attr="disabled">
                     {{ __('Save') }}
-                </x-jet-button>
+                </x-button>
             </div>
         </div>
     </form>

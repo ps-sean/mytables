@@ -6,7 +6,7 @@
                     <div class="rounded border border-gray-300 p-6 space-y-4">
                         <div>
                             <label>Name</label>
-                            <x-jet-input class="w-full" wire:model.live="sections.{{ $key }}.name" required/>
+                            <x-input class="w-full" wire:model.live="sections.{{ $key }}.name" required/>
                             @error("sections.$key.name")<span class="text-red-600">{{ $message }}</span>@enderror
                         </div>
                         <x-button wire:click.prevent="removeSection('{{ $key }}')" class="bg-red-600 hover:bg-red-500 w-full justify-center"><x-icons.cross class="h-6 mr-2"/> Delete</x-button>
@@ -19,13 +19,13 @@
         </div>
 
         <div class="flex items-center justify-end px-4 py-3 bg-gray-50 text-right sm:px-6">
-            <x-jet-action-message class="mr-3" on="saved">
+            <x-action-message class="mr-3" on="saved">
                 {{ __('Saved.') }}
-            </x-jet-action-message>
+            </x-action-message>
 
-            <x-jet-button wire:loading.attr="disabled">
+            <x-button class="bg-red-800 hover:bg-red-700 text-white" wire:loading.attr="disabled">
                 {{ __('Save') }}
-            </x-jet-button>
+            </x-button>
         </div>
     </div>
 </form>

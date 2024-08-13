@@ -1,5 +1,5 @@
 <div>
-    <x-jet-form-section submit="submit">
+    <x-form-section submit="submit">
         <x-slot name="title">Payment Date</x-slot>
         <x-slot name="description">
             Change your payment date. Any changes will be prorated.
@@ -22,13 +22,13 @@
             </div>
         </x-slot>
         <x-slot name="actions">
-            <x-jet-action-message class="mr-3" on="saved">
+            <x-action-message class="mr-3" on="saved">
                 {{ __('Saved.') }}
-            </x-jet-action-message>
+            </x-action-message>
 
-            <x-jet-button wire:loading.attr="disabled">
+            <x-button class="bg-red-800 hover:bg-red-700 text-white" wire:loading.attr="disabled">
                 {{ __('Save') }}
-            </x-jet-button>
+            </x-button>
         </x-slot>
-    </x-jet-form-section>
+    </x-form-section>
 </div>

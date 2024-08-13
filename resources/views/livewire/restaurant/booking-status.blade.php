@@ -34,7 +34,7 @@
         @endif
     </div>
 
-    <x-jet-confirmation-modal wire:model.live="reject_confirmation">
+    <x-confirmation-modal wire:model.live="reject_confirmation">
         <x-slot name="title">
             Reject Table
         </x-slot>
@@ -42,20 +42,20 @@
         <x-slot name="content">
             <p>Please confirm that you wish to reject this table. The customer will be notified of this change.</p>
             <label>Reason for rejecting (optional):</label>
-            <x-jet-input textarea class="w-full" wire:model.live="booking.reject_reason" placeholder="Reason for rejecting"/>
+            <x-input textarea class="w-full" wire:model.live="booking.reject_reason" placeholder="Reason for rejecting"/>
         </x-slot>
 
         <x-slot name="footer">
-            <x-jet-secondary-button wire:loading.attr="disabled" wire:click.prevent="$set('reject_confirmation', false)">
+            <x-secondary-button wire:loading.attr="disabled" wire:click.prevent="$set('reject_confirmation', false)">
                 Cancel
-            </x-jet-secondary-button>
-            <x-jet-danger-button wire:loading.attr="disabled" wire:click.prevent="bookingStatus('rejected')">
+            </x-secondary-button>
+            <x-danger-button wire:loading.attr="disabled" wire:click.prevent="bookingStatus('rejected')">
                 Confirm
-            </x-jet-danger-button>
+            </x-danger-button>
         </x-slot>
-    </x-jet-confirmation-modal>
+    </x-confirmation-modal>
 
-    <x-jet-dialog-modal wire:model.live="confirm_confirmation">
+    <x-dialog-modal wire:model.live="confirm_confirmation">
         <x-slot name="title">
             Accept Table
         </x-slot>
@@ -65,16 +65,16 @@
         </x-slot>
 
         <x-slot name="footer">
-            <x-jet-secondary-button wire:loading.attr="disabled" wire:click.prevent="$set('confirm_confirmation', false)">
+            <x-secondary-button wire:loading.attr="disabled" wire:click.prevent="$set('confirm_confirmation', false)">
                 Cancel
-            </x-jet-secondary-button>
-            <x-jet-button class="bg-green-400 hover:bg-green-300" wire:loading.attr="disabled" wire:click.prevent="bookingStatus('confirmed')">
+            </x-secondary-button>
+            <x-button class="bg-green-400 hover:bg-green-300" wire:loading.attr="disabled" wire:click.prevent="bookingStatus('confirmed')">
                 Confirm
-            </x-jet-button>
+            </x-button>
         </x-slot>
-    </x-jet-dialog-modal>
+    </x-dialog-modal>
 
-    <x-jet-confirmation-modal wire:model.live="no_show">
+    <x-confirmation-modal wire:model.live="no_show">
         <x-slot name="title">
             No Show
         </x-slot>
@@ -85,21 +85,21 @@
         </x-slot>
 
         <x-slot name="footer">
-            <x-jet-secondary-button wire:loading.attr="disabled" wire:click.prevent="$set('no_show', false)">
+            <x-secondary-button wire:loading.attr="disabled" wire:click.prevent="$set('no_show', false)">
                 Cancel
-            </x-jet-secondary-button>
+            </x-secondary-button>
             @if($booking->payment_intent && $fee)
-                <x-jet-danger-button wire:loading.attr="disabled" wire:click.prevent="$set('no_show_fee', true)">
+                <x-danger-button wire:loading.attr="disabled" wire:click.prevent="$set('no_show_fee', true)">
                     Charge Fee
-                </x-jet-danger-button>
+                </x-danger-button>
             @endif
-            <x-jet-button class="bg-green-400 hover:bg-green-300" wire:loading.attr="disabled" wire:click.prevent="noShow(false)">
+            <x-button class="bg-green-400 hover:bg-green-300" wire:loading.attr="disabled" wire:click.prevent="noShow(false)">
                 {{ $booking->payment_intent ? 'Dont Charge' : 'Confirm' }}
-            </x-jet-button>
+            </x-button>
         </x-slot>
-    </x-jet-confirmation-modal>
+    </x-confirmation-modal>
 
-    <x-jet-dialog-modal wire:model.live="no_show_fee">
+    <x-dialog-modal wire:model.live="no_show_fee">
         <x-slot name="title">
             Charge No Show Fee
         </x-slot>
@@ -112,16 +112,16 @@
         </x-slot>
 
         <x-slot name="footer">
-            <x-jet-secondary-button wire:loading.attr="disabled" wire:click.prevent="$set('no_show_fee', false)">
+            <x-secondary-button wire:loading.attr="disabled" wire:click.prevent="$set('no_show_fee', false)">
                 Cancel
-            </x-jet-secondary-button>
-            <x-jet-button class="bg-green-400 hover:bg-green-300" wire:loading.attr="disabled" wire:click.prevent="noShow(true)">
+            </x-secondary-button>
+            <x-button class="bg-green-400 hover:bg-green-300" wire:loading.attr="disabled" wire:click.prevent="noShow(true)">
                 Confirm
-            </x-jet-button>
+            </x-button>
         </x-slot>
-    </x-jet-dialog-modal>
+    </x-dialog-modal>
 
-    <x-jet-dialog-modal wire:model.live="seat_table">
+    <x-dialog-modal wire:model.live="seat_table">
         <x-slot name="title">
             Seat Table
         </x-slot>
@@ -131,16 +131,16 @@
         </x-slot>
 
         <x-slot name="footer">
-            <x-jet-secondary-button wire:loading.attr="disabled" wire:click.prevent="$set('seat_table', false)">
+            <x-secondary-button wire:loading.attr="disabled" wire:click.prevent="$set('seat_table', false)">
                 Cancel
-            </x-jet-secondary-button>
-            <x-jet-button class="bg-green-400 hover:bg-green-300" wire:loading.attr="disabled" wire:click.prevent="bookingStatus('seated')">
+            </x-secondary-button>
+            <x-button class="bg-green-400 hover:bg-green-300" wire:loading.attr="disabled" wire:click.prevent="bookingStatus('seated')">
                 Confirm
-            </x-jet-button>
+            </x-button>
         </x-slot>
-    </x-jet-dialog-modal>
+    </x-dialog-modal>
 
-    <x-jet-confirmation-modal wire:model.live="finish_table">
+    <x-confirmation-modal wire:model.live="finish_table">
         <x-slot name="title">
             Finished
         </x-slot>
@@ -148,12 +148,12 @@
             Please confirm that this table is finished and is now free?
         </x-slot>
         <x-slot name="footer">
-            <x-jet-secondary-button wire:loading.attr="disabled" wire:click.prevent="$set('finish_table', false)">
+            <x-secondary-button wire:loading.attr="disabled" wire:click.prevent="$set('finish_table', false)">
                 Cancel
-            </x-jet-secondary-button>
-            <x-jet-button class="bg-green-400 hover:bg-green-300" wire:loading.attr="disabled" wire:click.prevent="finished">
+            </x-secondary-button>
+            <x-button class="bg-green-400 hover:bg-green-300" wire:loading.attr="disabled" wire:click.prevent="finished">
                 Confirm
-            </x-jet-button>
+            </x-button>
         </x-slot>
-    </x-jet-confirmation-modal>
+    </x-confirmation-modal>
 </div>

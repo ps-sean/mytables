@@ -1,4 +1,4 @@
-<x-jet-form-section submit="submit">
+<x-form-section submit="submit">
     <x-slot name="title">
         Opening Hours
     </x-slot>
@@ -23,21 +23,21 @@
                 {{ $day }}
             </div>
             <div class="col-span-2">
-                <x-jet-input class="w-full" type="time" wire:model.live="restaurant.open_hours.{{ $day }}.open"/>
+                <x-input class="w-full" type="time" wire:model.live="restaurant.open_hours.{{ $day }}.open"/>
             </div>
             <div class="col-span-2">
-                <x-jet-input class="w-full" type="time" wire:model.live="restaurant.open_hours.{{ $day }}.close"/>
+                <x-input class="w-full" type="time" wire:model.live="restaurant.open_hours.{{ $day }}.close"/>
             </div>
             <div></div>
         @endforeach
     </x-slot>
     <x-slot name="actions">
-        <x-jet-action-message class="mr-3" on="saved">
+        <x-action-message class="mr-3" on="saved">
             {{ __('Saved.') }}
-        </x-jet-action-message>
+        </x-action-message>
 
-        <x-jet-button wire:loading.attr="disabled">
+        <x-button class="bg-red-800 hover:bg-red-700 text-white" wire:loading.attr="disabled">
             {{ __('Save') }}
-        </x-jet-button>
+        </x-button>
     </x-slot>
-</x-jet-form-section>
+</x-form-section>

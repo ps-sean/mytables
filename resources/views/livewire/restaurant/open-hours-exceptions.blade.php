@@ -1,4 +1,4 @@
-<x-jet-dialog-modal wire:model.live="open">
+<x-dialog-modal wire:model.live="open">
     <x-slot name="title">
         Open Hours Exceptions
     </x-slot>
@@ -12,12 +12,12 @@
                     </div>
                     <div>
                         <label>Open</label>
-                        <x-jet-input class="w-full" type="time" wire:model.live="exceptions.{{ $index }}.open"/>
+                        <x-input class="w-full" type="time" wire:model.live="exceptions.{{ $index }}.open"/>
                         @error("exceptions.*.open")<span class="text-red-600">{{ $message }}</span>@enderror
                     </div>
                     <div>
                         <label>Close</label>
-                        <x-jet-input class="w-full" type="time" wire:model.live="exceptions.{{ $index }}.close"/>
+                        <x-input class="w-full" type="time" wire:model.live="exceptions.{{ $index }}.close"/>
                         @error("exceptions.*.close")<span class="text-red-600">{{ $message }}</span>@enderror
                     </div>
                     <div class="flex items-center">
@@ -31,17 +31,17 @@
         <div class="grid grid-cols-5 gap-2">
             <div class="col-span-2">
                 <label>Date</label>
-                <x-jet-input class="w-full" type="date" wire:model.live="newException.open_date" :min="\Carbon\Carbon::now()->format('Y-m-d')"/>
+                <x-input class="w-full" type="date" wire:model.live="newException.open_date" :min="\Carbon\Carbon::now()->format('Y-m-d')"/>
                 @error("newException.open_date")<span class="text-red-600">{{ $message }}</span>@enderror
             </div>
             <div>
                 <label>Open</label>
-                <x-jet-input class="w-full" type="time" wire:model.live="newException.open"/>
+                <x-input class="w-full" type="time" wire:model.live="newException.open"/>
                 @error("newException.open")<span class="text-red-600">{{ $message }}</span>@enderror
             </div>
             <div>
                 <label>Close</label>
-                <x-jet-input class="w-full" type="time" wire:model.live="newException.close"/>
+                <x-input class="w-full" type="time" wire:model.live="newException.close"/>
                 @error("newException.close")<span class="text-red-600">{{ $message }}</span>@enderror
             </div>
             <div class="flex items-center">
@@ -51,13 +51,13 @@
     </x-slot>
     <x-slot name="footer">
         <div class="flex justify-end items-center">
-            <x-jet-action-message class="mr-3" on="saved">
+            <x-action-message class="mr-3" on="saved">
                 {{ __('Saved.') }}
-            </x-jet-action-message>
+            </x-action-message>
 
-            <x-jet-button wire:click="submit" wire:loading.attr="disabled">
+            <x-button class="bg-red-800 hover:bg-red-700 text-white" wire:click="submit" wire:loading.attr="disabled">
                 {{ __('Save') }}
-            </x-jet-button>
+            </x-button>
         </div>
     </x-slot>
-</x-jet-dialog-modal>
+</x-dialog-modal>
