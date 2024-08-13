@@ -1,9 +1,9 @@
 @if(!empty($newDate))
-    <form wire:submit.prevent="addException">
+    <form wire:submit="addException">
         <div class="px-4 py-5 bg-white sm:p-6 flex justify-between space-x-3 items-center">
             <div>
                 <label>Date</label>
-                <x-jet-input class="w-full" type="date" wire:model="newDate" :min="$newDate" required/>
+                <x-jet-input class="w-full" type="date" wire:model.live="newDate" :min="$newDate" required/>
                 @error("newDate")<span class="text-red-600">{{ $message }}</span>@enderror
             </div>
 
@@ -14,7 +14,7 @@
         </div>
     </form>
 @else
-    <form wire:submit.prevent="submit">
+    <form wire:submit="submit">
         <div class="shadow overflow-hidden sm:rounded-md">
             <div class="px-4 bg-white sm:p-6 space-y-4">
                 <div class="flex h-16 space-x-8 overflow-auto">
@@ -27,7 +27,7 @@
                     @if($exception->closed)
                         <div class="flex items-center justify-center py-6">
                             <label>
-                                <input type="checkbox" wire:model="exceptions.{{ $index }}.closed"/> Closed
+                                <input type="checkbox" wire:model.live="exceptions.{{ $index }}.closed"/> Closed
                                 @error("exceptions.$index.closed")<span class="text-red-600">{{ $message }}</span>@enderror
                             </label>
                         </div>
@@ -36,29 +36,29 @@
                             <div class="space-y-2">
                                 <div>
                                     <label>Title</label>
-                                    <x-jet-input wire:model="exceptions.{{ $index }}.title" placeholder="Title" class="w-full" required/>
+                                    <x-jet-input wire:model.live="exceptions.{{ $index }}.title" placeholder="Title" class="w-full" required/>
                                     @error("exceptions.$index.title")<span class="text-red-600">{{ $message }}</span>@enderror
                                 </div>
                                 <div>
                                     <label>Description</label>
-                                    <x-jet-input textarea wire:model="exceptions.{{ $index }}.description" placeholder="Description" class="w-full"/>
+                                    <x-jet-input textarea wire:model.live="exceptions.{{ $index }}.description" placeholder="Description" class="w-full"/>
                                     @error("exceptions.$index.description")<span class="text-red-600">{{ $message }}</span>@enderror
                                 </div>
                             </div>
                             <div>
                                 <label>Open</label>
-                                <x-jet-input type="time" wire:model="exceptions.{{ $index }}.start" class="w-full" required/>
+                                <x-jet-input type="time" wire:model.live="exceptions.{{ $index }}.start" class="w-full" required/>
                                 @error("exceptions.$index.start")<span class="text-red-600">{{ $message }}</span>@enderror
                             </div>
                             <div class="space-y-2">
                                 <div>
                                     <label>Finish</label>
-                                    <x-jet-input type="time" wire:model="exceptions.{{ $index }}.finish" class="w-full" required/>
+                                    <x-jet-input type="time" wire:model.live="exceptions.{{ $index }}.finish" class="w-full" required/>
                                     @error("exceptions.$index.finish")<span class="text-red-600">{{ $message }}</span>@enderror
                                 </div>
                                 <div>
                                     <label>Last Booking</label>
-                                    <x-jet-input type="time" wire:model="exceptions.{{ $index }}.last_booking" class="w-full" required/>
+                                    <x-jet-input type="time" wire:model.live="exceptions.{{ $index }}.last_booking" class="w-full" required/>
                                     @error("exceptions.$index.last_booking")<span class="text-red-600">{{ $message }}</span>@enderror
                                 </div>
                             </div>

@@ -9,11 +9,11 @@
     <div class="bg-white p-5">
         <div class="container mx-auto md:flex justify-between gap-3 mb-6">
             <x-button class="bg-red-800 hover:bg-red-700" wire:loading.attr="disabled" wire:click="createNewBooking">New Booking</x-button>
-            <x-jet-input class="w-full md:w-auto" wire:model="search" placeholder="Search"/>
+            <x-jet-input class="w-full md:w-auto" wire:model.live="search" placeholder="Search"/>
             @if($view === "list")
                 <div class="w-full md:w-auto">
                     Status:&nbsp;
-                    <x-select wire:model="status">
+                    <x-select wire:model.live="status">
                         <option value="all">All</option>
                         <option value="pending">Pending</option>
                         <option value="confirmed">Confirmed</option>
@@ -23,7 +23,7 @@
                     </x-select>
                 </div>
             @else
-                <x-jet-input class="w-full md:w-auto" wire:model="date" type="date"/>
+                <x-jet-input class="w-full md:w-auto" wire:model.live="date" type="date"/>
                 <div class="relative flex items-center">
                     <a class="block flex items-center border-b border-gray-300 py-2 w-full md:w-auto justify-between space-x-2" x-on:click.prevent="show = !show" href="#show"><span>Show Info ({{ count($show) }})</span><x-icons.chevron-down class="h-4"/></a>
                     <div class="absolute top-full left-0 w-full md:w-32 bg-white p-2 rounded-b border border-gray-300" x-show.transition.in="show" x-cloak x-on:click.away="show = false">
@@ -31,7 +31,7 @@
                             @foreach(["name", "guests", "table", "time", "comments"] as $s)
                                 <li>
                                     <label>
-                                        <input type="checkbox" wire:model="show" value="{{ $s }}">
+                                        <input type="checkbox" wire:model.live="show" value="{{ $s }}">
                                         {{ ucwords($s) }}
                                     </label>
                                 </li>
@@ -41,7 +41,7 @@
                 </div>
                 <div class="w-full md:w-auto text-center md:text-right">
                     Text:&nbsp;
-                    <x-select wire:model="size">
+                    <x-select wire:model.live="size">
                         <option value="small">Small</option>
                         <option value="medium">Medium</option>
                         <option value="large">Large</option>
@@ -50,7 +50,7 @@
             @endif
             <div class="w-full md:w-auto text-center md:text-right">
                 View:&nbsp;
-                <x-select wire:model="view">
+                <x-select wire:model.live="view">
                     <option value="grid">Grid</option>
                     <option value="list">List</option>
                 </x-select>
@@ -243,7 +243,7 @@
         @endswitch
     </div>
 
-    <x-jet-dialog-modal wire:model="createBooking" maxWidth="lg">
+    <x-jet-dialog-modal wire:model.live="createBooking" maxWidth="lg">
         <x-slot name="title">
             Create Booking
         </x-slot>
@@ -261,7 +261,7 @@
                             <x-icons.enter class="h-6"/>
                         </div>
                         <div class="w-full">
-                            <x-jet-input class="w-full" type="datetime-local" wire:model="newBooking.booked_at" />
+                            <x-jet-input class="w-full" type="datetime-local" wire:model.live="newBooking.booked_at" />
                             @error("newBooking.booked_at") <p class="text-red-600">{{ $message }}</p> @enderror
                         </div>
                     </div>
@@ -271,7 +271,7 @@
                             <x-icons.exit class="h-6"/>
                         </div>
                         <div class="w-full">
-                            <x-jet-input class="w-full" type="datetime-local" wire:model="newBooking.finish_at" :min="$newBooking->booked_at->format('Y-m-d\TH:i')" />
+                            <x-jet-input class="w-full" type="datetime-local" wire:model.live="newBooking.finish_at" :min="$newBooking->booked_at->format('Y-m-d\TH:i')" />
                             <small>This field auto updates when you edit the booking time or guests.</small>
                             @error("newBooking.finish_at") <p class="text-red-600">{{ $message }}</p> @enderror
                         </div>
@@ -286,7 +286,7 @@
                                 @foreach($restaurant->tables as $table)
                                     <div>
                                         <label class="block">
-                                            <input type="checkbox" wire:model="newBookingTables.{{ $table->getKey() }}" />
+                                            <input type="checkbox" wire:model.live="newBookingTables.{{ $table->getKey() }}" />
                                             {{ $table }}
                                         </label>
                                     </div>
@@ -302,7 +302,7 @@
                             <x-icons.group class="h-6"/>
                         </div>
                         <div class="w-full">
-                            <x-jet-input class="w-auto" type="number" wire:model="newBooking.covers" min="1" /> guests
+                            <x-jet-input class="w-auto" type="number" wire:model.live="newBooking.covers" min="1" /> guests
                             @error("newBooking.covers") <p class="text-red-600">{{ $message }}</p> @enderror
                         </div>
                     </div>
@@ -312,7 +312,7 @@
                             <x-icons.user class="h-6"/>
                         </div>
                         <div class="w-full">
-                            <x-jet-input type="text" wire:model="newBooking.name" class="w-full" placeholder="Name" />
+                            <x-jet-input type="text" wire:model.live="newBooking.name" class="w-full" placeholder="Name" />
                             @error("newBooking.name")<span class="text-red-600">{{ $message }}</span>@enderror
                         </div>
                     </div>
@@ -322,7 +322,7 @@
                             <x-icons.at class="h-6"/>
                         </div>
                         <div class="w-full">
-                            <x-jet-input type="email" wire:model="newBooking.email" class="w-full" placeholder="Email" />
+                            <x-jet-input type="email" wire:model.live="newBooking.email" class="w-full" placeholder="Email" />
                             @error("newBooking.email")<span class="text-red-600">{{ $message }}</span>@enderror
                         </div>
                     </div>
@@ -332,7 +332,7 @@
                             <x-icons.phone class="h-6"/>
                         </div>
                         <div class="w-full">
-                            <x-jet-input type="tel" wire:model="newBooking.contact_number" class="w-full" placeholder="Contact Number" />
+                            <x-jet-input type="tel" wire:model.live="newBooking.contact_number" class="w-full" placeholder="Contact Number" />
                             @error("newBooking.contact_number")<span class="text-red-600">{{ $message }}</span>@enderror
                         </div>
                     </div>
@@ -342,7 +342,7 @@
                             <x-icons.edit class="h-6"/>
                         </div>
                         <div class="w-full">
-                            <x-jet-input textarea wire:model="newBooking.comments" class="w-full" placeholder="Additional Comments"/>
+                            <x-jet-input textarea wire:model.live="newBooking.comments" class="w-full" placeholder="Additional Comments"/>
                             @error("newBooking.comments")<span class="text-red-600">{{ $message }}</span>@enderror
                         </div>
                     </div>
@@ -367,7 +367,7 @@
 
     @push("scripts")
         <script>
-            document.addEventListener("livewire:load", () => {
+            document.addEventListener("livewire:init", () => {
                 window.addEventListener("search", () => {
                     let found = document.getElementsByClassName("scroll-me")
 

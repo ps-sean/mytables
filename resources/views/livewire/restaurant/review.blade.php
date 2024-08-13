@@ -1,17 +1,17 @@
 <div>
     @if(!$booking->review)
-        <form wire:submit.prevent="submit">
+        <form wire:submit="submit">
             <div class="grid md:grid-cols-2 gap-4 p-5">
                 <div class="space-y-2">
                     <h5 class="font-bold text-xl">Review</h5>
                     <div>
                         <label>Review Title<span class="text-red-600">&ast;</span></label>
-                        <x-jet-input class="w-full" maxlength="255" wire:model="review.title" placeholder="What is the main reason for your review?"/>
+                        <x-jet-input class="w-full" maxlength="255" wire:model.live="review.title" placeholder="What is the main reason for your review?"/>
                         @error("review.title")<span class="text-red-600">{{ $message }}</span>@enderror
                     </div>
                     <div>
                         <label>Review</label>
-                        <x-jet-input rows="10" textarea wire:model="review.review" class="w-full" placeholder="Give your review some context"/>
+                        <x-jet-input rows="10" textarea wire:model.live="review.review" class="w-full" placeholder="Give your review some context"/>
                         @error("review.review")<span class="text-red-600">{{ $message }}</span>@enderror
                     </div>
                 </div>

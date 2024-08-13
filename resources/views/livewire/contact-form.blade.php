@@ -1,17 +1,17 @@
-<form wire:submit.prevent="submit" class="space-y-5">
+<form wire:submit="submit" class="space-y-5">
     <div>
         <label class="text-gray-500">Name</label>
-        <x-jet-input class="w-full" wire:model="name"/>
+        <x-jet-input class="w-full" wire:model.live="name"/>
         @error("name")<span class="text-red-600">{{ $message }}</span>@enderror
     </div>
     <div>
         <label class="text-gray-500">Email</label>
-        <x-jet-input type="email" class="w-full" wire:model="email"/>
+        <x-jet-input type="email" class="w-full" wire:model.live="email"/>
         @error("email")<span class="text-red-600">{{ $message }}</span>@enderror
     </div>
     <div>
         <label class="text-gray-500">Subject</label>
-        <x-select wire:model="subject" required class="w-full" :disabled="$subjectDisabled">
+        <x-select wire:model.live="subject" required class="w-full" :disabled="$subjectDisabled">
             @if(empty($subject))
                 <option>- Please Select -</option>
             @endif
@@ -21,7 +21,7 @@
     </div>
     <div>
         <label class="text-gray-500">Your Message</label>
-        <x-jet-input textarea wire:model="text" class="w-full" rows="5"/>
+        <x-jet-input textarea wire:model.live="text" class="w-full" rows="5"/>
         @error("text")<span class="text-red-600">{{ $message }}</span>@enderror
     </div>
     <div class="text-center">

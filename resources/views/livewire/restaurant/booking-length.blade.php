@@ -1,4 +1,4 @@
-<div x-data="{ open: @entangle('open') }">
+<div x-data="{ open: @entangle('open').live }">
     <x-jet-form-section submit="submit">
         <x-slot name="title">
             Booking Rules
@@ -14,12 +14,12 @@
                         <div class="grid grid-cols-3 gap-2">
                             <div>
                                 <label>Max Guests</label>
-                                <x-jet-input class="w-full" type="number" wire:model="booking_rules.{{ $index }}.max_covers" min="1" max="{{ $restaurant->max_booking_size() }}" required />
+                                <x-jet-input class="w-full" type="number" wire:model.live="booking_rules.{{ $index }}.max_covers" min="1" max="{{ $restaurant->max_booking_size() }}" required />
                                 @error("booking_rules.$index.max_covers")<span class="text-red-600">{{ $message }}</span>@enderror
                             </div>
                             <div>
                                 <label>Minutes</label>
-                                <x-jet-input class="w-full" type="number" wire:model="booking_rules.{{ $index }}.minutes" min="5" step="5" required />
+                                <x-jet-input class="w-full" type="number" wire:model.live="booking_rules.{{ $index }}.minutes" min="5" step="5" required />
                                 @error("booking_rules.$index.minutes")<span class="text-red-600">{{ $message }}</span>@enderror
                             </div>
                             <div>

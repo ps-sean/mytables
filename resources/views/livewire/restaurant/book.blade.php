@@ -1,4 +1,4 @@
-<div wire:keydown.escape="hideBooking" x-data="{ card_method: @entangle('card_method'), covers: @entangle('covers'), max_covers: @entangle('max_covers') }">
+<div wire:keydown.escape="hideBooking" x-data="{ card_method: @entangle('card_method').live, covers: @entangle('covers').live, max_covers: @entangle('max_covers').live }">
     <div class="p-5 space-y-5">
         <div class="flex overflow-auto rounded border mx-auto max-w-full" style="width: fit-content;">
             @foreach($dates as $date)
@@ -18,7 +18,7 @@
             </div>
             <div class="flex items-center justify-center">
                 <label>Location:</label>
-                <x-select wire:model="section">
+                <x-select wire:model.live="section">
                     @foreach($restaurant_sections as $g)
                         <option value="{{ $g->id }}">{{ $g }}</option>
                     @endforeach
@@ -176,9 +176,9 @@
                                             </svg>
                                         </div>
                                         <div class="w-full">
-                                            <x-jet-input type="text" wire:model="booking.name" class="w-full" placeholder="Name" id="booking-name" />
+                                            <x-jet-input type="text" wire:model.live="booking.name" class="w-full" placeholder="Name" id="booking-name" />
                                             @error("booking.name")<span class="text-red-600">{{ $message }}</span>@enderror
-                                            <x-jet-input type="email" wire:model="booking.email" class="w-full" placeholder="Email" />
+                                            <x-jet-input type="email" wire:model.live="booking.email" class="w-full" placeholder="Email" />
                                             @error("booking.email")<span class="text-red-600">{{ $message }}</span>@enderror
                                         </div>
                                     </div>
@@ -191,7 +191,7 @@
                                         </svg>
                                     </div>
                                     <div class="w-full">
-                                        <x-jet-input type="tel" wire:model="booking.contact_number" class="w-full" placeholder="Contact Number" />
+                                        <x-jet-input type="tel" wire:model.live="booking.contact_number" class="w-full" placeholder="Contact Number" />
                                         @error("booking.contact_number")<span class="text-red-600">{{ $message }}</span>@enderror
                                     </div>
                                 </div>
@@ -203,7 +203,7 @@
                                         </svg>
                                     </div>
                                     <div class="w-full">
-                                        <x-jet-input textarea wire:model="booking.comments" class="w-full" placeholder="Additional Comments"/>
+                                        <x-jet-input textarea wire:model.live="booking.comments" class="w-full" placeholder="Additional Comments"/>
                                         @error("booking.comments")<span class="text-red-600">{{ $message }}</span>@enderror
                                     </div>
                                 </div>
@@ -228,16 +228,16 @@
                                             <div>
                                                 @auth
                                                     @if(auth()->user()->hasDefaultPaymentMethod())
-                                                        <label class="block flex items-center py-5 border-t"><input class="mr-2" type="radio" wire:model="card_method" value="default"/> Use Default Payment Method ({{ ucwords(auth()->user()->card_brand) }} {{ auth()->user()->card_last_four }})</label>
+                                                        <label class="block flex items-center py-5 border-t"><input class="mr-2" type="radio" wire:model.live="card_method" value="default"/> Use Default Payment Method ({{ ucwords(auth()->user()->card_brand) }} {{ auth()->user()->card_last_four }})</label>
                                                     @endif
-                                                    <label class="block flex items-center py-5 border-t border-b"><input class="mr-2" type="radio" wire:model="card_method" value="add"/> Add New Payment Method</label>
+                                                    <label class="block flex items-center py-5 border-t border-b"><input class="mr-2" type="radio" wire:model.live="card_method" value="add"/> Add New Payment Method</label>
                                                 @endauth
                                             </div>
 
                                             <div x-show.transition.in="card_method === 'add'" class="space-y-2">
                                                 <div wire:ignore class="w-full py-3 border-b" id="card-element"></div>
                                                 @auth
-                                                    <label><input type="checkbox" wire:model="save_method"> Make Default Payment Method</label>
+                                                    <label><input type="checkbox" wire:model.live="save_method"> Make Default Payment Method</label>
                                                 @endauth
                                             </div>
                                             <span class="text-red-600" id="card-error"></span>
@@ -265,7 +265,7 @@
                                     Book
                                 </x-button>
                             @else
-                                <x-button wire:loading.attr="disabled" wire:click.prevent="$emit('executeCaptchaValidation')" type="button" class="justify-center bg-green-500 hover:bg-green-600">
+                                <x-button wire:loading.attr="disabled" wire:click.prevent="$dispatch('executeCaptchaValidation')" type="button" class="justify-center bg-green-500 hover:bg-green-600">
                                     Book
                                 </x-button>
                             @endif
@@ -306,7 +306,7 @@
             <script src="https://js.stripe.com/v3/"></script>
 
             <script>
-                document.addEventListener('livewire:load', () => {
+                document.addEventListener('livewire:init', () => {
                     const stripe = Stripe('{{ config("services.stripe.public") }}')
 
                     const elements = stripe.elements()

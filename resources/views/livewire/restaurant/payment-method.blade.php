@@ -48,7 +48,7 @@
     @push("scripts")
         <script src="https://js.stripe.com/v3/"></script>
         <script>
-            document.addEventListener("livewire:load", () => {
+            document.addEventListener("livewire:init", () => {
                 const stripe = Stripe('{{ config("services.stripe.public") }}')
 
                 const elements = stripe.elements()

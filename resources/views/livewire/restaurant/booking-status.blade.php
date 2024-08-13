@@ -34,7 +34,7 @@
         @endif
     </div>
 
-    <x-jet-confirmation-modal wire:model="reject_confirmation">
+    <x-jet-confirmation-modal wire:model.live="reject_confirmation">
         <x-slot name="title">
             Reject Table
         </x-slot>
@@ -42,7 +42,7 @@
         <x-slot name="content">
             <p>Please confirm that you wish to reject this table. The customer will be notified of this change.</p>
             <label>Reason for rejecting (optional):</label>
-            <x-jet-input textarea class="w-full" wire:model="booking.reject_reason" placeholder="Reason for rejecting"/>
+            <x-jet-input textarea class="w-full" wire:model.live="booking.reject_reason" placeholder="Reason for rejecting"/>
         </x-slot>
 
         <x-slot name="footer">
@@ -55,7 +55,7 @@
         </x-slot>
     </x-jet-confirmation-modal>
 
-    <x-jet-dialog-modal wire:model="confirm_confirmation">
+    <x-jet-dialog-modal wire:model.live="confirm_confirmation">
         <x-slot name="title">
             Accept Table
         </x-slot>
@@ -74,7 +74,7 @@
         </x-slot>
     </x-jet-dialog-modal>
 
-    <x-jet-confirmation-modal wire:model="no_show">
+    <x-jet-confirmation-modal wire:model.live="no_show">
         <x-slot name="title">
             No Show
         </x-slot>
@@ -99,7 +99,7 @@
         </x-slot>
     </x-jet-confirmation-modal>
 
-    <x-jet-dialog-modal wire:model="no_show_fee">
+    <x-jet-dialog-modal wire:model.live="no_show_fee">
         <x-slot name="title">
             Charge No Show Fee
         </x-slot>
@@ -121,7 +121,7 @@
         </x-slot>
     </x-jet-dialog-modal>
 
-    <x-jet-dialog-modal wire:model="seat_table">
+    <x-jet-dialog-modal wire:model.live="seat_table">
         <x-slot name="title">
             Seat Table
         </x-slot>
@@ -140,7 +140,7 @@
         </x-slot>
     </x-jet-dialog-modal>
 
-    <x-jet-confirmation-modal wire:model="finish_table">
+    <x-jet-confirmation-modal wire:model.live="finish_table">
         <x-slot name="title">
             Finished
         </x-slot>

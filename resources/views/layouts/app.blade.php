@@ -31,13 +31,10 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap">
 
     <!-- Styles -->
-    @vite('resources/css/app.css')
-
-    @livewireStyles
+    <livewire:styles />
 
     <!-- Scripts -->
-    @vite('resources/js/app.js')
-    <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.8.0/dist/alpine.min.js" defer></script>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
     <script src="https://www.google.com/recaptcha/api.js?render={{ config('services.recaptcha.key') }}"></script>
 
     <!-- Facebook Pixel Code -->
@@ -112,7 +109,7 @@
 
 @stack('modals')
 
-@livewireScripts
+<livewire:scripts />
 
 @stack("scripts")
 </body>

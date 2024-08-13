@@ -1,4 +1,4 @@
-<div x-data="{ open: @entangle('showNotifications') }">
+<div x-data="{ open: @entangle('showNotifications').live }">
     <!-- This example requires Tailwind CSS v2.0+ -->
     <div x-cloak x-show.immediate="open" class="fixed inset-0 overflow-hidden z-50">
         <div class="absolute inset-0 overflow-hidden">

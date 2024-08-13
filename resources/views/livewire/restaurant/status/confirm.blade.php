@@ -1,4 +1,4 @@
-<div x-cloak x-data="{ open: @entangle('restaurant_id'), status: @entangle('status') }" class="container mx-auto bg-white p-5 space-y-5">
+<div x-cloak x-data="{ open: @entangle('restaurant_id').live, status: @entangle('status').live }" class="container mx-auto bg-white p-5 space-y-5">
     @foreach($restaurants as $restaurant)
         <div class="bg-white rounded overflow-hidden shadow hover:shadow-lg cursor-pointer transition-shadow duration-150 ease-in-out">
             <div x-on:click="open = '{{ $restaurant->id }}'" class="p-3 grid grid-cols-3 gap-y-3">

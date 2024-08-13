@@ -17,7 +17,7 @@
             @endforeach
         </div>
         <div class="col-span-5">
-            <x-jet-input class="w-full" placeholder="Add Staff By Email Address" wire:model="search" wire:keydown.enter.prevent="addStaff"/>
+            <x-jet-input class="w-full" placeholder="Add Staff By Email Address" wire:model.live="search" wire:keydown.enter.prevent="addStaff"/>
         </div>
         <x-button class="bg-red-800 hover:bg-red-700 justify-center" wire:click="addStaff"><x-icons.plus class="h-6 mr-1"/> Add</x-button>
         <div class="col-span-6">

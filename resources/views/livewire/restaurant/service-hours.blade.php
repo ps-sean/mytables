@@ -1,4 +1,4 @@
-<div x-data="{ open: @entangle('open'), modal: false }">
+<div x-data="{ open: @entangle('open').live, modal: false }">
     <x-jet-form-section submit="submit">
         <x-slot name="title">
             Service Hours
@@ -27,29 +27,29 @@
                                 <div class="space-y-2">
                                     <div>
                                         <label>Title</label>
-                                        <x-jet-input wire:model="services.{{ $index }}.title" placeholder="Title" class="w-full" required/>
+                                        <x-jet-input wire:model.live="services.{{ $index }}.title" placeholder="Title" class="w-full" required/>
                                         @error("services.$index.title")<span class="text-red-600">{{ $message }}</span>@enderror
                                     </div>
                                     <div>
                                         <label>Description</label>
-                                        <x-jet-input textarea wire:model="services.{{ $index }}.description" placeholder="Description" class="w-full"/>
+                                        <x-jet-input textarea wire:model.live="services.{{ $index }}.description" placeholder="Description" class="w-full"/>
                                         @error("services.$index.description")<span class="text-red-600">{{ $message }}</span>@enderror
                                     </div>
                                 </div>
                                 <div>
                                     <label>Open</label>
-                                    <x-jet-input type="time" wire:model="services.{{ $index }}.start" class="w-full" required/>
+                                    <x-jet-input type="time" wire:model.live="services.{{ $index }}.start" class="w-full" required/>
                                     @error("services.$index.start")<span class="text-red-600">{{ $message }}</span>@enderror
                                 </div>
                                 <div class="space-y-2">
                                     <div>
                                         <label>Finish</label>
-                                        <x-jet-input type="time" wire:model="services.{{ $index }}.finish" class="w-full" required/>
+                                        <x-jet-input type="time" wire:model.live="services.{{ $index }}.finish" class="w-full" required/>
                                         @error("services.$index.finish")<span class="text-red-600">{{ $message }}</span>@enderror
                                     </div>
                                     <div>
                                         <label>Last Booking</label>
-                                        <x-jet-input type="time" wire:model="services.{{ $index }}.last_booking" class="w-full" required/>
+                                        <x-jet-input type="time" wire:model.live="services.{{ $index }}.last_booking" class="w-full" required/>
                                         @error("services.$index.last_booking")<span class="text-red-600">{{ $message }}</span>@enderror
                                     </div>
                                 </div>
@@ -106,7 +106,7 @@
         @endif
     </x-jet-form-section>
 
-    <x-jet-dialog-modal wire:model="schedule">
+    <x-jet-dialog-modal wire:model.live="schedule">
         <x-slot name="title">Schedule Changes</x-slot>
         <x-slot name="content">
             <p>
@@ -119,7 +119,7 @@
             <p>To make these changes immediately, leave this field blank and save your changes as normal.</p>
 
             <div class="flex items-center justify-center">
-                <x-jet-input wire:model="scheduleDate" type="date" :min="\Carbon\Carbon::now()->addDay()->format('Y-m-d')"/>
+                <x-jet-input wire:model.live="scheduleDate" type="date" :min="\Carbon\Carbon::now()->addDay()->format('Y-m-d')"/>
             </div>
 
             @if($errors->any())

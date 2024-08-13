@@ -1,6 +1,6 @@
 <div class="space-y-10">
     <div>
-        <x-select wire:model="rid">
+        <x-select wire:model.live="rid">
             @foreach($restaurants as $r)
                 <option value="{{ $r->id }}">{{ $r }}</option>
             @endforeach
@@ -63,7 +63,7 @@
     @push("scripts")
         <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
         <script>
-            document.addEventListener('livewire:load', () => {
+            document.addEventListener('livewire:init', () => {
                 google.charts.load('current', {'packages':['corechart']})
                 google.charts.setOnLoadCallback(drawChart)
 

@@ -1,4 +1,4 @@
-<form wire:submit.prevent="submit">
+<form wire:submit="submit">
     <div class="shadow overflow-hidden sm:rounded-md">
         <div class="px-4 bg-white sm:p-6">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -6,7 +6,7 @@
                     <div class="rounded border border-gray-300 p-6 space-y-4">
                         <div>
                             <label>Name</label>
-                            <x-jet-input class="w-full" wire:model="sections.{{ $key }}.name" required/>
+                            <x-jet-input class="w-full" wire:model.live="sections.{{ $key }}.name" required/>
                             @error("sections.$key.name")<span class="text-red-600">{{ $message }}</span>@enderror
                         </div>
                         <x-button wire:click.prevent="removeSection('{{ $key }}')" class="bg-red-600 hover:bg-red-500 w-full justify-center"><x-icons.cross class="h-6 mr-2"/> Delete</x-button>

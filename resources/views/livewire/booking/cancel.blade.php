@@ -1,7 +1,7 @@
 <div>
     <x-button wire:click="$set('confirmCancel', true)" class="bg-red-600 hover:bg-red-500 justify-center w-full"><x-icons.cross class="h-5 inline mr-2"/> Cancel Booking</x-button>
 
-    <x-jet-confirmation-modal wire:model="confirmCancel">
+    <x-jet-confirmation-modal wire:model.live="confirmCancel">
         <x-slot name="title">
             Cancel Booking
         </x-slot>

@@ -1,22 +1,22 @@
-<form wire:submit.prevent="submit">
+<form wire:submit="submit">
     <div class="shadow overflow-hidden sm:rounded-md">
         <div class="px-4 bg-white sm:p-6">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 @foreach($blocks as $index => $block)
                     <div>
                         <label>Start</label>
-                        <x-jet-input class="w-full" type="datetime-local" wire:model="blocks.{{ $index }}.start_date"/>
+                        <x-jet-input class="w-full" type="datetime-local" wire:model.live="blocks.{{ $index }}.start_date"/>
                         @error("blocks.$index.start_date")<span class="text-red-600">{{ $message }}</span>@enderror
                     </div>
                     <div>
                         <label>End</label>
-                        <x-jet-input class="w-full" type="datetime-local" wire:model="blocks.{{ $index }}.end_date"/>
+                        <x-jet-input class="w-full" type="datetime-local" wire:model.live="blocks.{{ $index }}.end_date"/>
                         @error("blocks.$index.end_date")<span class="text-red-600">{{ $message }}</span>@enderror
                     </div>
                     <div class="md:col-span-2 grid grid-cols-2 md:grid-cols-4 gap-4">
                         @foreach($restaurant->tables()->where("bookable", 1)->get() as $table)
                             <label>
-                                <input type="checkbox" wire:model="blocks.{{ $index }}.tables" value="{{ $table->id }}"/>
+                                <input type="checkbox" wire:model.live="blocks.{{ $index }}.tables" value="{{ $table->id }}"/>
                                 {{ $table }}
                             </label>
                         @endforeach

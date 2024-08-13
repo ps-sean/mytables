@@ -8,7 +8,7 @@
             <div class="col-span-6">
                 <p>
                     Charge my account on the
-                    <x-select wire:model="restaurant.billing_date">
+                    <x-select wire:model.live="restaurant.billing_date">
                         <option value="1">1st</option>
                         <option value="2">2nd</option>
                         <option value="3">3rd</option>

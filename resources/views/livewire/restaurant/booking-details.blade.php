@@ -1,5 +1,5 @@
 <div class="p-5">
-    <form class="p-5 md:grid md:grid-cols-2 gap-4 space-y-4" wire:submit.prevent="submit">
+    <form class="p-5 md:grid md:grid-cols-2 gap-4 space-y-4" wire:submit="submit">
         <p class="text-gray-700 text-2xl font-bold col-span-2">
             {{ $booking->name }}
         </p>
@@ -18,7 +18,7 @@
         @if(($booking->booked_at->format("Y-m-d H:i:s") > \Carbon\Carbon::now()->setTimezone("Europe/London")->format("Y-m-d H:i:s") && $booking->booked_by == auth()->user()->id) || $restaurant->staff->contains(auth()->user()))
             <div class="col-span-2">
                 <label><x-icons.user class="h-5 inline mr-2"/> Guests</label>
-                <x-jet-input class="w-full" type="number" min="1" wire:model="booking.covers"/>
+                <x-jet-input class="w-full" type="number" min="1" wire:model.live="booking.covers"/>
                 @error("booking.covers")<span class="text-red-600">{{ $message }}</span>@enderror
             </div>
             @if($restaurant->staff->contains(auth()->user()))
@@ -28,7 +28,7 @@
                         @foreach($restaurant->tables as $table)
                             <div>
                                 <label class="block">
-                                    <input type="checkbox" wire:model="bookingTables.{{ $table->getKey() }}" />
+                                    <input type="checkbox" wire:model.live="bookingTables.{{ $table->getKey() }}" />
                                     {{ $table }}
                                 </label>
                             </div>
@@ -43,12 +43,12 @@
             @endif
             <div>
                 <label><x-icons.clock class="h-5 inline mr-2"/> Booked At</label>
-                <x-jet-input class="w-full" type="datetime-local" wire:model="booking.booked_at"/>
+                <x-jet-input class="w-full" type="datetime-local" wire:model.live="booking.booked_at"/>
             </div>
             @if($restaurant->staff->contains(auth()->user()))
                 <div>
                     <label><x-icons.clock class="h-5 inline mr-2"/> Finish At</label>
-                    <x-jet-input class="w-full" type="datetime-local" wire:model="booking.finish_at"/>
+                    <x-jet-input class="w-full" type="datetime-local" wire:model.live="booking.finish_at"/>
                 </div>
             @else
                 <div class="space-y-2">
@@ -77,7 +77,7 @@
         @if($restaurant->staff->contains(auth()->user()))
             <div class="col-span-2">
                 <label><x-icons.info class="h-5 inline mr-2"/> Additional Info</label>
-                <x-jet-input textarea class="w-full" wire:model="booking.comments"/>
+                <x-jet-input textarea class="w-full" wire:model.live="booking.comments"/>
             </div>
         @else
             @if(!empty($booking->comments))

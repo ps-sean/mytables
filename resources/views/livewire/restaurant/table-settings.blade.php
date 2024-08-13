@@ -15,20 +15,20 @@
                 @if($tables->count())
                     @foreach($tables as $index => $table)
                         <div class="col-span-2 shadow-lg p-3 space-y-3">
-                            <input type="hidden" wire:model="tables.*.id">
+                            <input type="hidden" wire:model.live="tables.*.id">
                             <div>
                                 <label class="text-gray-600">Name</label>
-                                <x-jet-input class="w-full" wire:model="tables.{{ $index }}.name" placeholder="Table Name" required />
+                                <x-jet-input class="w-full" wire:model.live="tables.{{ $index }}.name" placeholder="Table Name" required />
                                 @error("tables.$index.name")<span class="text-red-600">{{ $message }}</span>@enderror
                             </div>
                             <div>
                                 <label class="text-gray-600">Seats</label>
-                                <x-jet-input type="number" class="w-full" wire:model="tables.{{ $index }}.seats" min="1" required />
+                                <x-jet-input type="number" class="w-full" wire:model.live="tables.{{ $index }}.seats" min="1" required />
                                 @error("tables.$index.seats")<span class="text-red-600">{{ $message }}</span>@enderror
                             </div>
                             <div>
                                 <label>Section</label>
-                                <x-select class="w-full" wire:model="tables.{{ $index }}.restaurant_section_id">
+                                <x-select class="w-full" wire:model.live="tables.{{ $index }}.restaurant_section_id">
                                     <option value="">--</option>
                                     @foreach($this->restaurant->sections as $section)
                                         <option value="{{ $section->id }}">{{ $section->name }}</option>
@@ -37,7 +37,7 @@
                                 @error("tables.$index.restaurant_section_id")<span class="text-red-600">{{ $message }}</span>@enderror
                             </div>
                             <div class="text-center">
-                                <label><input type="checkbox" wire:model="tables.{{ $index }}.bookable"/> Bookable</label>
+                                <label><input type="checkbox" wire:model.live="tables.{{ $index }}.bookable"/> Bookable</label>
                                 @error("tables.$index.bookable")<span class="text-red-600">{{ $message }}</span>@enderror
                             </div>
                             <div>

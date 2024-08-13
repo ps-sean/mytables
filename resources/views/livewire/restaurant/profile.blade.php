@@ -13,7 +13,7 @@
             <label class="md:col-span-2">Restaurant Logo</label>
             <img src="{{ $logo && empty($errors->first("logo")) ? $logo->temporaryUrl() : $restaurant->logo }}">
             <div class="flex flex-wrap content-center">
-                <input type="file" wire:model="logo">
+                <input type="file" wire:model.live="logo">
                 @error("logo")<span class="text-red-600">{{ $message }}</span>@enderror
             </div>
         </div>
@@ -21,28 +21,28 @@
             <label class="md:col-span-2">Restaurant Image</label>
             <img src="{{ $image && empty($errors->first("image")) ? $image->temporaryUrl() : $restaurant->image }}">
             <div class="flex flex-wrap content-center">
-                <input type="file" wire:model="image">
+                <input type="file" wire:model.live="image">
                 @error("image")<span class="text-red-600">{{ $message }}</span>@enderror
             </div>
         </div>
         <div class="col-span-6 sm:col-span-4">
             <label>Name</label>
-            <x-jet-input wire:model="restaurant.name" class="w-full" />
+            <x-jet-input wire:model.live="restaurant.name" class="w-full" />
             @error("restaurant.name")<span class="text-red-600">{{ $message }}</span>@enderror
         </div>
         <div class="col-span-6 sm:col-span-4">
             <label>Email</label>
-            <x-jet-input wire:model="restaurant.email" class="w-full" />
+            <x-jet-input wire:model.live="restaurant.email" class="w-full" />
             @error("restaurant.email")<span class="text-red-600">{{ $message }}</span>@enderror
         </div>
         <div class="col-span-6 sm:col-span-4">
             <label>Phone</label>
-            <x-jet-input wire:model="restaurant.phone" class="w-full" />
+            <x-jet-input wire:model.live="restaurant.phone" class="w-full" />
             @error("restaurant.phone")<span class="text-red-600">{{ $message }}</span>@enderror
         </div>
         <div class="col-span-6 sm:col-span-4">
             <label>Description</label>
-            <x-jet-input textarea wire:model="restaurant.description" class="w-full" rows="5" placeholder="A short description of your restaurant" />
+            <x-jet-input textarea wire:model.live="restaurant.description" class="w-full" rows="5" placeholder="A short description of your restaurant" />
             @error("restaurant.description")<span class="text-red-600">{{ $message }}</span>@enderror
         </div>
     </x-slot>

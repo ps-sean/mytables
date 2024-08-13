@@ -1,13 +1,13 @@
 <form class="grid md:grid-cols-2 gap-x-12 gap-y-8 px-6">
     <div>
         <label class="block">Restaurant Name</label>
-        <x-jet-input wire:model="name" class="w-full" placeholder="Your Amazing Restaurant Name"/>
+        <x-jet-input wire:model.live="name" class="w-full" placeholder="Your Amazing Restaurant Name"/>
         @error("name") <p class="text-red-600">{{ $message }}</p> @enderror
     </div>
     <div class="relative">
         <label class="block">Restaurant Address</label>
         <div class="relative">
-            <x-jet-input class="w-full" wire:model="address" placeholder="The Street You Light Up" disabled="{{ !empty($addressJSON) }}"/>
+            <x-jet-input class="w-full" wire:model.live="address" placeholder="The Street You Light Up" disabled="{{ !empty($addressJSON) }}"/>
             <button wire:click.prevent="resetSession" class="absolute inset-y-0 right-0 text-red-800 font-black hover:text-red-600 text-3xl focus:outline-none">&times;</button>
         </div>
         <div class="absolute">
@@ -26,17 +26,17 @@
             @endempty
         </div>
         @endif
-        <x-jet-input type="hidden" wire:model="sessionToken"/>
-        <x-jet-input type="hidden" wire:model="addressJSON"/>
+        <x-jet-input type="hidden" wire:model.live="sessionToken"/>
+        <x-jet-input type="hidden" wire:model.live="addressJSON"/>
     </div>
     <div>
         <label class="block">Contact Number</label>
-        <x-jet-input wire:model="phone" type="tel" class="w-full" placeholder="Just in case we need to check things over" maxlength="16"/>
+        <x-jet-input wire:model.live="phone" type="tel" class="w-full" placeholder="Just in case we need to check things over" maxlength="16"/>
         @error("phone") <p class="text-red-600">{{ $message }}</p> @enderror
     </div>
     <div>
         <label class="block">Email Address</label>
-        <x-jet-input wire:model="email" type="email" class="w-full" placeholder="We'll send you an email to confirm your details"/>
+        <x-jet-input wire:model.live="email" type="email" class="w-full" placeholder="We'll send you an email to confirm your details"/>
         @error("email") <p class="text-red-600">{{ $message }}</p> @enderror
     </div>
     <div>
