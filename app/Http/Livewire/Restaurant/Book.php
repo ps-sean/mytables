@@ -13,8 +13,16 @@ use Livewire\Component;
 
 class Book extends Component
 {
-    public $restaurant, $dates, $selectedDate, $times, $services, $booking, $restaurant_sections, $setup_intent, $user,
-        $preAuthDate;
+    public Restaurant $restaurant;
+    public $dates;
+    public $selectedDate;
+    public $times;
+    public $services;
+    public $booking;
+    public $restaurant_sections;
+    public $setup_intent;
+    public $user;
+    public $preAuthDate;
     public $section = "all";
     public $covers = 2;
     public $save_method = false;
