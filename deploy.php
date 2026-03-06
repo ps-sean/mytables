@@ -2,6 +2,7 @@
 namespace Deployer;
 
 require 'recipe/laravel.php';
+require 'contrib/npm.php';
 
 // Config
 
@@ -20,16 +21,19 @@ host('mytables.co.uk')
 
 // Tasks
 
+task('npm:install', function () {
+    run('source ~/.nvm/nvm.sh && cd {{release_path}} && npm install');
+});
+
 task('build', function () {
-    cd('{{release_path}}');
-    run('npm install');
-    run('npm run build');
+    run('source ~/.nvm/nvm.sh && cd {{release_path}} && npm run build');
 });
 
 // Hooks
 
 after('deploy:failed', 'deploy:unlock');
 
-after('deploy:vendors', 'build');
+after('deploy:vendors', 'npm:install');
+after('npm:install', 'build');
 
 after('deploy:symlink', 'artisan:horizon:terminate');
