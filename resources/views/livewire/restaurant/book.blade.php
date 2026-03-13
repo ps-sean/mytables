@@ -265,12 +265,12 @@
                                     Book
                                 </x-button>
                             @else
-                                <x-button wire:loading.attr="disabled" wire:click.prevent="$dispatch('executeCaptchaValidation')" type="button" class="justify-center bg-green-500 hover:bg-green-600">
+                                <x-button wire:loading.attr="disabled" wire:click.prevent="book" type="button" class="justify-center bg-green-500 hover:bg-green-600">
                                     Book
                                 </x-button>
                             @endif
                         @endif
-                        <x-button wire:click.prevent="hideBooking" type="button" class="justify-center border border-gray-300 bg-white text-gray-700 hover:bg-gray-50">
+                        <x-button wire:click.prevent="hideBooking" type="button" class="justify-center border border-zinc-300 bg-white text-zinc-700 hover:bg-zinc-50">
                             {{ empty($booking->id) ? 'Cancel' : 'Close' }}
                         </x-button>
                         @if(session()->has("timeTaken"))
@@ -288,18 +288,6 @@
             </div>
         </div>
     @endif
-
-    @push('scripts')
-        <script>
-            Livewire.on('executeCaptchaValidation', () => {
-                grecaptcha.ready(function() {
-                    grecaptcha.execute('{{ config('services.recaptcha.key') }}', {action: 'submit'}).then(function(token) {
-                    @this.emitSelf('captchaResponse', token);
-                    });
-                });
-            })
-        </script>
-    @endpush
 
     @if($restaurant->no_show_fee > 0)
         @push("scripts")
