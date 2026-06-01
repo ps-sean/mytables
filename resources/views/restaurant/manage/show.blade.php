@@ -8,7 +8,7 @@
         </div>
     </x-slot>
 
-    <div class="container mx-auto bg-white py-5 px-3">
+    <div class="container mx-auto bg-white py-5 px-3" x-data="{ tab: 'details' }">
         <div class="space-y-3">
             @empty($restaurant->email_verified_at)
                 @if(session()->has('verify_email.success'))
@@ -46,19 +46,20 @@
             @endif
         </div>
 
-        <x-tabs :active="'Restaurant Details'">
-            <x-tab id="restaurant_tab" name="Restaurant Details">
-                @include("restaurant.manage.details")
-            </x-tab>
-            <x-tab id="booking_tab" name="Booking Settings">
-                @include("restaurant.manage.booking_settings")
-            </x-tab>
-            <x-tab id="billing_tab" name="Billing Settings">
-                @include("restaurant.manage.billing_settings")
-            </x-tab>
-{{--            <x-tab id="order_tab" name="Order Settings">--}}
-{{--                @livewire("restaurant.orders")--}}
-{{--            </x-tab>--}}
-        </x-tabs>
+        <div class="flex h-16 space-x-8 mb-5">
+            <x-tab key="tab" value="details">Restaurant Details</x-tab>
+            <x-tab key="tab" value="booking">Booking Settings</x-tab>
+            <x-tab key="tab" value="billing">Billing Settings</x-tab>
+        </div>
+
+        <div x-cloak x-show="tab === 'details'">
+            @include("restaurant.manage.details")
+        </div>
+        <div x-cloak x-show="tab === 'booking'">
+            @include("restaurant.manage.booking_settings")
+        </div>
+        <div x-cloak x-show="tab === 'billing'">
+            @include("restaurant.manage.billing_settings")
+        </div>
     </div>
 </x-app-layout>

@@ -4,14 +4,18 @@
             My Bookings
         </h2>
     </x-slot>
-    <div class="container mx-auto bg-white p-5">
-        <x-tabs active="Future Bookings">
-            <x-tab name="Future Bookings">
-                @livewire("booking.index", ['bookings' => "futureBookings"])
-            </x-tab>
-            <x-tab name="Past Bookings">
-                @livewire("booking.index", ['bookings' => "pastBookings"])
-            </x-tab>
-        </x-tabs>
+    <div class="container mx-auto bg-white p-5" x-data="{ tab: 'future' }">
+        <div class="flex h-16 space-x-8 mb-5">
+            <x-tab key="tab" value="future">Future Bookings</x-tab>
+            <x-tab key="tab" value="past">Past Bookings</x-tab>
+        </div>
+
+        <div x-cloak x-show="tab === 'future'">
+            @livewire("booking.index", ['bookings' => "futureBookings"])
+        </div>
+
+        <div x-cloak x-show="tab === 'past'">
+            @livewire("booking.index", ['bookings' => "pastBookings"])
+        </div>
     </div>
 </x-app-layout>
