@@ -9,6 +9,9 @@ class ServiceException extends Service
 {
     protected $casts = [
         "service_date" => "datetime",
+        "start" => "datetime:H:i",
+        "finish" => "datetime:H:i",
+        "last_booking" => "datetime:H:i",
     ];
 
     protected $fillable = [
