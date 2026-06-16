@@ -88,18 +88,16 @@ class Booking extends Model
 
         // there is a free timeslot, now check how many tables are booked in between the start and finish time
         $seatedBookings = $this->restaurant->bookings()->where(function ($query) {
-            $query->where([
-                ["booked_at", ">=", $this->booked_at->subMinutes($this->restaurant->turnaround_time)],
-                ["booked_at", "<", $this->finish_at->addMinutes($this->restaurant->turnaround_time)],
-            ]);
-            $query->orWhere([
-                ["finish_at", ">", $this->booked_at->subMinutes($this->restaurant->turnaround_time)],
-                ["finish_at", "<=", $this->finish_at->addMinutes($this->restaurant->turnaround_time)],
-            ]);
-            $query->orWhere([
-                ["booked_at", "<=", $this->booked_at->subMinutes($this->restaurant->turnaround_time)],
-                ["finish_at", ">=", $this->finish_at->addMinutes($this->restaurant->turnaround_time)],
-            ]);
+            $query->where(function ($query) {
+                $query->where('booked_at', '>=', $this->booked_at->subMinutes($this->restaurant->turnaround_time))
+                    ->where('booked_at', '<', $this->finish_at->addMinutes($this->restaurant->turnaround_time));
+            })->orWhere(function ($query) {
+                $query->where('finish_at', '>', $this->booked_at->subMinutes($this->restaurant->turnaround_time))
+                    ->where('finish_at', '<=', $this->finish_at->addMinutes($this->restaurant->turnaround_time));
+            })->orWhere(function ($query) {
+                $query->where('booked_at', '<=', $this->booked_at->subMinutes($this->restaurant->turnaround_time))
+                    ->where('finish_at', '>=', $this->finish_at->addMinutes($this->restaurant->turnaround_time));
+            });
         })
             ->whereIn("status", ["pending", "confirmed", "seated"])
             ->get();
@@ -169,18 +167,16 @@ class Booking extends Model
             // check for other bookings on these tables at the same time
             foreach ($this->table_ids as $tableID) {
                 $tableBookings = $this->restaurant->bookings()->where(function ($query) {
-                    $query->where([
-                        ["booked_at", ">=", $this->booked_at->subMinutes($this->restaurant->turnaround_time)],
-                        ["booked_at", "<", $this->finish_at->addMinutes($this->restaurant->turnaround_time)],
-                    ]);
-                    $query->orWhere([
-                        ["finish_at", ">", $this->booked_at->subMinutes($this->restaurant->turnaround_time)],
-                        ["finish_at", "<=", $this->finish_at->addMinutes($this->restaurant->turnaround_time)],
-                    ]);
-                    $query->orWhere([
-                        ["booked_at", "<=", $this->booked_at->subMinutes($this->restaurant->turnaround_time)],
-                        ["finish_at", ">=", $this->finish_at->addMinutes($this->restaurant->turnaround_time)],
-                    ]);
+                    $query->where(function ($query) {
+                        $query->where('booked_at', '>=', $this->booked_at->subMinutes($this->restaurant->turnaround_time))
+                            ->where('booked_at', '<', $this->finish_at->addMinutes($this->restaurant->turnaround_time));
+                    })->orWhere(function ($query) {
+                        $query->where('finish_at', '>', $this->booked_at->subMinutes($this->restaurant->turnaround_time))
+                            ->where('finish_at', '<=', $this->finish_at->addMinutes($this->restaurant->turnaround_time));
+                    })->orWhere(function ($query) {
+                        $query->where('booked_at', '<=', $this->booked_at->subMinutes($this->restaurant->turnaround_time))
+                            ->where('finish_at', '>=', $this->finish_at->addMinutes($this->restaurant->turnaround_time));
+                    });
                 })->whereRaw("FIND_IN_SET(?, `table_ids`)", [$tableID])
                     ->whereIn("status", ["pending", "confirmed", "seated"])
                     ->where("id", "!=", $this->id)
