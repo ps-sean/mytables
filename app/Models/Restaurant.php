@@ -401,7 +401,7 @@ class Restaurant extends Model
                         ["day", $time->clone()->subDay()->shortEnglishDayOfWeek],
                         ["finish", ">=", $time->format("H:i")]
                     ])
-                        ->whereRaw("finish<=start")
+                        ->whereRaw("finish <= start")
                         ->get();
                 }
 

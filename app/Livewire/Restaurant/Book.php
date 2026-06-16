@@ -44,20 +44,19 @@ class Book extends Component
 
     protected $listeners = ['captchaResponse' => 'processCaptcha'];
 
-    public function mount(Restaurant $restaurant)
+    public function mount()
     {
-        $this->restaurant = $restaurant;
         $this->selectedDate = Carbon::now();
 
-        if($restaurant->sections->count()){
-            $this->section = $restaurant->sections->first()->id;
+        if($this->restaurant->sections->count()){
+            $this->section = $this->restaurant->sections->first()->id;
         }
 
         $this->max_covers = $this->restaurant->max_booking_size($this->section);
 
         $this->rules["booking.covers"][] = "max:" . $this->max_covers;
 
-        $this->restaurant_sections = $restaurant->sections()->whereHas("tables", function($query){
+        $this->restaurant_sections = $this->restaurant->sections()->whereHas("tables", function($query){
             return $query->where("bookable", 1);
         })->get();
 
