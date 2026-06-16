@@ -9,7 +9,7 @@
         <p class="font-bold">Your restaurant is currently live. Click here if you need to go offline, this will prevent people being able to see your restaurant.</p>
     </x-alert>
 
-    <x-jet-confirmation-modal wire:model.live="offlineConfirmation">
+    <x-confirmation-modal wire:model.live="offlineConfirmation">
         <x-slot name="title">Go Offline?</x-slot>
         <x-slot name="content">
             <p>Your restaurant will not show up in search results and will not be accessible by customers.</p>
@@ -18,6 +18,6 @@
         <x-slot name="footer">
             <x-button class="bg-red-600 hover:bg-red-500" wire:click="goOffline">Go Offline</x-button>
         </x-slot>
-    </x-jet-confirmation-modal>
+    </x-confirmation-modal>
 </div>
 

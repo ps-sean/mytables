@@ -9,8 +9,6 @@ class BookingRule extends Model
 {
     use HasFactory;
 
-    protected $connection = "mysql";
-
     protected $fillable = [
         "max_covers",
         "minutes",

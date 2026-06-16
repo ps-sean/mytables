@@ -14,8 +14,6 @@ class Table extends Model
 {
     use HasFactory, SoftDeletes, History, HasJsonRelationships;
 
-    protected $connection = "mysql";
-
     protected $fillable = [
         "name",
         "seats",

@@ -3,7 +3,7 @@
         <form method="GET" action="/">
             <div class="flex justify-between">
                 <div class="w-10/12">
-                    <x-jet-input class="w-full" type="text" placeholder="Search by restaurant name, city or postcode" name="search" value="{{ $_GET['search'] }}"/>
+                    <x-input class="w-full" type="text" placeholder="Search by restaurant name, city or postcode" name="search" value="{{ $_GET['search'] }}"/>
                 </div>
                 <x-button type="submit" class="w-2/12 bg-red-800 hover:bg-red-700 text-white justify-center rounded-l-none rounded-r-none">
                     <svg class="h-4 mr-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">

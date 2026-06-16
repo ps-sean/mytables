@@ -11,8 +11,6 @@ class Service extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $connection = "mysql";
-
     const DAYS_OF_WEEK = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
     protected $fillable = [

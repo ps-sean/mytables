@@ -9,8 +9,6 @@ class OpenHoursException extends Model
 {
     use HasFactory;
 
-    protected $connection = "mysql";
-
     protected $casts = [
         "open_date" => "datetime",
     ];

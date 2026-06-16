@@ -176,9 +176,9 @@
                                             </svg>
                                         </div>
                                         <div class="w-full">
-                                            <x-jet-input type="text" wire:model.live="booking.name" class="w-full" placeholder="Name" id="booking-name" />
+                                            <x-input type="text" wire:model.live="booking.name" class="w-full" placeholder="Name" id="booking-name" />
                                             @error("booking.name")<span class="text-red-600">{{ $message }}</span>@enderror
-                                            <x-jet-input type="email" wire:model.live="booking.email" class="w-full" placeholder="Email" />
+                                            <x-input type="email" wire:model.live="booking.email" class="w-full" placeholder="Email" />
                                             @error("booking.email")<span class="text-red-600">{{ $message }}</span>@enderror
                                         </div>
                                     </div>
@@ -191,7 +191,7 @@
                                         </svg>
                                     </div>
                                     <div class="w-full">
-                                        <x-jet-input type="tel" wire:model.live="booking.contact_number" class="w-full" placeholder="Contact Number" />
+                                        <x-input type="tel" wire:model.live="booking.contact_number" class="w-full" placeholder="Contact Number" />
                                         @error("booking.contact_number")<span class="text-red-600">{{ $message }}</span>@enderror
                                     </div>
                                 </div>
@@ -203,7 +203,7 @@
                                         </svg>
                                     </div>
                                     <div class="w-full">
-                                        <x-jet-input textarea wire:model.live="booking.comments" class="w-full" placeholder="Additional Comments"/>
+                                        <x-input textarea wire:model.live="booking.comments" class="w-full" placeholder="Additional Comments"/>
                                         @error("booking.comments")<span class="text-red-600">{{ $message }}</span>@enderror
                                     </div>
                                 </div>

@@ -18,7 +18,7 @@
         @if(($booking->booked_at->format("Y-m-d H:i:s") > \Carbon\Carbon::now()->setTimezone("Europe/London")->format("Y-m-d H:i:s") && $booking->booked_by == auth()->user()->id) || $restaurant->staff->contains(auth()->user()))
             <div class="col-span-2">
                 <label><x-icons.user class="h-5 inline mr-2"/> Guests</label>
-                <x-jet-input class="w-full" type="number" min="1" wire:model.live="booking.covers"/>
+                <x-input class="w-full" type="number" min="1" wire:model.live="booking.covers"/>
                 @error("booking.covers")<span class="text-red-600">{{ $message }}</span>@enderror
             </div>
             @if($restaurant->staff->contains(auth()->user()))
@@ -43,12 +43,12 @@
             @endif
             <div>
                 <label><x-icons.clock class="h-5 inline mr-2"/> Booked At</label>
-                <x-jet-input class="w-full" type="datetime-local" wire:model.live="booking.booked_at"/>
+                <x-input class="w-full" type="datetime-local" wire:model.live="booking.booked_at"/>
             </div>
             @if($restaurant->staff->contains(auth()->user()))
                 <div>
                     <label><x-icons.clock class="h-5 inline mr-2"/> Finish At</label>
-                    <x-jet-input class="w-full" type="datetime-local" wire:model.live="booking.finish_at"/>
+                    <x-input class="w-full" type="datetime-local" wire:model.live="booking.finish_at"/>
                 </div>
             @else
                 <div class="space-y-2">
@@ -77,7 +77,7 @@
         @if($restaurant->staff->contains(auth()->user()))
             <div class="col-span-2">
                 <label><x-icons.info class="h-5 inline mr-2"/> Additional Info</label>
-                <x-jet-input textarea class="w-full" wire:model.live="booking.comments"/>
+                <x-input textarea class="w-full" wire:model.live="booking.comments"/>
             </div>
         @else
             @if(!empty($booking->comments))
@@ -95,7 +95,7 @@
                     Update Booking
                 </x-button>
                 @error("booking")<span class="text-red-600">{{ $message }}</span>@enderror
-                <x-jet-action-message on="saved" class="text-center my-3">Saved</x-jet-action-message>
+                <x-action-message on="saved" class="text-center my-3">Saved</x-action-message>
             </div>
         @endif
     </form>

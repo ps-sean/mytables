@@ -82,8 +82,8 @@
                                 </svg>
                             </div>
                             <div class="w-full">
-                                <x-jet-input type="text" name="booking[name]" class="w-full" placeholder="Name" required />
-                                <x-jet-input type="email" name="booking[email]" class="w-full" placeholder="Email" required />
+                                <x-input type="text" name="booking[name]" class="w-full" placeholder="Name" required />
+                                <x-input type="email" name="booking[email]" class="w-full" placeholder="Email" required />
                             </div>
                         </div>
 
@@ -94,7 +94,7 @@
                                 </svg>
                             </div>
                             <div class="w-full">
-                                <x-jet-input type="tel" name="booking[contact_number]" class="w-full" placeholder="Contact Number" required />
+                                <x-input type="tel" name="booking[contact_number]" class="w-full" placeholder="Contact Number" required />
                             </div>
                         </div>
 
@@ -105,7 +105,7 @@
                                 </svg>
                             </div>
                             <div class="w-full">
-                                <x-jet-input textarea name="booking[comments]" class="w-full" placeholder="Additional Comments"/>
+                                <x-input textarea name="booking[comments]" class="w-full" placeholder="Additional Comments"/>
                             </div>
                         </div>
                     @endif

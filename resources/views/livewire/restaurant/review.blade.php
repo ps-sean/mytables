@@ -6,12 +6,12 @@
                     <h5 class="font-bold text-xl">Review</h5>
                     <div>
                         <label>Review Title<span class="text-red-600">&ast;</span></label>
-                        <x-jet-input class="w-full" maxlength="255" wire:model.live="review.title" placeholder="What is the main reason for your review?"/>
+                        <x-input class="w-full" maxlength="255" wire:model.live="review.title" placeholder="What is the main reason for your review?"/>
                         @error("review.title")<span class="text-red-600">{{ $message }}</span>@enderror
                     </div>
                     <div>
                         <label>Review</label>
-                        <x-jet-input rows="10" textarea wire:model.live="review.review" class="w-full" placeholder="Give your review some context"/>
+                        <x-input rows="10" textarea wire:model.live="review.review" class="w-full" placeholder="Give your review some context"/>
                         @error("review.review")<span class="text-red-600">{{ $message }}</span>@enderror
                     </div>
                 </div>
@@ -90,8 +90,8 @@
                     @error("review.overall")<div><span class="text-red-600">{{ $message }}</span></div>@enderror
                 </div>
                 <div class="md:col-span-2 text-center">
-                    <x-jet-button class="bg-red-800 hover:bg-red-700">Submit</x-jet-button>
-                    <x-jet-action-message on="saved" class="text-center my-3">Saved</x-jet-action-message>
+                    <x-button class="bg-red-800 hover:bg-red-700">Submit</x-button>
+                    <x-action-message on="saved" class="text-center my-3">Saved</x-action-message>
                 </div>
             </div>
         </form>

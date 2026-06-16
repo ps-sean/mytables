@@ -9,8 +9,6 @@ class TableBlock extends Model
 {
     use HasFactory;
 
-    protected $connection = "mysql";
-
     protected $casts = [
         "tables" => "json",
         "start_date" => "datetime:Y-m-d\TH:i",

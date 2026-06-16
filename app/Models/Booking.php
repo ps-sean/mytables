@@ -12,8 +12,6 @@ class Booking extends Model
 {
     use HasFactory, HasJsonRelationships;
 
-    protected $connection = "mysql";
-
     protected $casts = [
         "table_ids" => "json",
         "booked_at" => "datetime:Y-m-d\TH:i",

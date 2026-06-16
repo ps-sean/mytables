@@ -8,15 +8,13 @@ use App\Traits\History;
 use Carbon\Carbon;
 use Carbon\CarbonInterval;
 use Carbon\CarbonPeriod;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Storage;
 use Laravel\Cashier\Billable;
-use Spatie\Activitylog\Traits\LogsActivity;
-use Stripe\Customer;
-use Stripe\StripeClient;
+use Laravel\Cashier\Cashier;
 
 class Restaurant extends Model
 {
@@ -173,19 +171,21 @@ class Restaurant extends Model
         return $status;
     }
 
-    public function getBookingTimeframeAttribute($value)
+    public function bookingTimeframe(): Attribute
     {
-        $parts = explode(":", $value);
+        return Attribute::make(
+            get: function ($value) {
+                $parts = explode(":", $value);
 
-        return [
-            "covers" => $parts[0],
-            "minutes" => $parts[1]
-        ];
-    }
-
-    public function setBookingTimeframeAttribute($value)
-    {
-        $this->attributes['booking_timeframe'] = $value['covers'] . ":" . $value['minutes'];
+                return [
+                    'covers' => (int) $parts[0],
+                    'minutes' => (int) $parts[1]
+                ];
+            },
+            set: function ($value) {
+                $this->attributes['booking_timeframe'] = $value['covers'].':'.$value['minutes'];
+            }
+        );
     }
 
     public function getMonthlyPaymentAttribute()
@@ -266,7 +266,6 @@ class Restaurant extends Model
 
     public function linkAccount()
     {
-
         return $this->createAsStripeCustomer([
             "name" => $this->name,
             "email" => $this->email,
@@ -508,9 +507,7 @@ class Restaurant extends Model
             $this->refresh();
         }
 
-        $stripeClient = new StripeClient(config("services.stripe.secret"));
-
-        $invoices = $stripeClient->invoices->all([
+        $invoices = Cashier::stripe()->invoices->all([
             "customer" => $this->stripe_id,
             "limit" => 1,
         ]);

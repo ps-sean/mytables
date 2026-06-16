@@ -1,5 +1,5 @@
 <div x-data="{ open: @entangle('open').live, modal: false }">
-    <x-jet-form-section submit="submit">
+    <x-form-section submit="submit">
         <x-slot name="title">
             Service Hours
         </x-slot>
@@ -14,9 +14,9 @@
             <div x-show.transition="open" class="col-span-6">
                 <div class="h-16 space-x-8 flex mb-5 overflow-auto">
                     @foreach(\App\Models\Service::DAYS_OF_WEEK as $day)
-                        <x-jet-nav-link wire:click.prevent="changeTab('{{ $day }}')" href="#" :active="$openDay === $day">
+                        <x-nav-link wire:click.prevent="changeTab('{{ $day }}')" href="#" :active="$openDay === $day">
                             {{ $day }}
-                        </x-jet-nav-link>
+                        </x-nav-link>
                     @endforeach
                 </div>
 
@@ -27,29 +27,29 @@
                                 <div class="space-y-2">
                                     <div>
                                         <label>Title</label>
-                                        <x-jet-input wire:model.live="services.{{ $index }}.title" placeholder="Title" class="w-full" required/>
+                                        <x-input wire:model.live="services.{{ $index }}.title" placeholder="Title" class="w-full" required/>
                                         @error("services.$index.title")<span class="text-red-600">{{ $message }}</span>@enderror
                                     </div>
                                     <div>
                                         <label>Description</label>
-                                        <x-jet-input textarea wire:model.live="services.{{ $index }}.description" placeholder="Description" class="w-full"/>
+                                        <x-input textarea wire:model.live="services.{{ $index }}.description" placeholder="Description" class="w-full"/>
                                         @error("services.$index.description")<span class="text-red-600">{{ $message }}</span>@enderror
                                     </div>
                                 </div>
                                 <div>
                                     <label>Open</label>
-                                    <x-jet-input type="time" wire:model.live="services.{{ $index }}.start" class="w-full" required/>
+                                    <x-input type="time" wire:model.live="services.{{ $index }}.start" class="w-full" required/>
                                     @error("services.$index.start")<span class="text-red-600">{{ $message }}</span>@enderror
                                 </div>
                                 <div class="space-y-2">
                                     <div>
                                         <label>Finish</label>
-                                        <x-jet-input type="time" wire:model.live="services.{{ $index }}.finish" class="w-full" required/>
+                                        <x-input type="time" wire:model.live="services.{{ $index }}.finish" class="w-full" required/>
                                         @error("services.$index.finish")<span class="text-red-600">{{ $message }}</span>@enderror
                                     </div>
                                     <div>
                                         <label>Last Booking</label>
-                                        <x-jet-input type="time" wire:model.live="services.{{ $index }}.last_booking" class="w-full" required/>
+                                        <x-input type="time" wire:model.live="services.{{ $index }}.last_booking" class="w-full" required/>
                                         @error("services.$index.last_booking")<span class="text-red-600">{{ $message }}</span>@enderror
                                     </div>
                                 </div>
@@ -84,9 +84,9 @@
 
         @if($open)
             <x-slot name="actions">
-                <x-jet-action-message class="mr-3" on="saved">
+                <x-action-message class="mr-3" on="saved">
                     {{ __('Saved.') }}
-                </x-jet-action-message>
+                </x-action-message>
 
                 <x-button wire:click.prevent="$set('schedule', true)" class="bg-red-800 hover:bg-red-700 mr-3">
                     <x-icons.clock class="h-4 mr-2"/> Schedule
@@ -99,14 +99,14 @@
                     Hide
                 </x-button>
 
-                <x-jet-button wire:loading.attr="disabled">
+                <x-button wire:loading.attr="disabled">
                     {{ __('Save') }}
-                </x-jet-button>
+                </x-button>
             </x-slot>
         @endif
-    </x-jet-form-section>
+    </x-form-section>
 
-    <x-jet-dialog-modal wire:model.live="schedule">
+    <x-dialog-modal wire:model.live="schedule">
         <x-slot name="title">Schedule Changes</x-slot>
         <x-slot name="content">
             <p>
@@ -119,7 +119,7 @@
             <p>To make these changes immediately, leave this field blank and save your changes as normal.</p>
 
             <div class="flex items-center justify-center">
-                <x-jet-input wire:model.live="scheduleDate" type="date" :min="\Carbon\Carbon::now()->addDay()->format('Y-m-d')"/>
+                <x-input wire:model.live="scheduleDate" type="date" :min="\Carbon\Carbon::now()->addDay()->format('Y-m-d')"/>
             </div>
 
             @if($errors->any())
@@ -135,7 +135,7 @@
         <x-slot name="footer">
             <x-button wire:click.prevent="submit" class="bg-red-800 hover:bg-red-700">Save</x-button>
         </x-slot>
-    </x-jet-dialog-modal>
+    </x-dialog-modal>
 
     <div x-cloak x-show="modal" x-on:keydown.escape="modal = false" class="fixed z-10 inset-0 overflow-y-auto">
         <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">

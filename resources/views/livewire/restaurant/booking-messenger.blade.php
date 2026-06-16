@@ -35,7 +35,7 @@
             @if($booking->booked_at->isFuture())
                 <form wire:submit="submit">
                     <div class="grid grid-cols-4">
-                        <x-jet-input textarea class="bg-white col-span-3" placeholder="Type something here..." type="text" wire:model.live="message"/>
+                        <x-input textarea class="bg-white col-span-3" placeholder="Type something here..." type="text" wire:model.live="message"/>
                         <x-button type="submit" class="bg-red-800 hover:bg-red-700 rounded-t-none rounded-b-none justify-center">Send</x-button>
                     </div>
                 </form>

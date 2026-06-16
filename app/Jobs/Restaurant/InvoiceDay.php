@@ -5,28 +5,23 @@ namespace App\Jobs\Restaurant;
 use App\Models\Restaurant;
 use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Stripe\StripeClient;
 
 class InvoiceDay implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-
-    public $restaurant;
 
     /**
      * Create a new job instance.
      *
      * @param Restaurant $restaurant
      */
-    public function __construct(Restaurant $restaurant)
-    {
-        $this->restaurant = $restaurant;
-    }
+    public function __construct(
+        public Restaurant $restaurant
+    ) {}
 
     /**
      * Execute the job.
