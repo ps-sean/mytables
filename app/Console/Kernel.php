@@ -29,15 +29,15 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')->hourly();
 
-        $schedule->job(new UnreadMessageEmailer)->everyFiveMinutes();
-
-        $schedule->job(new ReviewReminder)->everyFiveMinutes();
-
-        $schedule->job(new BookingPreAuths)->everyFiveMinutes();
-
-        $schedule->command("restaurant:invoice")->dailyAt("06:00");
-
-        $schedule->command('horizon:snapshot')->everyFiveMinutes();
+//        $schedule->job(new UnreadMessageEmailer)->everyFiveMinutes();
+//
+//        $schedule->job(new ReviewReminder)->everyFiveMinutes();
+//
+//        $schedule->job(new BookingPreAuths)->everyFiveMinutes();
+//
+//        $schedule->command("restaurant:invoice")->dailyAt("06:00");
+//
+//        $schedule->command('horizon:snapshot')->everyFiveMinutes();
     }
 
     /**
