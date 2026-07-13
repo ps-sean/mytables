@@ -36,7 +36,7 @@ class Book extends Component
         "booking.booked_at" => ["required"],
         "booking.booked_by" => [],
         "booking.email" => ["required", "email"],
-        "booking.contact_number" => ['required', 'min:11', 'max:16', 'phone'],
+        "booking.contact_number" => ['required', 'phone:GB,INTERNATIONAL'],
         "booking.comments" => [],
         "save_method" => [],
         "card_method" => ["required", "in:add,default"],

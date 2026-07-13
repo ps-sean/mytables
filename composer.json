@@ -23,6 +23,7 @@
         "league/flysystem-aws-s3-v3": "^3.0",
         "livewire/livewire": "3.7.11",
         "predis/predis": "^1.1",
+        "propaganistas/laravel-phone": "^6.0",
         "pusher/pusher-php-server": "^7.0",
         "spatie/laravel-activitylog": "^4.0.0",
         "staudenmeir/eloquent-json-relations": "^1.5",

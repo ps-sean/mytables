@@ -176,9 +176,9 @@
                                             </svg>
                                         </div>
                                         <div class="w-full">
-                                            <x-input type="text" wire:model.live="booking.name" class="w-full" placeholder="Name" id="booking-name" />
+                                            <x-input type="text" wire:model="booking.name" class="w-full" placeholder="Name" id="booking-name" />
                                             @error("booking.name")<span class="text-red-600">{{ $message }}</span>@enderror
-                                            <x-input type="email" wire:model.live="booking.email" class="w-full" placeholder="Email" />
+                                            <x-input type="email" wire:model="booking.email" class="w-full" placeholder="Email" />
                                             @error("booking.email")<span class="text-red-600">{{ $message }}</span>@enderror
                                         </div>
                                     </div>
@@ -191,7 +191,7 @@
                                         </svg>
                                     </div>
                                     <div class="w-full">
-                                        <x-input type="tel" wire:model.live="booking.contact_number" class="w-full" placeholder="Contact Number" />
+                                        <x-input type="tel" wire:model="booking.contact_number" class="w-full" placeholder="Contact Number" />
                                         @error("booking.contact_number")<span class="text-red-600">{{ $message }}</span>@enderror
                                     </div>
                                 </div>
@@ -203,7 +203,7 @@
                                         </svg>
                                     </div>
                                     <div class="w-full">
-                                        <x-input textarea wire:model.live="booking.comments" class="w-full" placeholder="Additional Comments"/>
+                                        <x-input textarea wire:model="booking.comments" class="w-full" placeholder="Additional Comments"/>
                                         @error("booking.comments")<span class="text-red-600">{{ $message }}</span>@enderror
                                     </div>
                                 </div>
@@ -228,16 +228,16 @@
                                             <div>
                                                 @auth
                                                     @if(auth()->user()->hasDefaultPaymentMethod())
-                                                        <label class="block flex items-center py-5 border-t"><input class="mr-2" type="radio" wire:model.live="card_method" value="default"/> Use Default Payment Method ({{ ucwords(auth()->user()->card_brand) }} {{ auth()->user()->card_last_four }})</label>
+                                                        <label class="flex items-center py-5 border-t"><input class="mr-2" type="radio" wire:model="card_method" value="default"/> Use Default Payment Method ({{ ucwords(auth()->user()->card_brand) }} {{ auth()->user()->card_last_four }})</label>
                                                     @endif
-                                                    <label class="block flex items-center py-5 border-t border-b"><input class="mr-2" type="radio" wire:model.live="card_method" value="add"/> Add New Payment Method</label>
+                                                    <label class="flex items-center py-5 border-t border-b"><input class="mr-2" type="radio" wire:model="card_method" value="add"/> Add New Payment Method</label>
                                                 @endauth
                                             </div>
 
                                             <div x-show.transition.in="card_method === 'add'" class="space-y-2">
                                                 <div wire:ignore class="w-full py-3 border-b" id="card-element"></div>
                                                 @auth
-                                                    <label><input type="checkbox" wire:model.live="save_method"> Make Default Payment Method</label>
+                                                    <label><input type="checkbox" wire:model="save_method"> Make Default Payment Method</label>
                                                 @endauth
                                             </div>
                                             <span class="text-red-600" id="card-error"></span>
