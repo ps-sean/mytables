@@ -16,12 +16,12 @@ class SignUp extends Component
     public $email = "";
     public $sessionToken;
     public $addressResults = [];
-    public $addressJSON = "";
+    public $addressJSON = '';
 
     protected $rules = [
         'name' => 'required|min:6',
-        'email' => 'required|email|unique:restaurants',
-        'phone' => ['required', 'unique:restaurants', 'min:11', 'max:16', 'regex:^(((\+44\s?\d{4}|\(?0\d{4}\)?)\s?\d{3}\s?\d{3})|((\+44\s?\d{3}|\(?0\d{3}\)?)\s?\d{3}\s?\d{4})|((\+44\s?\d{2}|\(?0\d{2}\)?)\s?\d{4}\s?\d{4}))(\s?\#(\d{4}|\d{3}))?$^']
+        'email' => 'required|email:rfc,dns',
+        'phone' => ['required', 'phone:GB,INTERNATIONAL']
     ];
 
     public function mount()
