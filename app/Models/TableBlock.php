@@ -10,7 +10,7 @@ class TableBlock extends Model
     use HasFactory;
 
     protected $casts = [
-        "tables" => "json",
+        "tables" => "array",
         "start_date" => "datetime:Y-m-d\TH:i",
         "end_date" => "datetime:Y-m-d\TH:i",
     ];

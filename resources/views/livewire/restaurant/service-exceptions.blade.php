@@ -10,7 +10,7 @@
 
                 <div class="flex items-center space-x-3">
                     <x-button wire:click.prevent="$set('newDate', null)" class="bg-gray-500 hover:bg-gray-400">Cancel</x-button>
-                    <x-button wire:loading.attr="disabled">Save</x-button>
+                    <x-button type="submit" wire:loading.attr="disabled" class="bg-red-800 hover:bg-red-700">Save</x-button>
                 </div>
             </div>
         </form>
@@ -142,7 +142,7 @@
                         {{ __('Saved.') }}
                     </x-action-message>
 
-                    <x-button wire:loading.attr="disabled">
+                    <x-button type="submit" wire:loading.attr="disabled" class="bg-red-800 hover:bg-red-700">
                         {{ __('Save') }}
                     </x-button>
                 </div>

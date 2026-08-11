@@ -3,17 +3,19 @@
 namespace App\Livewire\Restaurant;
 
 use App\Models\Restaurant;
+use Illuminate\Support\Collection;
 use Livewire\Component;
 
 class BlockTables extends Component
 {
-    public $restaurant, $blocks;
+    public Restaurant $restaurant;
+    public Collection $blocks;
 
     protected $rules = [
         "blocks.*.restaurant_id" => "required",
         "blocks.*.start_date" => "required",
         "blocks.*.end_date" => "required",
-        "blocks.*.tables" => ""
+        "blocks.*.tables.*" => ""
     ];
 
     public function mount(Restaurant $restaurant)
@@ -30,7 +32,7 @@ class BlockTables extends Component
     public function addBlock()
     {
         $this->blocks->push($this->restaurant->tableBlocks()->make([
-            "tables" => []
+            'tables' => [],
         ]));
     }
 
