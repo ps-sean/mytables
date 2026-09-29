@@ -60,7 +60,7 @@ class Profile extends Component
             // a new image was submitted, lets save it
             $oldImage = $this->restaurant->image_location;
 
-            $this->restaurant->image_location = $this->image->store($this->restaurant->getKey() . '/images', ['disk' => 's3']);
+            $this->restaurant->image_location = $this->image->store($this->restaurant->getKey() . '/images');
 
             if(!empty($oldImage)){
                 // now that it's saved, delete the old one
@@ -72,7 +72,7 @@ class Profile extends Component
             // a new image was submitted, lets save it
             $oldLogo = $this->restaurant->logo_location;
 
-            $this->restaurant->logo_location = $this->logo->store($this->restaurant->getKey() . '/images', ['disk' => 's3']);
+            $this->restaurant->logo_location = $this->logo->store($this->restaurant->getKey() . '/images');
 
             if(!empty($oldLogo)){
                 // now that it's saved, delete the old one
