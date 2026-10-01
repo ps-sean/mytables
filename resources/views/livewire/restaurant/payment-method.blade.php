@@ -39,7 +39,7 @@
                 {{ __('Saved.') }}
             </x-action-message>
 
-            <x-button type="button" id="save-card" data-secret="{{ $restaurant->createSetupIntent()->client_secret }}" wire:loading.attr="disabled">
+            <x-button type="button" class="bg-red-800 hover:bg-red-700" id="save-card" data-secret="{{ $restaurant->createSetupIntent()->client_secret }}" wire:loading.attr="disabled">
                 {{ __('Save') }}
             </x-button>
         </x-slot>
